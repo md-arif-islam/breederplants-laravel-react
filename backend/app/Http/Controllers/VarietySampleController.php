@@ -1,0 +1,162 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\VarietySample;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
+
+class VarietySampleController extends Controller {
+    public function showVarietySample( $id, $sampleId ) {
+
+        $sample = VarietySample::with( 'varietyReport' )->findOrFail( $sampleId );
+
+        return response()->json( $sample );
+    }
+
+    public function create( $id ) {
+
+        $sample = VarietySample::where( 'variety_report_id', $id )->first();
+
+        return response()->json( $sample );
+    }
+
+    public function update( $id, $sampleId, Request $request ) {
+        // Validate incoming data.
+        $validated = $request->validate( [
+            'sample_date' => 'required|date',
+            'leaf_color' => 'nullable|string',
+            'amount_of_branches' => 'nullable|numeric',
+            'flower_buds' => 'nullable|numeric',
+            'branch_color' => 'nullable|string',
+            'roots' => 'nullable|string',
+            'flower_color' => 'nullable|string',
+            'flower_petals' => 'nullable|numeric',
+            'flowering_time' => 'nullable|string',
+            'length_of_flowering' => 'nullable|string',
+            'seeds' => 'nullable|string',
+            'seed_color' => 'nullable|string',
+            'amount_of_seeds' => 'nullable|numeric',
+            'status' => 'required|boolean',
+            'note' => 'nullable|string',
+            'images' => 'required|array',
+            'images.*' => 'required|string',
+        ] );
+
+        // Process each image in the array.
+        $storedImages = [];
+        foreach ( $validated['images'] as $image ) {
+            // If the image is a base64-encoded image, decode and save it.
+            if ( preg_match( '/^data:image\/(\w+);base64,/', $image, $matches ) ) {
+                try {
+                    $storedImages[] = $this->saveImage( $image );
+                } catch ( \Exception $e ) {
+                    return response()->json( ['error' => $e->getMessage()], 422 );
+                }
+            } else {
+                $storedImages[] = $image;
+            }
+        }
+
+        // Merge the processed images into the validated data.
+        $dataToUpdate = $validated;
+        $dataToUpdate['images'] = json_encode( $storedImages );
+
+        // Update or create the variety sample record.
+        $varietySample = VarietySample::updateOrCreate(
+            ['id' => $sampleId],
+            $dataToUpdate
+        );
+        return response()->json( [
+            'message' => 'Variety sample updated successfully',
+            'data' => $varietySample,
+        ], 200 );
+    }
+
+    public function store( $id, Request $request ) {
+        // Validate incoming data.
+        $validated = $request->validate( [
+            'sample_date' => 'required|date',
+            'leaf_color' => 'nullable|string',
+            'amount_of_branches' => 'nullable|numeric',
+            'flower_buds' => 'nullable|numeric',
+            'branch_color' => 'nullable|string',
+            'roots' => 'nullable|string',
+            'flower_color' => 'nullable|string',
+            'flower_petals' => 'nullable|numeric',
+            'flowering_time' => 'nullable|string',
+            'length_of_flowering' => 'nullable|string',
+            'seeds' => 'nullable|string',
+            'seed_color' => 'nullable|string',
+            'amount_of_seeds' => 'nullable|numeric',
+            'status' => 'required|boolean',
+            'note' => 'nullable|string',
+            'images' => 'required|array',
+            'images.*' => 'required|string',
+        ] );
+
+        // Process each image.
+        $storedImages = [];
+        foreach ( $validated['images'] as $image ) {
+            // If the image is a valid base64 encoded image, decode and store it.
+            if ( preg_match( '/^data:image\/(\w+);base64,/', $image, $matches ) ) {
+                try {
+                    $storedImages[] = $this->saveImage( $image );
+                } catch ( \Exception $e ) {
+                    return response()->json( ['error' => $e->getMessage()], 422 );
+                }
+            } else {
+                // Otherwise assume it's already a full URL/path.
+                $storedImages[] = $image;
+            }
+        }
+
+        // Merge processed images into data and set the variety_report_id.
+        $dataToStore = $validated;
+        $dataToStore['images'] = json_encode( $storedImages );
+        $dataToStore['variety_report_id'] = $id;
+
+        // Create a new record.
+        $varietySample = VarietySample::create( $dataToStore );
+
+        return response()->json( [
+            'message' => 'Variety sample created successfully',
+            'data' => $varietySample,
+        ], 201 );
+    }
+
+    private function saveImage( $image ) {
+        // Check if image is valid base64 string
+        if ( preg_match( '/^data:image\/(\w+);base64,/', $image, $type ) ) {
+            // Take out the base64 encoded text without mime type
+            $image = substr( $image, strpos( $image, ',' ) + 1 );
+            // Get file extension
+            $type = strtolower( $type[1] ); // jpg, png, gif
+
+            // Check if file is an image
+            if ( !in_array( $type, ['jpg', 'jpeg', 'gif', 'png'] ) ) {
+                throw new \Exception( 'invalid image type' );
+            }
+            $image = str_replace( ' ', '+', $image );
+            $image = base64_decode( $image );
+
+            if ( $image === false ) {
+                throw new \Exception( 'base64_decode failed' );
+            }
+        } else {
+            throw new \Exception( 'did not match data URI with image data' );
+        }
+
+        $dir = 'images/';
+        $file = Str::random() . '.' . $type;
+        $absolutePath = public_path( $dir );
+        $relativePath = $dir . $file;
+        if ( !File::exists( $absolutePath ) ) {
+            File::makeDirectory( $absolutePath, 0755, true );
+        }
+        file_put_contents( $relativePath, $image );
+
+        return $relativePath;
+    }
+}

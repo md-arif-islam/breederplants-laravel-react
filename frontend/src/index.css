@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body{
+    font-family: 'Poppins', sans-serif;
+}
+
+
+.active :nth-child(1){
+    color: #ffffff;
+    background: #45A049;
+}
+.active svg{
+    color: #ffffff;
+}
+.active svg.grower{
+    fill: #ffffff;
+}
+
+
+
+.notification-span a{
+    color: #4caf50;
+    font-weight: 600;
+}
+  
