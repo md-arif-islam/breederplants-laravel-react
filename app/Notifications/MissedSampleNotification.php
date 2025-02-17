@@ -44,12 +44,12 @@ class MissedSampleNotification extends Notification {
 
         return ( new MailMessage )
             ->subject( 'Missed Sample Date Notification' )
-            ->line( "Dear {$growerName}," )
-            ->line( "We noticed that the sample date for the variety, {$this->varietyReport->variety_name}, was missed on {$this->formattedDate}." )
-            ->line( "To ensure we continue processing your reports efficiently, please make arrangements as soon as possible." )
-            ->action( 'View Report', $this->varietyReportUrl )
-            ->line( 'If you have any questions or need assistance, feel free to reach out.' )
-            ->salutation( 'Best regards, Breederplants' );
+            ->view( 'emails.missed-sample', [
+                'growerName' => $growerName,
+                'variety_name' => $this->varietyReport->variety_name,
+                'formatted_date' => $this->formattedDate,
+                'url' => $this->varietyReportUrl,
+            ] );
     }
 
     /**
