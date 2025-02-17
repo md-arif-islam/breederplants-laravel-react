@@ -1,4 +1,4 @@
-name: FTP & SSH Deploy
+name: FTP Deploy
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  deploy:
+  ftp-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,6 +17,9 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
+
+      - name: Install Composer Dependencies
+        run: composer install --no-dev --prefer-dist --optimize-autoloader
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -36,19 +39,7 @@ jobs:
           username: "breederplants_action"
           password: "7Oq@716bc"
           exclude: |
-            .git/**
-            node_modules/**
-            vendor/**
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
             fileToExclude.txt
-          debug: true
-          retryCount: 3
-
-      - name: Post-Deploy via SSH
-        uses: appleboy/ssh-action@master
-        with:
-          host: "onlinewithyou.nl"
-          username: "breederplants_action"
-          password: "7Oq@716bc"
-          port: "22"
-          script: |
-            composer install --no-dev --prefer-dist --optimize-autoloader
