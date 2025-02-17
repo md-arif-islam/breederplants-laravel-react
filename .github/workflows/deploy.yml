@@ -20,10 +20,6 @@ jobs:
         with:
           php-version: "8.2"
 
-      # 3. Install Composer Dependencies locally (if needed)
-      - name: Install Composer Dependencies
-        run: composer install --no-dev --prefer-dist --optimize-autoloader
-
       # 4. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -44,9 +40,6 @@ jobs:
           server: "onlinewithyou.nl"
           username: "breederplants_action"
           password: "7Oq@716bc"
-          # Adjust local-dir and server-dir as needed:
-          local-dir: "./"
-          server-dir: "/httpdocs"
           exclude: |
             **/.git*
             **/node_modules/**
@@ -62,5 +55,5 @@ jobs:
           password: "7Oq@716bc"
           port: "22"
           script: |
-            cd /httpdocs
+            cd ./
             composer install --no-dev --prefer-dist --optimize-autoloader
