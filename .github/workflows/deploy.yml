@@ -33,10 +33,13 @@ jobs:
           npm run build
 
       - name: FTP Deploy
-        uses: SamKirkland/FTP-Deploy-Action@4.3.1
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.1
         with:
           server: "onlinewithyou.nl"
           username: "breederplants_action"
           password: "7Oq@716bc"
-          local-dir: "./"
-          server-dir: "/"
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            fileToExclude.txt
