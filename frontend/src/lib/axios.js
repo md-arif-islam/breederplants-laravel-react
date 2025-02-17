@@ -24,17 +24,17 @@ axiosInstance.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-// // Add a response interceptor to catch 401 errors (expired token)
-// axiosInstance.interceptors.response.use(
-//     (response) => response,
-//     (error) => {
-//         if (error.response && error.response.status === 401) {
-//             localStorage.removeItem("token");
-//             localStorage.removeItem("user");
-//             // Optionally, show a toast notification if you're using react-hot-toast
-//             toast.error("Session expired. Please log in again.");
-//             window.location.href = "/login";
-//         }
-//         return Promise.reject(error);
-//     }
-// );
+// Add a response interceptor to catch 401 errors (expired token)
+axiosInstance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            // Optionally, show a toast notification if you're using react-hot-toast
+            toast.error("Session expired. Please log in again.");
+            window.location.href = "/login";
+        }
+        return Promise.reject(error);
+    }
+);
