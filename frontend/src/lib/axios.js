@@ -27,10 +27,14 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response && error.response.status === 401) {
+        // Only handle 401 if the request is not to our login/signout endpoints
+        if (
+            error.response &&
+            error.response.status === 401 &&
+            !error.config.url.includes("/login")
+        ) {
             localStorage.removeItem("token");
             localStorage.removeItem("user");
-            // Optionally, show a toast notification if you're using react-hot-toast
             toast.error("Session expired. Please log in again.");
             window.location.href = "/login";
         }
