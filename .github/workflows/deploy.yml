@@ -10,30 +10,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout the repository
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # 2. Setup PHP
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
 
-      # 4. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "20"
 
-      # 5. Build Frontend assets
       - name: Build Frontend
         run: |
           cd frontend
           npm install
           npm run build
 
-      # 6. Deploy files via FTP (excluding vendor and other unwanted folders)
       - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.1
         with:
@@ -41,12 +36,13 @@ jobs:
           username: "breederplants_action"
           password: "7Oq@716bc"
           exclude: |
-            **/.git*
-            **/node_modules/**
-            **/vendor/**
+            .git/**
+            node_modules/**
+            vendor/**
             fileToExclude.txt
+          debug: true
+          retryCount: 3
 
-      # 7. Run post-deployment commands via SSH (to recreate vendor and run migrations)
       - name: Post-Deploy via SSH
         uses: appleboy/ssh-action@master
         with:
@@ -55,5 +51,4 @@ jobs:
           password: "7Oq@716bc"
           port: "22"
           script: |
-            cd ./
             composer install --no-dev --prefer-dist --optimize-autoloader
