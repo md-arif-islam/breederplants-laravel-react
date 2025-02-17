@@ -1,4 +1,4 @@
-name: FTP Deploy
+name: FTP & SSH Deploy
 
 on:
   push:
@@ -6,40 +6,61 @@ on:
       - main
 
 jobs:
-  ftp-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout the repository
       - name: Checkout Repository
         uses: actions/checkout@v3
 
+      # 2. Setup PHP
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
 
+      # 3. Install Composer Dependencies locally (if needed)
       - name: Install Composer Dependencies
         run: composer install --no-dev --prefer-dist --optimize-autoloader
 
+      # 4. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "20"
 
+      # 5. Build Frontend assets
       - name: Build Frontend
         run: |
           cd frontend
           npm install
           npm run build
 
+      # 6. Deploy files via FTP (excluding vendor and other unwanted folders)
       - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.1
         with:
           server: "onlinewithyou.nl"
           username: "breederplants_action"
           password: "7Oq@716bc"
+          # Adjust local-dir and server-dir as needed:
+          local-dir: "./"
+          server-dir: "/httpdocs"
           exclude: |
             **/.git*
-            **/.git*/**
             **/node_modules/**
+            **/vendor/**
             fileToExclude.txt
+
+      # 7. Run post-deployment commands via SSH (to recreate vendor and run migrations)
+      - name: Post-Deploy via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: "onlinewithyou.nl"
+          username: "breederplants_action"
+          password: "7Oq@716bc"
+          port: "22"
+          script: |
+            cd /httpdocs
+            composer install --no-dev --prefer-dist --optimize-autoloader

@@ -24,7 +24,6 @@ axiosInstance.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-// Add a response interceptor to catch 401 errors (expired token)
 // axiosInstance.interceptors.response.use(
 //     (response) => response,
 //     (error) => {
