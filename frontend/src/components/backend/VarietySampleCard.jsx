@@ -1,20 +1,11 @@
 import React, { useState } from "react";
 import { Eye, Pencil, Trash2, Download, Leaf } from "lucide-react";
+import { useVarietySampleStore } from "../../store/useVarietySampleStore";
 
-export function VarietySampleCard({ sample, varietyReportId }) {
+export function VarietySampleCard({ sample, varietyReportId, onDelete }) {
     const [imgLoaded, setImgLoaded] = useState(false);
-
-    const handleDelete = (e) => {
-        e.preventDefault();
-        if (
-            window.confirm(
-                "Are you sure you want to delete this variety sample?"
-            )
-        ) {
-            // Delete the variety sample
-            console.log(`Deleting variety sample with ID: ${sample.id}`);
-        }
-    };
+    const [showPopup, setShowPopup] = useState(false);
+    const { deleteVarietySample } = useVarietySampleStore();
 
     // Build full image URL
     let imagePath = "/placeholder.svg";
@@ -26,6 +17,26 @@ export function VarietySampleCard({ sample, varietyReportId }) {
     } catch (error) {
         console.error("Error parsing images: ", error);
     }
+
+    const handleDelete = (e) => {
+        e.preventDefault();
+        setShowPopup(true);
+    };
+
+    const confirmDelete = async () => {
+        setShowPopup(false);
+        const response = await deleteVarietySample(varietyReportId, sample.id);
+        if (response.status === 200) {
+            console.log("Deletion successful");
+            onDelete(); // trigger parent callback to refresh data
+        } else {
+            console.error("Error deleting variety sample");
+        }
+    };
+
+    const cancelDelete = () => {
+        setShowPopup(false);
+    };
 
     return (
         <div className="bg-white rounded-xl shadow overflow-hidden group relative px-3">
@@ -68,12 +79,6 @@ export function VarietySampleCard({ sample, varietyReportId }) {
                             <Trash2 className="w-5 h-5" />
                         </button>
                     </form>
-                    <a
-                        href={`/admin/variety-reports/${sample.id}/export`}
-                        className="p-2 bg-white hover:bg-white/50 rounded-md transition-colors"
-                    >
-                        <Download className="w-5 h-5" />
-                    </a>
                 </div>
             </div>
 
@@ -147,6 +152,31 @@ export function VarietySampleCard({ sample, varietyReportId }) {
                     </span>
                 </div>
             </div>
+
+            {/* Delete Confirmation Modal */}
+            {showPopup && (
+                <div className="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75">
+                    <div className="bg-white p-4 rounded-md shadow-md">
+                        <p>
+                            Are you sure you want to delete this variety sample?
+                        </p>
+                        <div className="flex gap-2 mt-4">
+                            <button
+                                onClick={confirmDelete}
+                                className="inline-flex items-center px-3 py-2 text-sm font-medium border rounded-md hover:bg-gray-50"
+                            >
+                                Yes
+                            </button>
+                            <button
+                                onClick={cancelDelete}
+                                className="inline-flex items-center px-3 py-2 text-sm font-medium border rounded-md hover:bg-gray-50"
+                            >
+                                No
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

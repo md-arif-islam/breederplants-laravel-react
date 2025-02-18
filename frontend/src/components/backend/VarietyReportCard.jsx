@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { Eye, Pencil, Trash2, Download, Leaf } from "lucide-react";
+import { Eye, Pencil, Trash2, Download, Leaf, Loader2 } from "lucide-react";
 import { useVarietyReportStore } from "../../store/useVarietyReportStore";
 // import hydrangeaImg from "../../assets/images/hydrangea-paniculata.jpg"; // if needed
 
 export function VarietyReportCard({ report, onDelete }) {
     const [showPopup, setShowPopup] = useState(false);
     const [imgLoaded, setImgLoaded] = useState(false); // state to track image load
-    const { deleteVarietyReport } = useVarietyReportStore();
+    const { deleteVarietyReport, exportVarietyReport } =
+        useVarietyReportStore();
+    const [exportLoading, setExportLoading] = useState(false);
 
     const handleDelete = (e) => {
         e.preventDefault();
@@ -67,12 +69,23 @@ export function VarietyReportCard({ report, onDelete }) {
                     >
                         <Trash2 className="w-5 h-5" />
                     </button>
-                    <a
-                        href={`/admin/variety-reports/${report.id}/export`}
+                    <button
+                        onClick={(e) => {
+                            e.preventDefault();
+                            setExportLoading(true);
+                            exportVarietyReport(report.id).finally(() =>
+                                setExportLoading(false)
+                            );
+                        }}
+                        disabled={exportLoading}
                         className="p-2 bg-white hover:bg-white/50 rounded-md transition-colors"
                     >
-                        <Download className="w-5 h-5" />
-                    </a>
+                        {exportLoading ? (
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : (
+                            <Download className="w-5 h-5" />
+                        )}
+                    </button>
                 </div>
             </div>
             <div className="p-4 border-b">

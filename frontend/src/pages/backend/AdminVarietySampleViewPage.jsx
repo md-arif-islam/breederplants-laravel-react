@@ -233,10 +233,6 @@ export default function AdminVarietySampleViewPage() {
                                 <Trash2 className="mr-2 h-4 w-4" />
                                 Delete
                             </button>
-                            <button className="inline-flex items-center px-3 py-2 text-sm font-medium border rounded-md hover:bg-gray-50">
-                                <Download className="mr-2 h-4 w-4" />
-                                Export
-                            </button>
                         </div>
                     </div>
                 </div>

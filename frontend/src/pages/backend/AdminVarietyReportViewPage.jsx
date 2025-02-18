@@ -238,6 +238,7 @@ export default function AdminVarietyReportViewPage() {
                                 key={sample.id}
                                 sample={sample}
                                 varietyReportId={id}
+                                onDelete={() => getVarietyReportById(id)}
                             />
                         ))}
                     </div>
