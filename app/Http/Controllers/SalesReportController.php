@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SalesReportExport;
+use App\Http\Controllers\Controller;
 use App\Models\Grower;
 use App\Models\GrowerProduct;
 use App\Models\SalesReport;
+use App\Notifications\SalesReportSubmittedNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
+use Maatwebsite\Excel\Excel;
 
 class SalesReportController extends Controller {
     /**
@@ -654,6 +660,28 @@ class SalesReportController extends Controller {
                 "quarters_array" => $request->quarters_array,
                 "total" => $total,
             ] );
+        }
+
+        $grower = Grower::find( $salesReport->grower_id );
+
+        // Generate Excel file
+        $excel = app( Excel::class );
+        $excelFile = $excel->raw( new SalesReportExport( $salesReport, $grower ), Excel::XLSX );
+
+        // Send notification to admin
+        try {
+            Notification::route( 'mail', 'arifislamdev@gmail.com' )
+                ->notify( new SalesReportSubmittedNotification( $salesReport, $grower, $excelFile, 'admin' ) );
+            Log::info( "Sales report submitted by " . $grower->company_name . " for " . ucwords( $salesReport->quarter ) . " " . $salesReport->year . " (admin notified)." );
+        } catch ( \Exception $e ) {
+            Log::info( "Sales report submitted but admin notification failed for " . $grower->company_name . "." );
+        }
+
+        // Send notification to grower
+        try {
+            $grower->user->notify( new SalesReportSubmittedNotification( $salesReport, $grower, $excelFile, 'grower' ) );
+        } catch ( \Exception $e ) {
+            Log::info( "Sales report submitted but grower notification failed for " . $grower->company_name . "." );
         }
 
         return response()->json( [

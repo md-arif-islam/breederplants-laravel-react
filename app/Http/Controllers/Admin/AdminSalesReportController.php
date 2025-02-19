@@ -62,6 +62,7 @@ class AdminSalesReportController extends Controller {
         $salesReport->update( [
             'submission_date' => null,
             'data' => null,
+            'total' => 0.00,
         ] );
 
         return response()->json( [
