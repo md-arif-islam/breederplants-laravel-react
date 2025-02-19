@@ -10,6 +10,7 @@ export default function AdminSalesReportViewPage() {
         currentSalesReport,
         isLoading,
         exportSalesReport,
+        deleteSalesReport,
     } = useSalesReportStore();
     const [showPopup, setShowPopup] = useState(false);
     const [isExporting, setIsExporting] = useState(false);
@@ -28,10 +29,10 @@ export default function AdminSalesReportViewPage() {
 
     const confirmDelete = async () => {
         setShowPopup(false);
-        // const response = await deleteSalesReport(id); // Assuming you have a deleteSalesReport function
-        // if (response.status === 200) {
-        //   navigate("/admin/sales-reports");
-        // }
+        const response = await deleteSalesReport(id);
+        if (response && response.status === 200) {
+            navigate("/admin/sales-reports");
+        }
     };
 
     const cancelDelete = () => {

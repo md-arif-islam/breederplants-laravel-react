@@ -100,7 +100,7 @@ Route::prefix( 'admin' )->middleware( ['auth:sanctum', \App\Http\Middleware\Admi
     // Sales Reports
     Route::get( '/sales-reports', [AdminSalesReportController::class, 'index'] );
     Route::get( '/sales-reports/{id}', [AdminSalesReportController::class, 'show'] );
-    Route::get( '/sales-reports/{id}/empty', [AdminSalesReportController::class, 'empty'] )->name( 'sales-reports.empty' );
+    Route::delete( '/sales-reports/{id}/empty', [AdminSalesReportController::class, 'empty'] )->name( 'sales-reports.empty' );
 
 } );
 

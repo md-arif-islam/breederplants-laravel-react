@@ -13,8 +13,7 @@ const quarterOptions = [
 
 const statusOptions = [
     { value: "submitted", label: "Submitted" },
-    { value: "passed", label: "Passed" },
-    { value: "waiting", label: "Waiting" },
+    { value: "pending", label: "Pending" },
 ];
 
 export default function AdminSalesReportsPage() {
@@ -275,14 +274,9 @@ export default function AdminSalesReportsPage() {
                                                                 <span className="bg-green-500 text-white px-2 py-1 rounded-full text-sm">
                                                                     Submitted
                                                                 </span>
-                                                            ) : report.year <
-                                                              new Date().getFullYear() ? (
-                                                                <span className="bg-red-500 text-white px-2 py-1 rounded-full text-sm">
-                                                                    Passed
-                                                                </span>
                                                             ) : (
-                                                                <span className="bg-yellow-500 text-white px-2 py-1 rounded-full text-sm">
-                                                                    Waiting
+                                                                <span className="bg-gray-500 text-white px-2 py-1 rounded-full text-sm">
+                                                                    Pending
                                                                 </span>
                                                             )}
                                                         </td>
