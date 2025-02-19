@@ -54,7 +54,7 @@ class SalesReportSubmittedNotification extends Notification {
 
         return ( new MailMessage )
             ->subject( $subject )
-            ->view( 'emails.sales-report-submitted', $data )
+            ->view( 'emails.sales-report-sub mitted', $data )
             ->attachData(
                 $this->excelFile,
                 "Breederplants-" . Str::slug( $this->grower->company_name ) . "-" . $this->salesReport->quarter . "-" . $this->salesReport->year . ".xlsx", [

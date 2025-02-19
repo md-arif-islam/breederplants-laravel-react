@@ -229,10 +229,10 @@ class AdminVarietyReportController extends Controller {
     public function reminder( $id ) {
         // Fetch the specific variety report by ID
         $varietyReport = VarietyReport::findOrFail( $id );
-        $grower = User::findOrFail( 33 );
 
         $variety_name = $varietyReport->variety_name;
         $grower_id = $varietyReport->grower_id;
+        $grower = User::findOrFail( $grower_id );
         $next_sample_date = json_decode( $varietyReport->samples_schedule )[0];
 
         // Format the date nicely
