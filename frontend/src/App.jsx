@@ -141,7 +141,7 @@ const App = () => {
                     <Route
                         path="sales-reports"
                         element={
-                            authUser.role == "admin" ? (
+                            authUser?.role == "admin" ? (
                                 <Navigate to="/admin/sales-reports" />
                             ) : (
                                 <SalesReportsPage />
