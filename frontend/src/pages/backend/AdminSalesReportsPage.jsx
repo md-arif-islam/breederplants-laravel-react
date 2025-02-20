@@ -146,12 +146,6 @@ export default function AdminSalesReportsPage() {
                                 </option>
                             ))}
                         </select>
-                        <button
-                            onClick={clearFilters}
-                            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition duration-150 ease-in-out"
-                        >
-                            Clear
-                        </button>
                     </div>
                 </div>
 

@@ -32,22 +32,6 @@ class VarietySample extends Model {
         'images' => 'array',
     ];
 
-    protected static function boot() {
-        parent::boot();
-
-        static::deleting( function ( $varietySample ) {
-            // Delete associated images
-            $images = json_decode( $varietySample->images, true );
-            if ( $images ) {
-                foreach ( $images as $image ) {
-                    if ( file_exists( public_path( $image ) ) ) {
-                        unlink( public_path( $image ) );
-                    }
-                }
-            }
-        } );
-    }
-
     public function varietyReport() {
         return $this->belongsTo( VarietyReport::class );
     }

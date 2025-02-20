@@ -141,10 +141,15 @@ class AdminVarietyReportController extends Controller {
 
         if ( isset( $request['thumbnail'] ) ) {
             if ( preg_match( '/^data:image\/(\w+);base64,/', $request['thumbnail'] ) ) {
+
+                if ( file_exists( $varietyReport->thumbnail ) ) {
+                    unlink( $varietyReport->thumbnail );
+                }
+
                 $relativePath = $this->saveImage( $request['thumbnail'] );
                 $request['thumbnail'] = $relativePath;
             } else {
-                // nothing
+
             }
 
         }
@@ -194,7 +199,7 @@ class AdminVarietyReportController extends Controller {
             throw new \Exception( 'did not match data URI with image data' );
         }
 
-        $dir = 'images/';
+        $dir = 'images/variety-reports/';
         $file = Str::random() . '.' . $type;
         $absolutePath = public_path( $dir );
         $relativePath = $dir . $file;

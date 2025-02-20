@@ -133,9 +133,9 @@ export default function AdminGrowerPage() {
                                                 <tr>
                                                     <td
                                                         colSpan={7}
-                                                        className="text-center bg-red-100 p-5 rounded-md"
+                                                        className="text-center py-4 bg-red-100 p-5 rounded-md"
                                                     >
-                                                        No grower found.
+                                                        No growers found.
                                                     </td>
                                                 </tr>
                                             )}

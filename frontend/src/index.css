@@ -19,9 +19,12 @@ body{
 }
 
 
+.active svg.breeder{
+    fill: #ffffff;
+}
+
 
 .notification-span a{
     color: #4caf50;
     font-weight: 600;
 }
-  

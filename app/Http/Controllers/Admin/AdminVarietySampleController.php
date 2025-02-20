@@ -91,6 +91,10 @@ class AdminVarietySampleController extends Controller {
             'images.*' => 'required|string',
         ] );
 
+        // Fetch the existing variety sample
+        $varietySample = VarietySample::findOrFail( $sampleId );
+        $oldImages = json_decode( $varietySample->images, true ) ?? [];
+
         // Process each image in the array.
         $storedImages = [];
         foreach ( $validated['images'] as $image ) {
@@ -111,10 +115,18 @@ class AdminVarietySampleController extends Controller {
         $dataToUpdate['images'] = json_encode( $storedImages );
 
         // Update or create the variety sample record.
-        $varietySample = VarietySample::updateOrCreate(
-            ['id' => $sampleId],
-            $dataToUpdate
-        );
+        $varietySample->update( $dataToUpdate );
+
+        // Delete old images that are not in the updated images array
+        foreach ( $oldImages as $oldImage ) {
+            if ( !in_array( $oldImage, $storedImages ) ) {
+                $imagePath = public_path( $oldImage );
+                if ( File::exists( $imagePath ) ) {
+                    File::delete( $imagePath );
+                }
+            }
+        }
+
         return response()->json( [
             'message' => 'Variety sample updated successfully',
             'data' => $varietySample,
@@ -159,7 +171,7 @@ class AdminVarietySampleController extends Controller {
             throw new \Exception( 'did not match data URI with image data' );
         }
 
-        $dir = 'images/';
+        $dir = 'images/variety-samples/';
         $file = Str::random() . '.' . $type;
         $absolutePath = public_path( $dir );
         $relativePath = $dir . $file;
