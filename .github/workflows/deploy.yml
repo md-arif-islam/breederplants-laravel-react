@@ -35,9 +35,9 @@ jobs:
       - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.1
         with:
-          server: "onlinewithyou.nl"
-          username: "breederplants_action"
-          password: "7Oq@716bc"
+          server: ${{ secrets.SERVER }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
           exclude: |
             **/.git*
             **/.git*/**
