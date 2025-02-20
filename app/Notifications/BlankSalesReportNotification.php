@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 
 class BlankSalesReportNotification extends Notification implements ShouldQueue {
     use Queueable;
@@ -24,13 +25,23 @@ class BlankSalesReportNotification extends Notification implements ShouldQueue {
         $this->aboutQuarters = $aboutQuarters;
         $this->link = $link;
         $this->year = $year;
+
+        Log::info( 'BlankSalesReportNotification constructed', [
+            'grower' => $this->grower,
+            'quarter' => $this->quarter,
+            'aboutQuarters' => $this->aboutQuarters,
+            'link' => $this->link,
+            'year' => $this->year,
+        ] );
     }
 
     public function via( object $notifiable ): array {
+        Log::info( 'BlankSalesReportNotification via', ['notifiable' => $notifiable] );
         return ['mail', 'database', 'broadcast', FcmChannel::class];
     }
 
     public function toMail( object $notifiable ): MailMessage {
+        Log::info( 'BlankSalesReportNotification toMail', ['notifiable' => $notifiable] );
         $growerName = $this->grower->grower->contact_person ?? $this->grower->company_name;
         return ( new MailMessage )
             ->subject( 'Blank Sales Report Notification' )
@@ -44,18 +55,21 @@ class BlankSalesReportNotification extends Notification implements ShouldQueue {
     }
 
     public function toDatabase( object $notifiable ): array {
+        Log::info( 'BlankSalesReportNotification toDatabase', ['notifiable' => $notifiable] );
         return [
             'message' => "A blank sales report for quarter {$this->quarter} ({$this->year}) has been generated. Check details at <a href='{$this->link}'>Sales Reports</a>.",
         ];
     }
 
     public function toArray( object $notifiable ): array {
+        Log::info( 'BlankSalesReportNotification toArray', ['notifiable' => $notifiable] );
         return [
             'message' => "A blank sales report for quarter {$this->quarter} ({$this->year}) has been generated. Check details at <a href='{$this->link}'>Sales Reports</a>.",
         ];
     }
 
     public function toBroadcast( object $notifiable ): BroadcastMessage {
+        Log::info( 'BlankSalesReportNotification toBroadcast', ['notifiable' => $notifiable] );
         return new BroadcastMessage( [
             'data' => $this->toArray( $notifiable ),
             'type' => 'blank-sales-report',
@@ -63,7 +77,7 @@ class BlankSalesReportNotification extends Notification implements ShouldQueue {
     }
     // Todo: Fcm not working
     public function toFcm( object $notifiable ) {
-
+        Log::info( 'BlankSalesReportNotification toFcm', ['notifiable' => $notifiable] );
         return [
             'fcm_token' => $this->grower->fcm_token,
             'notification' => [
