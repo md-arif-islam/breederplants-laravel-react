@@ -107,17 +107,17 @@ export default function VarietyReportPage() {
 
                 {isLoading ? (
                     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        {[...Array(6)].map((_, index) => (
+                        {[...Array(1)].map((_, index) => (
                             <div
                                 key={index}
-                                className="bg-white rounded-xl shadow overflow-hidden group relative px-3 animate-pulse"
+                                className="bg-white rounded-xl shadow overflow-hidden group relative animate-pulse"
                             >
                                 <div className="h-96 w-full bg-gray-300"></div>
                             </div>
                         ))}
                     </div>
                 ) : varietyReports?.length === 0 ? (
-                    <div className="text-center space-y-5">
+                    <div className="text-center space-y-5 bg-red-100 p-5 rounded-md">
                         No variety reports found.
                     </div>
                 ) : (

@@ -132,17 +132,13 @@ class VarietyReportImport implements ToModel, WithHeadingRow {
 
     private function saveImageToDisk( $imageContents, $extension, $varietyReport ) {
         Log::info( 'ddddddddddddddddddd' );
-        // Define the file path and save the image
         $filename = time() . '-' . Str::slug( $varietyReport->variety_name ) . '.' . $extension;
         $path = 'images/' . $filename;
-
         if ( file_put_contents( public_path( $path ), $imageContents ) === false ) {
             Log::error( 'Failed to save image for variety report ID: ' . $varietyReport->id );
             return;
         }
-
-        $pathUrl = url( $path );
-
+        $pathUrl = $path;
         // Log success and update variety report
         Log::info( 'Image successfully saved at: ' . $pathUrl );
         $varietyReport->update( ['thumbnail' => $pathUrl] );

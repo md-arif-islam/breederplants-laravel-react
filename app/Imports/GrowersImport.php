@@ -45,6 +45,7 @@ class GrowersImport implements ToCollection {
                 $this->failedImports[] = [
                     'username' => $row[0],
                     'email' => $row[3],
+                    'reason' => $existingUser ? 'Email already exists' : 'Username already exists',
                 ];
 
                 // Log the failed import
@@ -54,7 +55,7 @@ class GrowersImport implements ToCollection {
                     'reason' => $existingUser ? 'Email already exists' : 'Username already exists',
                 ] );
 
-                continue; // Skip this row, as it already exists
+                continue;
             }
 
             // Create user and grower if no conflicts

@@ -152,7 +152,9 @@ class GrowerController extends Controller {
      * Remove the specified resource from storage.
      */
     public function destroy( Grower $grower ) {
+        $user = $grower->user;
         $grower->delete();
+        $user->delete();
         return response()->json( ['message' => 'Grower deleted successfully'] );
     }
 
@@ -180,10 +182,10 @@ class GrowerController extends Controller {
 
             // Check if there were any failed imports
             if ( count( $import->failedImports ) > 0 ) {
-                return redirect()->back()->with( [
-                    'success' => 'Growers imported successfully with some errors.',
+                return response()->json( [
+                    'message' => 'Growers imported with some errors.',
                     'failedImports' => $import->failedImports,
-                ] );
+                ], 422 );
             }
 
             return response()->json( ['message' => 'Growers imported successfully'] );

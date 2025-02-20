@@ -162,6 +162,11 @@ class AdminVarietyReportController extends Controller {
         $varietyReport = VarietyReport::findOrFail( $id );
         $varietyReport->delete();
 
+        // Delete the thumbnail
+        if ( file_exists( $varietyReport->thumbnail ) ) {
+            unlink( $varietyReport->thumbnail );
+        }
+
         return response()->json( [
             'message' => 'Variety report deleted successfully',
         ], 200 );

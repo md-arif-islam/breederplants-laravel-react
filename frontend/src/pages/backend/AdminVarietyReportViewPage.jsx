@@ -227,8 +227,8 @@ export default function AdminVarietyReportViewPage() {
                     </div>
 
                     {report?.samples?.length === 0 && (
-                        <div className="text-center space-y-5">
-                            No variety samples found.
+                        <div className="text-center space-y-5 bg-red-100 p-5 rounded-md">
+                            No variety sample found.
                         </div>
                     )}
 
