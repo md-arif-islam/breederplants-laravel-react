@@ -124,3 +124,14 @@ Route::middleware( 'auth:sanctum' )->group( function () {
     Route::post( '/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'] );
 
 } );
+
+Route::get( '/clear', function () {
+    \Illuminate\Support\Facades\Artisan::call( 'config:clear' );
+    \Illuminate\Support\Facades\Artisan::call( 'cache:clear' );
+    \Illuminate\Support\Facades\Artisan::call( 'config:cache' );
+    \Illuminate\Support\Facades\Artisan::call( 'view:clear' );
+    \Illuminate\Support\Facades\Artisan::call( 'route:clear' );
+    \Illuminate\Support\Facades\Artisan::call( 'route:cache' );
+    \Illuminate\Support\Facades\Artisan::call( 'optimize:clear' );
+    return 'Cleared';
+} );
