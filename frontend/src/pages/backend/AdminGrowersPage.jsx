@@ -37,9 +37,9 @@ export default function AdminGrowerPage() {
             // Refresh growers list
             getAllGrowers(currentPage, searchQuery);
         } catch (error) {
-            // Handle error (e.g., display error message)
+            setIsImportModalOpen(false);
             console.error("Import failed:", error);
-            // Optionally, display a user-friendly error message using toast
+            getAllGrowers(currentPage, searchQuery);
         }
     };
 

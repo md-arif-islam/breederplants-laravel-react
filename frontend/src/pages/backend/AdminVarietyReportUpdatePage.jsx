@@ -63,6 +63,7 @@ export default function AdminVarietyReportUpdatePage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log(formData);
         const response = await updateVarietyReport(id, formData);
 
         if (response.status === 200) {
@@ -165,16 +166,19 @@ export default function AdminVarietyReportUpdatePage() {
                                     </label>
                                     <select
                                         required
+                                        value={formData.grower_id}
+                                        onChange={(e) =>
+                                            setFormData({
+                                                ...formData,
+                                                grower_id: e.target.value,
+                                            })
+                                        }
                                         className="mt-1 w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
                                     >
                                         {growers?.map((grower) => (
                                             <option
                                                 key={grower.id}
                                                 value={grower.id}
-                                                selected={
-                                                    grower.id ===
-                                                    formData.grower_id
-                                                }
                                             >
                                                 {grower.company_name}
                                             </option>
@@ -189,16 +193,19 @@ export default function AdminVarietyReportUpdatePage() {
                                     </label>
                                     <select
                                         required
+                                        value={formData.breeder_id}
+                                        onChange={(e) =>
+                                            setFormData({
+                                                ...formData,
+                                                breeder_id: e.target.value,
+                                            })
+                                        }
                                         className="mt-1 w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
                                     >
                                         {breeders?.map((breeder) => (
                                             <option
                                                 key={breeder.id}
                                                 value={breeder.id}
-                                                selected={
-                                                    breeder.id ===
-                                                    formData.breeder_id
-                                                }
                                             >
                                                 {breeder.company_name}
                                             </option>

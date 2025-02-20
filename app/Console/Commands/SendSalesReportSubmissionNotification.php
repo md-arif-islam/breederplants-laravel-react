@@ -39,8 +39,9 @@ class SendSalesReportSubmissionNotification extends Command {
                 'current_date' => $currentDate,
             ] );
 
+            // todo if ( "2025-03-20" == $createdPlusOneMonth ) {
             if ( "2025-03-20" == $createdPlusOneMonth ) {
-                $link = url( "/sales-reports" );
+                $link = env( 'FRONTEND_URL' ) . "/sales-reports";
                 try {
                     // Send notification to grower via their user account
                     $grower = Grower::find( $saleReport->grower_id );

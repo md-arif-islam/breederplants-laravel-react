@@ -50,19 +50,24 @@ class SalesReportOverdueNotification extends Notification implements ShouldQueue
             ] );
     }
 
-    public function toDatabase( $notifiable ) {
-        Log::info( 'SalesReportOverdueNotification toDatabase', ['notifiable' => $notifiable] );
-        $quarterUc = ucfirst( $this->quarter );
+    public function toDatabase( object $notifiable ): array {
+        Log::info( 'BlankSalesReportNotification toDatabase', ['notifiable' => $notifiable] );
         return [
-            'message' => "Your sales report for {$quarterUc} is overdue. Please submit it. (About Quarters: {$this->aboutQuarters})",
+            'message' => "Your sales report for " . ucfirst( $this->quarter ) . " is overdue.",
+        ];
+    }
+
+    public function toArray( object $notifiable ): array {
+        return [
+            'message' => "Your sales report for " . ucfirst( $this->quarter ) . " is overdue.",
         ];
     }
 
     public function toBroadcast( $notifiable ) {
         Log::info( 'SalesReportOverdueNotification toBroadcast', ['notifiable' => $notifiable] );
         return new BroadcastMessage( [
-            'message' => "Your sales report for " . ucfirst( $this->quarter ) . " is overdue.",
-            'link' => $this->link,
+            'data' => $this->toArray( $notifiable ),
+            'type' => 'sales-report-overdue',
         ] );
     }
 

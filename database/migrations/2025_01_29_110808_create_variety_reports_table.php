@@ -12,8 +12,8 @@ return new class extends Migration {
         Schema::create( 'variety_reports', function ( Blueprint $table ) {
             $table->id();
             $table->foreignId( 'user_id' )->constrained()->onDelete( 'cascade' );
-            $table->unsignedBigInteger( 'grower_id' )->index();
-            $table->unsignedBigInteger( 'breeder_id' )->index();
+            $table->foreignId( 'grower_id' )->constrained( 'growers' )->onDelete( 'cascade' );
+            $table->foreignId( 'breeder_id' )->constrained( 'breeders' )->onDelete( 'cascade' );
             $table->string( 'variety_name' )->index();
             $table->string( 'thumbnail' )->nullable();
             $table->unsignedBigInteger( 'amount_of_plants' );

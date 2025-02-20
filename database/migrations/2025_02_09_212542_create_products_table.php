@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void {
         Schema::create( 'products', function ( Blueprint $table ) {
             $table->id();
-            $table->unsignedInteger( 'breeder_id' )->nullable()->index();
+            $table->foreignId( 'breeder_id' )->onDelete( 'cascade' )->index();
             $table->string( 'genus' )->index();
             $table->string( 'species' )->index();
             $table->string( 'cultivar' )->nullable();

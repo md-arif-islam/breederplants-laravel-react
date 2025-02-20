@@ -37,9 +37,9 @@ export default function AdminBreederPage() {
             // Refresh breeders list
             getAllBreeders(currentPage, searchQuery);
         } catch (error) {
-            // Handle error (e.g., display error message)
+            getAllBreeders(currentPage, searchQuery);
+            setIsImportModalOpen(false);
             console.error("Import failed:", error);
-            // Optionally, display a user-friendly error message using toast
         }
     };
 

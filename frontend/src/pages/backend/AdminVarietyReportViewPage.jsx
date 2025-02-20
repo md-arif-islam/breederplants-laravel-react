@@ -105,7 +105,7 @@ export default function AdminVarietyReportViewPage() {
                                         Company
                                     </h3>
                                     <p className="mt-1">
-                                        {report?.grower.company_name}
+                                        {report?.grower?.company_name}
                                     </p>
                                 </div>
                                 <div>
@@ -113,7 +113,7 @@ export default function AdminVarietyReportViewPage() {
                                         Breeder Name
                                     </h3>
                                     <p className="mt-1">
-                                        {report?.breeder.company_name}
+                                        {report?.breeder?.company_name}
                                     </p>
                                 </div>
                                 <div>
