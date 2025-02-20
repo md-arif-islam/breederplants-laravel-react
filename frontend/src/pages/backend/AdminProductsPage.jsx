@@ -92,7 +92,7 @@ export default function AdminProductsPage() {
                                                 <tr>
                                                     <td
                                                         colSpan={7}
-                                                        className="text-center py-4"
+                                                        className="text-center py-4 bg-red-100 p-5 rounded-md"
                                                     >
                                                         No products found.
                                                     </td>
