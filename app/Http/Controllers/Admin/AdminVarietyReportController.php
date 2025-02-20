@@ -232,7 +232,7 @@ class AdminVarietyReportController extends Controller {
 
         $variety_name = $varietyReport->variety_name;
         $grower_id = $varietyReport->grower_id;
-        $grower = User::findOrFail( $grower_id );
+
         $next_sample_date = json_decode( $varietyReport->samples_schedule )[0];
 
         // Format the date nicely
@@ -241,7 +241,8 @@ class AdminVarietyReportController extends Controller {
         // Generate the URL for the variety report
         $varietyReportUrl = env( 'FRONTEND_URL' ) . '/variety-reports/' . $varietyReport->id;
 
-        // Send the notification
+        $grower = Grower::findOrFail( $grower_id );
+        $grower = User::find( $grower->user_id );
         $grower->notify( new MissedSampleNotification( $varietyReport, $grower, $formatted_date, $varietyReportUrl ) );
 
         return response()->json( ['message' => 'Reminder email sent successfully!'], 200 );
