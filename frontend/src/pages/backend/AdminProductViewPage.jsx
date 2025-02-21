@@ -14,6 +14,10 @@ export default function AdminProductViewPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        document.title = "Product Details - Breederplants";
+    }, []);
+
+    useEffect(() => {
         getProduct(id);
     }, [getProduct, id]);
 

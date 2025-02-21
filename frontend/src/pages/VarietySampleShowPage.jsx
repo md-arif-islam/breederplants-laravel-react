@@ -26,6 +26,10 @@ export default function VarietySampleShow() {
         }
     }, [varietySample]);
 
+    useEffect(() => {
+        document.title = "Variety Sample Details - Breederplants";
+    }, []);
+
     if (isLoading || !varietySample) {
         return <div></div>;
     }

@@ -23,6 +23,10 @@ export default function VarietyReportPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        document.title = "Variety Reports - Breederplants";
+    }, []);
+
+    useEffect(() => {
         getAllVarietyReports(currentPage, searchQuery, sort, growerId);
     }, [currentPage, searchQuery, sort, growerId, getAllVarietyReports]);
 

@@ -12,6 +12,10 @@ export default function AdminProductsPage() {
 
     const navigate = useNavigate();
 
+    useEffect(() => {
+        document.title = "Products - Breederplants";
+    }, []);
+
     // Fetch all products on mount (or whenever currentPage changes).
     useEffect(() => {
         // By default, pass the current searchQuery

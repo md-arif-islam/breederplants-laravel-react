@@ -18,7 +18,7 @@ export default function SalesReportsPage() {
     useEffect(() => {
         // page title
         document.title = "Sales Reports - Breederplants";
-    });
+    }, []);
 
     useEffect(() => {
         getAllSalesReports();

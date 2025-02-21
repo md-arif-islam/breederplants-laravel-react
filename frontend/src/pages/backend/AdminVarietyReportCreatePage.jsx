@@ -31,6 +31,10 @@ export default function AdminVarietyReportCreatePage() {
     });
 
     useEffect(() => {
+        document.title = "Create Variety Report - Breederplants";
+    }, []);
+
+    useEffect(() => {
         getCreateVarietyReport();
     }, [getCreateVarietyReport]);
 

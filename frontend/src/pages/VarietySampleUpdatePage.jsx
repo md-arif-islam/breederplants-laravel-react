@@ -75,7 +75,7 @@ export default function VarietySampleUpdatePage() {
 
     useEffect(() => {
         // page title
-        document.title = "Edit - Variety Sample - Breederplants";
+        document.title = "Edit Variety Sample - Breederplants";
     });
 
     const fileToBase64 = (file) =>

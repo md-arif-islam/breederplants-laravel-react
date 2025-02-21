@@ -17,6 +17,10 @@ export default function AdminGrowerViewPage() {
         getGrower(id);
     }, [getGrower, id]);
 
+    useEffect(() => {
+        document.title = "Grower View - Breederplants";
+    }, []);
+
     const handleDelete = async (e) => {
         e.preventDefault();
         setShowPopup(true);

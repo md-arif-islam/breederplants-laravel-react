@@ -28,6 +28,10 @@ export default function VarietyReportShow() {
         }
     }, [report]);
 
+    useEffect(() => {
+        document.title = "Variety Report Details - Breederplants";
+    }, []);
+
     // Build dynamic thumbnail URL
     const thumbnailUrl =
         report?.thumbnail && !report.thumbnail.startsWith("data:")

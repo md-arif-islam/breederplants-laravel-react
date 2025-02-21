@@ -32,6 +32,10 @@ export default function AdminSalesReportsPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        document.title = "Admin Sales Reports - Breederplants";
+    }, []);
+
+    useEffect(() => {
         getAllGrowers();
     }, [getAllGrowers]);
 

@@ -19,6 +19,10 @@ export default function AdminSalesReportViewPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        document.title = "Sales Report Details - Breederplants";
+    }, []);
+
+    useEffect(() => {
         getSalesReportById(id);
     }, [getSalesReportById, id]);
 

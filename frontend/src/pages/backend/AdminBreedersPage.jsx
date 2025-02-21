@@ -20,6 +20,10 @@ export default function AdminBreederPage() {
 
     const navigate = useNavigate();
 
+    useEffect(() => {
+        document.title = "Admin Breeders - Breederplants";
+    }, []);
+
     // Fetch all breeders on mount (or whenever currentPage changes).
     useEffect(() => {
         // By default, pass the current searchQuery

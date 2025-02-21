@@ -85,6 +85,7 @@ export const useStore = create((set, get) => ({
         try {
             const res = await axiosInstance.post("/api/reset-password", data);
             toast.success(res.data.message);
+            return res;
         } catch (error) {
             toast.error(error.response.data.message);
         } finally {

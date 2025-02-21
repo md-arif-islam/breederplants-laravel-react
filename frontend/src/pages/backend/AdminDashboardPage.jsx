@@ -10,6 +10,10 @@ const AdminDashboardPage = () => {
         getDashboardStats();
     }, [getDashboardStats]);
 
+    useEffect(() => {
+        document.title = "Admin Dashboard - Breederplants";
+    }, []);
+
     const stats = dashboardStats || {};
 
     return (

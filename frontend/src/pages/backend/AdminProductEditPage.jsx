@@ -33,6 +33,10 @@ export default function AdminProductEditPage() {
     });
 
     useEffect(() => {
+        document.title = "Edit Product - Breederplants";
+    }, []);
+
+    useEffect(() => {
         getProduct(id);
     }, [getProduct, id]);
 

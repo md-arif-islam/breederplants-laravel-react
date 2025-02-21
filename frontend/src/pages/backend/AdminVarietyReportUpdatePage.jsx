@@ -6,6 +6,10 @@ import { useNavigate, useParams } from "react-router-dom";
 export default function AdminVarietyReportUpdatePage() {
     const [sampleDates, setSampleDates] = useState([""]);
 
+    useEffect(() => {
+        document.title = "Update Variety Report - Breederplants";
+    }, []);
+
     const {
         isLoading,
         getVarietyReportById,

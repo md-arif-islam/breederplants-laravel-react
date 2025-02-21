@@ -32,6 +32,10 @@ export default function AdminProductCreatePage() {
         width: "",
     });
 
+    useEffect(() => {
+        document.title = "Create Product - Breederplants";
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {

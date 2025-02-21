@@ -29,6 +29,9 @@ function LazyImage({ src, alt }) {
 }
 
 export default function AdminVarietySampleViewPage() {
+    useEffect(() => {
+        document.title = "Variety Sample - Breederplants";
+    }, []);
     const [showPopup, setShowPopup] = useState(false);
     const { isLoading, getVarietySample, varietySample, deleteVarietySample } =
         useVarietySampleStore();

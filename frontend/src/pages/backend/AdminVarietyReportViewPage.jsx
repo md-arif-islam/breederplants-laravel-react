@@ -23,6 +23,10 @@ export default function AdminVarietyReportViewPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        document.title = "Variety Report View - Breederplants";
+    }, []);
+
+    useEffect(() => {
         getVarietyReportById(id);
     }, [getVarietyReportById, id]);
 

@@ -20,6 +20,10 @@ export default function AdminGrowerPage() {
 
     const navigate = useNavigate();
 
+    useEffect(() => {
+        document.title = "Growers - Breederplants";
+    }, []);
+
     // Fetch all growers on mount (or whenever currentPage changes).
     useEffect(() => {
         // By default, pass the current searchQuery

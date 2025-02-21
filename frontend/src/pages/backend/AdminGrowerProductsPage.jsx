@@ -5,6 +5,9 @@ import { useGrowerProductStore } from "../../store/useGrowerProductStore";
 import { useProductStore } from "../../store/useProductStore";
 
 export default function AdminGrowerProductsPage() {
+    useEffect(() => {
+        document.title = "Admin Grower Products - Breederplants";
+    }, []);
     const [searchQuery, setSearchQuery] = useState("");
     const [showAddModal, setShowAddModal] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
