@@ -10,8 +10,8 @@ return new class extends Migration {
      */
     public function up(): void {
         Schema::table( 'growers', function ( Blueprint $table ) {
-            $table->text( 'production_reporting_quarter' )->after( 'sales_reporting_quarter' );
-            $table->text( 'production_reporting_values' )->after( 'production_reporting_quarter' );
+            $table->text( 'production_reporting_quarter' )->nullable()->after( 'sales_reporting_quarter' );
+            $table->text( 'production_reporting_values' )->nullable()->after( 'production_reporting_quarter' );
         } );
     }
 
