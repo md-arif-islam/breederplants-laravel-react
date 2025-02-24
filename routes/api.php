@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminGrowerProductController;
 use App\Http\Controllers\Admin\AdminProductController;
+use App\Http\Controllers\Admin\AdminProductionReportController;
 use App\Http\Controllers\Admin\AdminSalesReportController;
 use App\Http\Controllers\Admin\AdminVarietyReportController;
 use App\Http\Controllers\Admin\AdminVarietySampleController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\BreederController;
 use App\Http\Controllers\GrowerController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ProductionReportController;
 use App\Http\Controllers\SalesReportController;
 use App\Http\Controllers\VarietyReportController;
 use App\Http\Controllers\VarietySampleController;
@@ -102,6 +104,11 @@ Route::prefix( 'admin' )->middleware( ['auth:sanctum', \App\Http\Middleware\Admi
     Route::get( '/sales-reports/{id}', [AdminSalesReportController::class, 'show'] );
     Route::delete( '/sales-reports/{id}/empty', [AdminSalesReportController::class, 'empty'] )->name( 'sales-reports.empty' );
 
+    // Productions Reports
+    Route::get( '/production-reports', [AdminProductionReportController::class, 'index'] );
+    Route::get( '/production-reports/{id}', [AdminProductionReportController::class, 'show'] );
+    Route::delete( '/production-reports/{id}/empty', [AdminProductionReportController::class, 'empty'] )->name( 'production-reports.empty' );
+
 } );
 
 Route::middleware( 'auth:sanctum' )->group( function () {
@@ -116,6 +123,10 @@ Route::middleware( 'auth:sanctum' )->group( function () {
     Route::get( '/sales-reports', [SalesReportController::class, 'index'] );
     Route::get( '/sales-reports/create/{year}/{quarter}', [SalesReportController::class, 'create'] );
     Route::post( '/sales-reports', [SalesReportController::class, 'store'] );
+
+    Route::get( '/production-reports', [ProductionReportController::class, 'index'] );
+    Route::get( '/production-reports/create/{year}/{quarter}', [ProductionReportController::class, 'create'] );
+    Route::post( '/production-reports', [ProductionReportController::class, 'store'] );
 
     // Notifications
     Route::get( '/notifications', [NotificationController::class, 'getNotifications'] );
