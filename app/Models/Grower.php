@@ -21,6 +21,8 @@ class Grower extends Model {
         'website',
         'agreement_number',
         'sales_reporting_quarter',
+        'production_reporting_quarter',
+        'production_reporting_values',
     ];
 
     public function user() {

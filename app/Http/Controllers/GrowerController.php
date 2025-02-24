@@ -52,7 +52,11 @@ class GrowerController extends Controller {
             'website' => 'nullable|string|max:255',
             'agreement_number' => 'required|numeric',
             'sales_reporting_quarter' => 'required|array',
-            'sales_reporting_quarter.*' => 'required|string|max:255',
+            'sales_reporting_quarter.*' => 'required|string',
+            'production_reporting_quarter' => 'required|array',
+            'production_reporting_quarter.*' => 'required|string',
+            'production_reporting_values' => 'required|array',
+            'production_reporting_values.*' => 'required|string',
             'password' => 'required|string|min:4|confirmed',
         ] );
 
@@ -80,6 +84,8 @@ class GrowerController extends Controller {
             'website' => $request->website,
             'agreement_number' => $request->agreement_number,
             'sales_reporting_quarter' => json_encode( $request->sales_reporting_quarter ),
+            'production_reporting_quarter' => json_encode( $request->production_reporting_quarter ),
+            'production_reporting_values' => json_encode( $request->production_reporting_values ),
         ] );
 
     }
@@ -122,6 +128,10 @@ class GrowerController extends Controller {
             'agreement_number' => 'required|numeric',
             'sales_reporting_quarter' => 'required|array',
             'sales_reporting_quarter.*' => 'required|string|max:255',
+            'production_reporting_quarter' => 'required|array',
+            'production_reporting_quarter.*' => 'required|string|max:255',
+            'production_reporting_values' => 'required|array',
+            'production_reporting_values.*' => 'required|string|max:255',
         ] );
 
         $user->update( [
@@ -142,6 +152,8 @@ class GrowerController extends Controller {
             'website' => $request->website,
             'agreement_number' => $request->agreement_number,
             'sales_reporting_quarter' => json_encode( $request->sales_reporting_quarter ),
+            'production_reporting_quarter' => json_encode( $request->production_reporting_quarter ),
+            'production_reporting_values' => json_encode( $request->production_reporting_values ),
         ] );
 
         return response()->json( $grower );
