@@ -1,31 +1,31 @@
 import { useEffect } from "react";
-import { useSalesReportStore } from "../store/useSalesReportStore";
+import { useProductionReportStore } from "../store/useProductionReportStore";
 import { Link, useNavigate } from "react-router-dom";
 import { useStore } from "../store/useStore";
 
-export default function SalesReportsPage() {
+export default function ProductionReportsPage() {
     const {
-        salesReports,
-        getAllSalesReports,
+        productionReports,
+        getAllProductionReports,
         currentPage,
         totalPages,
         isLoading,
-    } = useSalesReportStore();
+    } = useProductionReportStore();
 
     const { authUser } = useStore();
     const navigate = useNavigate();
 
     useEffect(() => {
         // page title
-        document.title = "Sales Reports - Breederplants";
+        document.title = "Production Reports - Breederplants";
     }, []);
 
     useEffect(() => {
-        getAllSalesReports();
-    }, [getAllSalesReports]);
+        getAllProductionReports();
+    }, [getAllProductionReports]);
 
     const handlePageChange = (newPage) => {
-        getAllSalesReports(newPage);
+        getAllProductionReports(newPage);
     };
 
     return (
@@ -35,24 +35,24 @@ export default function SalesReportsPage() {
                 <div className="-mt-12 z-10 relative">
                     <div className="min-h-screen bg-white rounded-t-3xl p-4 sm:p-6 lg:p-8">
                         <h2 className="text-xl md:text-2xl font-bold mb-6">
-                            Sales Report
+                            Production Report
                         </h2>
                         <p className="pb-6 text-sm sm:text-sm md:text-base">
-                            Below are the sales reports for your account. You
-                            can submit a sales report for the current quarter if
-                            you haven&apos;t already done so.
+                            Below are the production reports for your account.
+                            You can submit a production report for the current
+                            quarter if you haven&apos;t already done so.
                         </p>
 
                         {isLoading ? (
                             <p className="text-center">Loading...</p>
                         ) : (
                             <>
-                                {salesReports?.length === 0 && (
+                                {productionReports?.length === 0 && (
                                     <div className="text-center space-y-5 bg-red-200 p-4 rounded">
-                                        No sales reports found.
+                                        No production reports found.
                                     </div>
                                 )}
-                                {salesReports?.map((report) => (
+                                {productionReports?.map((report) => (
                                     <div
                                         key={report.id}
                                         className="mx-auto py-2 sm:py-3 md:py-4"
@@ -243,7 +243,7 @@ export default function SalesReportsPage() {
                                                             </>
                                                         ) : (
                                                             <Link
-                                                                to={`/sales-reports/create/${report.year}/${report.quarter}`}
+                                                                to={`/production-reports/create/${report.year}/${report.quarter}`}
                                                                 className="inline-flex items-center px-3 py-1 sm:px-4 sm:py-2 rounded-md text-sm sm:text-sm font-medium text-white bg-primary hover:bg-secondary transition-colors"
                                                             >
                                                                 Submit Now
@@ -258,7 +258,7 @@ export default function SalesReportsPage() {
                             </>
                         )}
 
-                        {salesReports?.length > 0 && (
+                        {productionReports?.length > 0 && (
                             <div className="flex justify-center mt-4 sm:mt-6">
                                 <nav className="inline-flex rounded-md shadow-sm gap-2">
                                     <button

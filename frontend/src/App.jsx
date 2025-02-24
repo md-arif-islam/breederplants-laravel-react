@@ -45,6 +45,7 @@ import UserRoute from "./components/UserRoute";
 import AdminSalesReportsPage from "./pages/backend/AdminSalesReportsPage";
 import AdminSalesReportViewPage from "./pages/backend/AdminSalesReportViewPage";
 import AdminProductionReportsPage from "./pages/backend/AdminProductionReportsPage";
+import ProductionReportsPage from "./pages/ProductionReportsPage";
 
 const App = () => {
     const { authUser, isCheckingAuth, checkAuth } = useStore();
@@ -153,6 +154,17 @@ const App = () => {
                     <Route
                         path="sales-reports/create/:year/:quarter"
                         element={<SalesReportSubmitPage />}
+                    />
+
+                    <Route
+                        path="production-reports"
+                        element={
+                            authUser?.role == "admin" ? (
+                                <Navigate to="/admin/production-reports" />
+                            ) : (
+                                <ProductionReportsPage />
+                            )
+                        }
                     />
                 </Route>
 
