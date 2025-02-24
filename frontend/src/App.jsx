@@ -47,6 +47,7 @@ import AdminSalesReportViewPage from "./pages/backend/AdminSalesReportViewPage";
 import AdminProductionReportsPage from "./pages/backend/AdminProductionReportsPage";
 import ProductionReportsPage from "./pages/ProductionReportsPage";
 import ProductionReportSubmitPage from "./pages/ProductionReportSubmitPage";
+import AdminProductionReportViewPage from "./pages/backend/AdminProductReportViewPage";
 
 const App = () => {
     const { authUser, isCheckingAuth, checkAuth } = useStore();
@@ -279,6 +280,11 @@ const App = () => {
                     <Route
                         path="production-reports"
                         element={<AdminProductionReportsPage />}
+                    />
+
+                    <Route
+                        path="production-reports/:id"
+                        element={<AdminProductionReportViewPage />}
                     />
                 </Route>
             </Routes>
