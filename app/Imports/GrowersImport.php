@@ -90,6 +90,8 @@ class GrowersImport implements ToCollection {
                     'website' => $row[9] ?? '',
                     'agreement_number' => $row[10] ?? '',
                     'sales_reporting_quarter' => $row[11] ?? '',
+                    'production_reporting_quarter' => $row[12] ?? '',
+                    'production_reporting_values' => $row[13] ?? '',
                 ] );
                 Log::info( 'Grower created', ['username' => $row[0], 'user_id' => $user->id] );
             } catch ( \Exception $e ) {

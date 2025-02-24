@@ -236,6 +236,8 @@ class GrowerController extends Controller {
                 'Website',
                 'Agreement Number',
                 'Sales Reporting Quarter',
+                'Production Reporting Quarter',
+                'Production Reporting Values',
             ] );
 
             // Fetch and process data in chunks
@@ -254,6 +256,8 @@ class GrowerController extends Controller {
                         $grower->website ?? '',
                         $grower->agreement_number ?? '',
                         $grower->sales_reporting_quarter ?? '',
+                        $grower->production_reporting_quarter ?? '',
+                        $grower->production_reporting_values ?? '',
                     ];
                     fputcsv( $handle, $data );
                 }
