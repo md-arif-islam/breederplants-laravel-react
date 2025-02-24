@@ -32,8 +32,9 @@ class GenerateBlankSalesReports extends Command {
 
         $this->info( "Current Date {$currentDate}" );
         foreach ( $quarters as $quarter => $startDate ) {
-            // Todo if ( "01-01-2025" === $startDate ) {
-            if ( $currentDate === $startDate ) {
+            // Todo
+            if ( "01-01-2025" === $startDate ) {
+                // if ( $currentDate === $startDate ) {
                 $this->info( "Processing quarter: {$quarter} (Start Date: {$startDate})" );
                 $growers = Grower::whereJsonContains( 'sales_reporting_quarter', $quarter )->get();
 

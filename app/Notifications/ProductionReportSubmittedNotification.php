@@ -7,16 +7,16 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Str;
 
-class SalesReportSubmittedNotification extends Notification {
+class ProductionReportSubmittedNotification extends Notification {
     use Queueable;
 
-    protected $salesReport;
+    protected $productionReport;
     protected $grower;
     protected $excelFile;
     protected $recipientType; // 'admin' or 'grower'
 
-    public function __construct( $salesReport, $grower, $excelFile, $recipientType ) {
-        $this->salesReport = $salesReport;
+    public function __construct( $productionReport, $grower, $excelFile, $recipientType ) {
+        $this->productionReport = $productionReport;
         $this->grower = $grower;
         $this->excelFile = $excelFile;
         $this->recipientType = $recipientType;
@@ -28,19 +28,19 @@ class SalesReportSubmittedNotification extends Notification {
 
     public function toMail( $notifiable ): MailMessage {
         if ( $this->recipientType === 'admin' ) {
-            $subject = "New Sales Report Submission: " . $this->grower->company_name . " (" . ucwords( $this->salesReport->quarter ) . " " . $this->salesReport->year . ")";
+            $subject = "New Production Report Submission: " . $this->grower->company_name . " (" . ucwords( $this->productionReport->quarter ) . " " . $this->productionReport->year . ")";
             $greeting = "Dear Admin,";
-            $messageLine = "A new sales report has been submitted by " . $this->grower->company_name . ".";
-            $notificationTitle = "New Sales Report Submission";
+            $messageLine = "A new production report has been submitted by " . $this->grower->company_name . ".";
+            $notificationTitle = "New Production Report Submission";
         } else {
-            $subject = "Sales Report Submission: " . ucwords( $this->salesReport->quarter ) . " " . $this->salesReport->year;
+            $subject = "Production Report Submission: " . ucwords( $this->productionReport->quarter ) . " " . $this->productionReport->year;
             $greeting = "Dear " . $this->grower->company_name . ",";
-            $messageLine = "Your sales report has been submitted successfully.";
-            $notificationTitle = "Sales Report Submission";
+            $messageLine = "Your production report has been submitted successfully.";
+            $notificationTitle = "Production Report Submission";
         }
-        $quarter = ucwords( $this->salesReport->quarter );
-        $year = $this->salesReport->year;
-        $submissionDate = $this->salesReport->submission_date->format( "d-m-Y" );
+        $quarter = ucwords( $this->productionReport->quarter );
+        $year = $this->productionReport->year;
+        $submissionDate = $this->productionReport->submission_date->format( "d-m-Y" );
 
         $data = [
             'notificationTitle' => $notificationTitle,
@@ -54,10 +54,10 @@ class SalesReportSubmittedNotification extends Notification {
 
         return ( new MailMessage )
             ->subject( $subject )
-            ->view( 'emails.sales-report-submitted', $data )
+            ->view( 'emails.production-report-submitted', $data )
             ->attachData(
                 $this->excelFile,
-                "Breederplants-" . Str::slug( $this->grower->company_name ) . "-" . $this->salesReport->quarter . "-" . $this->salesReport->year . ".xlsx", [
+                "Breederplants-" . Str::slug( $this->grower->company_name ) . "-" . $this->productionReport->quarter . "-" . $this->productionReport->year . ".xlsx", [
                     'mime' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 ]
             );

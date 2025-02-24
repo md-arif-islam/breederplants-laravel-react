@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Exports\ProductionReportExport;
 use App\Http\Controllers\Controller;
 use App\Models\Grower;
-use App\Models\GrowerProduct;
 use App\Models\ProductionReport;
 use App\Notifications\ProductionReportSubmittedNotification;
 use Carbon\Carbon;
@@ -578,10 +577,10 @@ class ProductionReportController extends Controller {
             $end_date = $getQuarterDateRange( $quarters_array[0]["year"], $quarters_array[0]["quarter"] )["end"];
         }
 
-        // Retrieve the grower product details based on the logged-in user's grower information
-        $grower_products = GrowerProduct::with( "product" )->where( "grower_id", Auth::user()->grower->id )->get();
+        $grower = Grower::where( "user_id", Auth::user()->id )->first();
+        $grower_production_reporting_values = $grower->production_reporting_values;
 
-        return response()->json( compact( "grower_products", "year", "quarter", "start_date", "end_date", "quarters_array" ) );
+        return response()->json( compact( "grower_production_reporting_values", "year", "quarter", "start_date", "end_date", "quarters_array" ) );
 
     }
 
@@ -592,54 +591,32 @@ class ProductionReportController extends Controller {
 
         // Validate the input data
         $request->validate( [
-            "amount_sold" => "required|array",
-            "amount_sold.*" => "required|integer|min:1",
-            "unit_price" => "required|array",
-            "unit_price.*" => "required|numeric|min:0",
-            "product_id" => "required|array",
-            "product_id.*" => "exists:products,id",
+            "quantity" => "required|array",
+            "quantity.*" => "required|integer|min:1",
+            "report" => "required|array",
             "quarter" => "required|string",
             "year" => "required|integer",
             "quarters_array" => "required|json",
         ] );
 
+        // Process the production data as report:quantity
+        $productionData = [];
+        $reportItems = $request->report;
+        $quantities = $request->quantity;
+        $i = 0;
+        foreach ( $reportItems as $field => $label ) {
+            $productionData[$field] = $quantities[$i] ?? null;
+            $i++;
+        }
+
         // Fetch the grower associated with the authenticated user
         $growerId = Auth::user()->grower->id;
 
-        // Create an array to store the production report data
-        $productionData = [];
-
-        // Loop through the submitted amount_sold data
-        foreach ( $request->amount_sold as $productDetailId => $amountSold ) {
-            // Gather additional data from the request
-            $unitPrice = $request->unit_price[$productDetailId];
-            $productId = $request->product_id[$productDetailId];
-            $productName = $request->product_name[$productDetailId];
-
-            // Add production data for each product
-            $productionData[] = [
-                "product_id" => $productId,
-                "unit_price" => $unitPrice,
-                "amount" => $amountSold,
-                "product_name" => $productName,
-            ];
-
-            // Optionally, update the stock if the sale is confirmed
-            $growerProduct = GrowerProduct::find( $productDetailId );
-            if ( $growerProduct ) {
-                $growerProduct->stock -= $amountSold;
-                $growerProduct->save();
-            }
-        }
-
-        // Calculate total
-        $total = 0;
-        foreach ( $productionData as $sale ) {
-            $total += $sale["unit_price"] * $sale["amount"];
-        }
-
         // Check if a production report already exists
-        $productionReport = ProductionReport::where( "grower_id", $growerId )->where( "year", $request->year )->where( "quarter", $request->quarter )->first();
+        $productionReport = ProductionReport::where( "grower_id", $growerId )
+            ->where( "year", $request->year )
+            ->where( "quarter", $request->quarter )
+            ->first();
 
         if ( $productionReport ) {
             // Update existing report
@@ -647,7 +624,6 @@ class ProductionReportController extends Controller {
                 "submission_date" => now(),
                 "data" => json_encode( $productionData ),
                 "quarters_array" => $request->quarters_array,
-                "total" => $total,
             ] );
         } else {
             // Create a new production report entry
@@ -658,7 +634,6 @@ class ProductionReportController extends Controller {
                 "quarter" => $request->quarter,
                 "year" => $request->year,
                 "quarters_array" => $request->quarters_array,
-                "total" => $total,
             ] );
         }
 
