@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Grower;
-use App\Models\SalesReport;
+use App\Models\ProductionReport;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -21,8 +21,8 @@ class AdminProductionReportController extends Controller {
         // Fetch all growers for filtering options
         $growers = Grower::all();
 
-        // Build query to fetch sales reports
-        $query = SalesReport::query();
+        // Build query to fetch production reports
+        $query = ProductionReport::query();
 
         if ( !empty( $selectedGrower ) ) {
             $query->where( 'grower_id', $selectedGrower );
@@ -40,40 +40,40 @@ class AdminProductionReportController extends Controller {
             }
         }
 
-        $salesReports = $query->with( 'grower' )->orderBy( 'year', 'desc' )->orderBy( 'quarter', 'desc' )->paginate( 10 );
+        $productionReports = $query->with( 'grower' )->orderBy( 'year', 'desc' )->orderBy( 'quarter', 'desc' )->paginate( 10 );
 
-        return response()->json( $salesReports );
+        return response()->json( $productionReports );
     }
 
     public function show( $id ) {
-        // Fetch the specific sales report by ID
-        $salesReport = SalesReport::with( 'grower' )->findOrFail( $id );
+        // Fetch the specific production report by ID
+        $productionReport = ProductionReport::with( 'grower' )->findOrFail( $id );
 
-        // Return the show view with the sales report details
-        return response()->json( $salesReport );
+        // Return the show view with the production report details
+        return response()->json( $productionReport );
     }
 
     public function empty( $id ) {
-        // Find the sales report and update it
-        $salesReport = SalesReport::findOrFail( $id );
-        $salesReport->update( [
+        // Find the production report and update it
+        $productionReport = ProductionReport::findOrFail( $id );
+        $productionReport->update( [
             'submission_date' => null,
             'data' => null,
         ] );
 
         return response()->json( [
-            'message' => 'Sales report deleted successfully.',
+            'message' => 'Production report deleted successfully.',
         ] );
     }
 
     /* public function export( $id ) {
-// Fetch the specific sales report by ID
-$salesReport = SalesReport::findOrFail( $id );
-$grower = Grower::where( 'id', $salesReport->grower_id )->first();
+// Fetch the specific production report by ID
+$productionReport = ProductionReport::findOrFail( $id );
+$grower = Grower::where( 'id', $productionReport->grower_id )->first();
 
-$fileName = 'Breederplants-' . Str::slug( $grower->company_name ) . '-' . $salesReport->quarter . '-' . $salesReport->year . '.xlsx';
+$fileName = 'Breederplants-' . Str::slug( $grower->company_name ) . '-' . $productionReport->quarter . '-' . $productionReport->year . '.xlsx';
 
-return Excel::download( new SalesReportExport( $salesReport, $grower ), $fileName );
+return Excel::download( new ProductionReportExport( $productionReport, $grower ), $fileName );
 
 } */
 }
