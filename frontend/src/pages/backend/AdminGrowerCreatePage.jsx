@@ -22,6 +22,8 @@ export default function AdminGrowerCreatePage() {
         password_confirmation: "",
         agreement_number: "",
         sales_reporting_quarter: [],
+        production_reporting_quarter: [],
+        production_reporting_values: [],
     });
 
     const [showPassword, setShowPassword] = useState(false);
@@ -381,6 +383,277 @@ export default function AdminGrowerCreatePage() {
                                             )}
                                         />
                                         <span className="text-sm">Q4</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-2">
+                                    Production Reporting Fields{" "}
+                                    <span className="text-red-500">*</span>
+                                </label>
+                                <div className="flex gap-4">
+                                    <label className="flex items-center space-x-2">
+                                        <input
+                                            type="checkbox"
+                                            key={"q1"}
+                                            className="rounded border-primary"
+                                            onChange={(e) => {
+                                                setFormData((prev) => ({
+                                                    ...prev,
+                                                    production_reporting_quarter:
+                                                        e.target.checked
+                                                            ? [
+                                                                  ...prev.production_reporting_quarter,
+                                                                  "q1",
+                                                              ]
+                                                            : prev.production_reporting_quarter.filter(
+                                                                  (q) =>
+                                                                      q !== "q1"
+                                                              ),
+                                                }));
+                                            }}
+                                            checked={formData.production_reporting_quarter?.includes(
+                                                "q1"
+                                            )}
+                                        />
+                                        <span className="text-sm">Q1</span>
+                                    </label>
+
+                                    <label className="flex items-center space-x-2">
+                                        <input
+                                            type="checkbox"
+                                            key={"q2"}
+                                            className="rounded border-primary"
+                                            onChange={(e) => {
+                                                setFormData((prev) => ({
+                                                    ...prev,
+                                                    production_reporting_quarter:
+                                                        e.target.checked
+                                                            ? [
+                                                                  ...prev.production_reporting_quarter,
+                                                                  "q2",
+                                                              ]
+                                                            : prev.production_reporting_quarter.filter(
+                                                                  (q) =>
+                                                                      q !== "q2"
+                                                              ),
+                                                }));
+                                            }}
+                                            checked={formData.production_reporting_quarter?.includes(
+                                                "q2"
+                                            )}
+                                        />
+                                        <span className="text-sm">Q2</span>
+                                    </label>
+
+                                    <label className="flex items-center space-x-2">
+                                        <input
+                                            type="checkbox"
+                                            key={"q3"}
+                                            className="rounded border-primary"
+                                            onChange={(e) => {
+                                                setFormData((prev) => ({
+                                                    ...prev,
+                                                    production_reporting_quarter:
+                                                        e.target.checked
+                                                            ? [
+                                                                  ...prev.production_reporting_quarter,
+                                                                  "q3",
+                                                              ]
+                                                            : prev.production_reporting_quarter.filter(
+                                                                  (q) =>
+                                                                      q !== "q3"
+                                                              ),
+                                                }));
+                                            }}
+                                            checked={formData.production_reporting_quarter?.includes(
+                                                "q3"
+                                            )}
+                                        />
+                                        <span className="text-sm">Q3</span>
+                                    </label>
+
+                                    <label className="flex items-center space-x-2">
+                                        <input
+                                            type="checkbox"
+                                            key={"q4"}
+                                            className="rounded border-primary"
+                                            onChange={(e) => {
+                                                setFormData((prev) => ({
+                                                    ...prev,
+                                                    production_reporting_quarter:
+                                                        e.target.checked
+                                                            ? [
+                                                                  ...prev.production_reporting_quarter,
+                                                                  "q4",
+                                                              ]
+                                                            : prev.production_reporting_quarter.filter(
+                                                                  (q) =>
+                                                                      q !== "q4"
+                                                              ),
+                                                }));
+                                            }}
+                                            checked={formData.production_reporting_quarter?.includes(
+                                                "q4"
+                                            )}
+                                        />
+                                        <span className="text-sm">Q4</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-2">
+                                    Production Reporting Fields{" "}
+                                    <span className="text-red-500">*</span>
+                                </label>
+                                <div className="flex flex-col gap-2">
+                                    <label className="flex items-center space-x-2">
+                                        <input
+                                            type="checkbox"
+                                            key={"rooted_cuttings"}
+                                            className="rounded border-primary"
+                                            onChange={(e) => {
+                                                setFormData((prev) => ({
+                                                    ...prev,
+                                                    production_reporting_values:
+                                                        e.target.checked
+                                                            ? [
+                                                                  ...prev.production_reporting_values,
+                                                                  "rooted_cuttings",
+                                                              ]
+                                                            : prev.production_reporting_values.filter(
+                                                                  (q) =>
+                                                                      q !==
+                                                                      "rooted_cuttings"
+                                                              ),
+                                                }));
+                                            }}
+                                            checked={formData.production_reporting_values.includes(
+                                                "rooted_cuttings"
+                                            )}
+                                        />
+                                        <span className="text-sm">
+                                            Rooted cuttings
+                                        </span>
+                                    </label>
+
+                                    <label className="flex items-center space-x-2">
+                                        <input
+                                            type="checkbox"
+                                            key={"young_plants_pot"}
+                                            className="rounded border-primary"
+                                            onChange={(e) => {
+                                                setFormData((prev) => ({
+                                                    ...prev,
+                                                    production_reporting_values:
+                                                        e.target.checked
+                                                            ? [
+                                                                  ...prev.production_reporting_values,
+                                                                  "young_plants_pot",
+                                                              ]
+                                                            : prev.production_reporting_values.filter(
+                                                                  (q) =>
+                                                                      q !==
+                                                                      "young_plants_pot"
+                                                              ),
+                                                }));
+                                            }}
+                                            checked={formData.production_reporting_values.includes(
+                                                "young_plants_pot"
+                                            )}
+                                        />
+                                        <span className="text-sm">
+                                            Young plants in pot
+                                        </span>
+                                    </label>
+
+                                    <label className="flex items-center space-x-2">
+                                        <input
+                                            type="checkbox"
+                                            key={"young_plants_field"}
+                                            className="rounded border-primary"
+                                            onChange={(e) => {
+                                                setFormData((prev) => ({
+                                                    ...prev,
+                                                    production_reporting_values:
+                                                        e.target.checked
+                                                            ? [
+                                                                  ...prev.production_reporting_values,
+                                                                  "young_plants_field",
+                                                              ]
+                                                            : prev.production_reporting_values.filter(
+                                                                  (q) =>
+                                                                      q !==
+                                                                      "young_plants_field"
+                                                              ),
+                                                }));
+                                            }}
+                                            checked={formData.production_reporting_values.includes(
+                                                "young_plants_field"
+                                            )}
+                                        />
+                                        <span className="text-sm">
+                                            Young plants open field
+                                        </span>
+                                    </label>
+
+                                    <label className="flex items-center space-x-2">
+                                        <input
+                                            type="checkbox"
+                                            key={"finishing_plants"}
+                                            className="rounded border-primary"
+                                            onChange={(e) => {
+                                                setFormData((prev) => ({
+                                                    ...prev,
+                                                    production_reporting_values:
+                                                        e.target.checked
+                                                            ? [
+                                                                  ...prev.production_reporting_values,
+                                                                  "finishing_plants",
+                                                              ]
+                                                            : prev.production_reporting_values.filter(
+                                                                  (q) =>
+                                                                      q !==
+                                                                      "finishing_plants"
+                                                              ),
+                                                }));
+                                            }}
+                                            checked={formData.production_reporting_values.includes(
+                                                "finishing_plants"
+                                            )}
+                                        />
+                                        <span className="text-sm">
+                                            Finishing plants
+                                        </span>
+                                    </label>
+
+                                    <label className="flex items-center space-x-2">
+                                        <input
+                                            type="checkbox"
+                                            key={"labels"}
+                                            className="rounded border-primary"
+                                            onChange={(e) => {
+                                                setFormData((prev) => ({
+                                                    ...prev,
+                                                    production_reporting_values:
+                                                        e.target.checked
+                                                            ? [
+                                                                  ...prev.production_reporting_values,
+                                                                  "labels",
+                                                              ]
+                                                            : prev.production_reporting_values.filter(
+                                                                  (q) =>
+                                                                      q !==
+                                                                      "labels"
+                                                              ),
+                                                }));
+                                            }}
+                                            checked={formData.production_reporting_values.includes(
+                                                "labels"
+                                            )}
+                                        />
+                                        <span className="text-sm">Labels</span>
                                     </label>
                                 </div>
                             </div>

@@ -178,6 +178,44 @@ export default function AdminGrowerViewPage() {
 
                                 <div className="space-y-2">
                                     <h3 className="text-sm font-medium text-gray-500 mb-3">
+                                        Production Reporting Quarter
+                                    </h3>
+                                    {currentGrower &&
+                                        currentGrower.production_reporting_quarter &&
+                                        JSON.parse(
+                                            currentGrower.production_reporting_quarter
+                                        ).map((quarter, index) => (
+                                            <span
+                                                key={index}
+                                                className="text-sm bg-primary text-white px-2 py-1 rounded-md font-bold text-[12px] mr-1"
+                                            >
+                                                {quarter.toUpperCase()}
+                                            </span>
+                                        ))}
+                                </div>
+
+                                <div className="space-y-2">
+                                    <h3 className="text-sm font-medium text-gray-500 mb-3">
+                                        Production Reporting Values
+                                    </h3>
+                                    {currentGrower &&
+                                        currentGrower.production_reporting_values &&
+                                        JSON.parse(
+                                            currentGrower.production_reporting_values
+                                        ).map((value, index) => (
+                                            <span
+                                                key={index}
+                                                className="text-sm bg-primary text-white px-2 py-1 rounded-md font-bold text-[12px] mr-1"
+                                            >
+                                                {value
+                                                    .toUpperCase()
+                                                    .replace(/_/g, " ")}
+                                            </span>
+                                        ))}
+                                </div>
+
+                                <div className="space-y-2">
+                                    <h3 className="text-sm font-medium text-gray-500 mb-3">
                                         Agreement Number
                                     </h3>
                                     <p className="text-primary font-bold">
