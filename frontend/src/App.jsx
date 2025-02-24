@@ -44,6 +44,7 @@ import SalesReportSubmitPage from "./pages/SalesReportSubmitPage";
 import UserRoute from "./components/UserRoute";
 import AdminSalesReportsPage from "./pages/backend/AdminSalesReportsPage";
 import AdminSalesReportViewPage from "./pages/backend/AdminSalesReportViewPage";
+import AdminProductionReportsPage from "./pages/backend/AdminProductionReportsPage";
 
 const App = () => {
     const { authUser, isCheckingAuth, checkAuth } = useStore();
@@ -148,6 +149,7 @@ const App = () => {
                             )
                         }
                     />
+
                     <Route
                         path="sales-reports/create/:year/:quarter"
                         element={<SalesReportSubmitPage />}
@@ -255,6 +257,10 @@ const App = () => {
                     <Route
                         path="sales-reports/:id"
                         element={<AdminSalesReportViewPage />}
+                    />
+                    <Route
+                        path="production-reports"
+                        element={<AdminProductionReportsPage />}
                     />
                 </Route>
             </Routes>

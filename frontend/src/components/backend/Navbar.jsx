@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
-import { BadgeEuro, TreePalm } from "lucide-react";
+import { BadgeEuro, FileChartColumn, TreePalm } from "lucide-react";
 
 const Navbar = ({ sidebarOpen, toggleSidebar }) => {
     return (
@@ -185,6 +185,22 @@ const Navbar = ({ sidebarOpen, toggleSidebar }) => {
                         </span>
                         <span className="mx-3 text-[16px] font-medium color-[#4F4E53]">
                             Sales Reports
+                        </span>
+                    </NavLink>
+
+                    <NavLink
+                        to="/admin/production-reports"
+                        className={({ isActive }) =>
+                            `flex items-center px-6 py-2 mt-1 group ${
+                                isActive ? "active" : ""
+                            }`
+                        }
+                    >
+                        <span className="bg-[#F3F3F3] rounded p-1 group-hover:bg-primary transition duration-300">
+                            <FileChartColumn className="w-6 h-6 text-[#686868] group-hover:text-white transition duration-300" />
+                        </span>
+                        <span className="mx-3 text-[16px] font-medium color-[#4F4E53]">
+                            Production Reports
                         </span>
                     </NavLink>
                 </nav>
