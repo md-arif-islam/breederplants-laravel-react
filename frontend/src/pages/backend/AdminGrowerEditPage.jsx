@@ -314,7 +314,7 @@ export default function AdminGrowerEditPage() {
 
                             <div>
                                 <label className="block text-sm font-medium mb-2">
-                                    Sales Reporting Month{" "}
+                                    Sales Reporting Quarters{" "}
                                     <span className="text-red-500">*</span>
                                 </label>
                                 <div className="flex gap-4">
@@ -426,7 +426,7 @@ export default function AdminGrowerEditPage() {
 
                             <div>
                                 <label className="block text-sm font-medium mb-2">
-                                    Production Reporting Fields{" "}
+                                    Production Reporting Quarters{" "}
                                     <span className="text-red-500">*</span>
                                 </label>
                                 <div className="flex gap-4">

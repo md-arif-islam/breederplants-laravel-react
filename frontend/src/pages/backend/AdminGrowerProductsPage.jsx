@@ -239,7 +239,7 @@ export default function AdminGrowerProductsPage() {
                                                 <tr>
                                                     <td
                                                         colSpan={4}
-                                                        className="text-center py-4"
+                                                        className="text-center py-4 bg-red-100 p-5 rounded-md"
                                                     >
                                                         No Products found.
                                                     </td>

@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 class AdminGrowerProductController extends Controller {
     public function index( Request $request, $grower_id ) {
 
-        $query = GrowerProduct::with( ['grower', 'product'] );
+        $query = GrowerProduct::with( ['grower', 'product'] )->where( 'grower_id', $grower_id );
 
         // Apply search filter if the search input is provided
         if ( $request->filled( 'search' ) ) {
