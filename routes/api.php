@@ -43,6 +43,7 @@ Route::prefix( 'admin' )->middleware( ['auth:sanctum', \App\Http\Middleware\Admi
     Route::get( '/growers/export-csv', [GrowerController::class, 'exportCSV'] );
     Route::get( '/variety-reports/{id}/export', [AdminVarietyReportController::class, 'export'] );
     Route::get( '/sales-reports/{id}/export', [AdminSalesReportController::class, 'export'] );
+    Route::get( '/production-reports/{id}/export', [AdminProductionReportController::class, 'export'] );
 
     // import routes
     Route::post( '/breeders/import', [BreederController::class, 'importCSV'] );

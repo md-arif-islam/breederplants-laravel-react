@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\ProductionReportExport;
 use App\Http\Controllers\Controller;
 use App\Models\Grower;
 use App\Models\ProductionReport;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AdminProductionReportController extends Controller {
     public function index( Request $request ) {
@@ -66,14 +69,14 @@ class AdminProductionReportController extends Controller {
         ] );
     }
 
-    /* public function export( $id ) {
-// Fetch the specific production report by ID
-$productionReport = ProductionReport::findOrFail( $id );
-$grower = Grower::where( 'id', $productionReport->grower_id )->first();
+    public function export( $id ) {
+        // Fetch the specific production report by ID
+        $productionReport = ProductionReport::findOrFail( $id );
+        $grower = Grower::where( 'id', $productionReport->grower_id )->first();
 
-$fileName = 'Breederplants-' . Str::slug( $grower->company_name ) . '-' . $productionReport->quarter . '-' . $productionReport->year . '.xlsx';
+        $fileName = 'Breederplants-' . Str::slug( $grower->company_name ) . '-' . $productionReport->quarter . '-' . $productionReport->year . '.xlsx';
 
-return Excel::download( new ProductionReportExport( $productionReport, $grower ), $fileName );
+        return Excel::download( new ProductionReportExport( $productionReport, $grower ), $fileName );
 
-} */
+    }
 }
