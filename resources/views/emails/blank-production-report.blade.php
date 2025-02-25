@@ -22,7 +22,7 @@
                             <h1 style="color: #45a049; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0 0 20px; font-size: 22px; font-weight: bold; text-align: center;">Blank Sales Report Notification</h1>
                             <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0 0 20px; font-size: 14px; color: #000000;">Dear {{ $growerName ?? 'User' }},</p>
                             <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0 0 20px; font-size: 14px; color: #000000;">
-                                A blank sales report for quarter <strong>{{ $quarter ?? '' }}</strong> of <strong>{{ $year ?? '' }}</strong> has been generated.
+                                A blank production report for quarter <strong>{{ $quarter ?? '' }}</strong> of <strong>{{ $year ?? '' }}</strong> has been generated.
                             </p>
                             <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0 0 20px; font-size: 14px; color: #000000;">
                                 {{ $aboutQuarters ?? '' }}
