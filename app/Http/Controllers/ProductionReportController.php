@@ -645,7 +645,7 @@ class ProductionReportController extends Controller {
 
         // Send notification to admin
         try {
-            Notification::route( 'mail', 'arifislamdev@gmail.com' )
+            Notification::route( 'mail', 'info@onlinewithyou.nl' )
                 ->notify( new ProductionReportSubmittedNotification( $productionReport, $grower, $excelFile, 'admin' ) );
             Log::info( "Production report submitted by " . $grower->company_name . " for " . ucwords( $productionReport->quarter ) . " " . $productionReport->year . " (admin notified)." );
         } catch ( \Exception $e ) {

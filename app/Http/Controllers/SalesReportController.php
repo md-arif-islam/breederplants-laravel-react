@@ -670,7 +670,7 @@ class SalesReportController extends Controller {
 
         // Send notification to admin
         try {
-            Notification::route( 'mail', 'arifislamdev@gmail.com' )
+            Notification::route( 'mail', 'info@onlinewithyou.nl' )
                 ->notify( new SalesReportSubmittedNotification( $salesReport, $grower, $excelFile, 'admin' ) );
             Log::info( "Sales report submitted by " . $grower->company_name . " for " . ucwords( $salesReport->quarter ) . " " . $salesReport->year . " (admin notified)." );
         } catch ( \Exception $e ) {
