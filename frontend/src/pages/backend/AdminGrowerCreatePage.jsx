@@ -17,7 +17,7 @@ export default function AdminGrowerCreatePage() {
         phone: "",
         website: "",
         company_email: "",
-        is_active: false,
+        is_active: true,
         password: "",
         password_confirmation: "",
         agreement_number: "",
@@ -278,7 +278,6 @@ export default function AdminGrowerCreatePage() {
                             <div>
                                 <label className="block text-sm font-medium mb-2">
                                     Sales Reporting Quarters{" "}
-                                    <span className="text-red-500">*</span>
                                 </label>
                                 <div className="flex gap-4">
                                     <label className="flex items-center space-x-2">
@@ -389,7 +388,6 @@ export default function AdminGrowerCreatePage() {
                             <div>
                                 <label className="block text-sm font-medium mb-2">
                                     Production Reporting Fields{" "}
-                                    <span className="text-red-500">*</span>
                                 </label>
                                 <div className="flex gap-4">
                                     <label className="flex items-center space-x-2">
@@ -505,7 +503,6 @@ export default function AdminGrowerCreatePage() {
                             <div>
                                 <label className="block text-sm font-medium mb-2">
                                     Production Reporting Quarters{" "}
-                                    <span className="text-red-500">*</span>
                                 </label>
                                 <div className="flex flex-col gap-2">
                                     <label className="flex items-center space-x-2">

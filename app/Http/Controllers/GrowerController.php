@@ -51,12 +51,12 @@ class GrowerController extends Controller {
             'phone' => 'nullable|string|max:255',
             'website' => 'nullable|string|max:255',
             'agreement_number' => 'required|numeric',
-            'sales_reporting_quarter' => 'required|array',
-            'sales_reporting_quarter.*' => 'required|string',
-            'production_reporting_quarter' => 'required|array',
-            'production_reporting_quarter.*' => 'required|string',
-            'production_reporting_values' => 'required|array',
-            'production_reporting_values.*' => 'required|string',
+            'sales_reporting_quarter' => 'nullable|array',
+            'sales_reporting_quarter.*' => 'nullable|string',
+            'production_reporting_quarter' => 'nullable|array',
+            'production_reporting_quarter.*' => 'nullable|string',
+            'production_reporting_values' => 'nullable|array',
+            'production_reporting_values.*' => 'nullable|string',
             'password' => 'required|string|min:4|confirmed',
         ] );
 
@@ -126,12 +126,12 @@ class GrowerController extends Controller {
             'phone' => 'nullable|string|max:255',
             'website' => 'nullable|string|max:255',
             'agreement_number' => 'required|numeric',
-            'sales_reporting_quarter' => 'required|array',
-            'sales_reporting_quarter.*' => 'required|string|max:255',
-            'production_reporting_quarter' => 'required|array',
-            'production_reporting_quarter.*' => 'required|string|max:255',
-            'production_reporting_values' => 'required|array',
-            'production_reporting_values.*' => 'required|string|max:255',
+            'sales_reporting_quarter' => 'nullable|array',
+            'sales_reporting_quarter.*' => 'nullable|string|max:255',
+            'production_reporting_quarter' => 'nullable|array',
+            'production_reporting_quarter.*' => 'nullable|string|max:255',
+            'production_reporting_values' => 'nullable|array',
+            'production_reporting_values.*' => 'nullable|string|max:255',
         ] );
 
         $user->update( [
