@@ -2,26 +2,28 @@ import { useEffect, useState } from "react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import breederplantsLogo from "../assets/images/logo.png";
 import { useStore } from "../store/useStore";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false);
-
     const [formData, setFormData] = useState({
         email: "",
         password: "",
     });
     const { login, isLoggingIn } = useStore();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // Get the intended path from location state (if exists)
+    const redirectTo =
+        location.state?.from ||
+        (formData.role === "admin" ? "/admin/dashboard" : "/");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const user = await login(formData);
-
-        if (user.role === "admin") {
-            navigate("/admin/dashboard");
-        } else {
-            navigate("/");
+        if (user) {
+            navigate(redirectTo);
         }
     };
 
@@ -30,7 +32,6 @@ export default function LoginPage() {
     }, []);
 
     return (
-        // <div className="container max-w-[900px] mx-auto px-4  py-16 md:py-32">
         <div className="container max-w-[900px] mx-auto px-4 flex justify-center items-center h-screen">
             <div className="bg-white w-full flex flex-col items-center">
                 {/* Logo */}
@@ -48,7 +49,7 @@ export default function LoginPage() {
                         <h1 className="font-poppins text-[22px] font-bold text-[#292d32]">
                             Welcome User!
                         </h1>
-                        <p className="font-inter text-[#465b52] text-[13px] ">
+                        <p className="font-inter text-[#465b52] text-[13px]">
                             Enter your Email address and Password and enjoy our
                             app
                         </p>
@@ -115,9 +116,7 @@ export default function LoginPage() {
                                 disabled={isLoggingIn}
                             >
                                 {isLoggingIn ? (
-                                    <>
-                                        <Loader2 className="h-5 w-5 animate-spin mr-2" />
-                                    </>
+                                    <Loader2 className="h-5 w-5 animate-spin mr-2" />
                                 ) : (
                                     "Log In"
                                 )}
