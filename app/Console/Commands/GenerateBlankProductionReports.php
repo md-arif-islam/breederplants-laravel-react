@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 
 class GenerateBlankProductionReports extends Command {
     protected $signature = 'production-reports:generate';
-    protected $description = 'Generate blank production report entries for all growers based on their reporting quarters';
+    protected $description = 'Generate New production report entries for all growers based on their reporting quarters';
 
     public function __construct() {
         parent::__construct();
@@ -64,7 +64,7 @@ class GenerateBlankProductionReports extends Command {
                         'quarters_array' => json_encode( $quarterData ),
                     ] );
 
-                    Log::info( "Created blank production report for grower ID {$grower->id}, quarter {$quarter}, year {$currentYear}" );
+                    Log::info( "Created New production report for grower ID {$grower->id}, quarter {$quarter}, year {$currentYear}" );
 
                     $aboutQuarters = "";
                     foreach ( $quarterData as $index => $q ) {
@@ -89,12 +89,12 @@ class GenerateBlankProductionReports extends Command {
                         Log::error( "Failed to send notification to grower (ID: {$grower->id}) for quarter: {$quarter_uc}. Error: " . $e->getMessage() );
                     }
 
-                    Log::info( "Created blank production report for grower ID {$grower->id}, quarter {$quarter_uc}, year {$currentYear}" );
+                    Log::info( "Created New production report for grower ID {$grower->id}, quarter {$quarter_uc}, year {$currentYear}" );
                 }
             }
         }
 
-        $this->info( 'Blank production report generation completed successfully.' );
+        $this->info( 'New production report generation completed successfully.' );
     }
 
     public function get_qa_sd_ed( $year, $quarter, $quarterCount, $quarters ) {

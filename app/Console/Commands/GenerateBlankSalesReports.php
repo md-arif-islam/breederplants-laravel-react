@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 
 class GenerateBlankSalesReports extends Command {
     protected $signature = 'sales-reports:generate';
-    protected $description = 'Generate blank sales report entries for all growers based on their reporting quarters';
+    protected $description = 'Generate New sales report entries for all growers based on their reporting quarters';
 
     public function __construct() {
         parent::__construct();
@@ -64,7 +64,7 @@ class GenerateBlankSalesReports extends Command {
                         'quarters_array' => json_encode( $quarterData ),
                     ] );
 
-                    Log::info( "Created blank sales report for grower ID {$grower->id}, quarter {$quarter}, year {$currentYear}" );
+                    Log::info( "Created New sales report for grower ID {$grower->id}, quarter {$quarter}, year {$currentYear}" );
 
                     $aboutQuarters = "";
                     foreach ( $quarterData as $index => $q ) {
@@ -89,12 +89,12 @@ class GenerateBlankSalesReports extends Command {
                         Log::error( "Failed to send notification to grower (ID: {$grower->id}) for quarter: {$quarter_uc}. Error: " . $e->getMessage() );
                     }
 
-                    Log::info( "Created blank sales report for grower ID {$grower->id}, quarter {$quarter_uc}, year {$currentYear}" );
+                    Log::info( "Created New sales report for grower ID {$grower->id}, quarter {$quarter_uc}, year {$currentYear}" );
                 }
             }
         }
 
-        $this->info( 'Blank sales report generation completed successfully.' );
+        $this->info( 'New sales report generation completed successfully.' );
     }
 
     public function get_qa_sd_ed( $year, $quarter, $quarterCount, $quarters ) {

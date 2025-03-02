@@ -44,7 +44,7 @@ class BlankSalesReportNotification extends Notification implements ShouldQueue {
         Log::info( 'BlankSalesReportNotification toMail', ['notifiable' => $notifiable] );
         $growerName = $this->grower->grower->contact_person ?? $this->grower->company_name;
         return ( new MailMessage )
-            ->subject( 'Blank Sales Report Notification' )
+            ->subject( 'New sales report is available and requires your input' )
             ->view( 'emails.blank-sales-report', [
                 'growerName' => $growerName,
                 'quarter' => $this->quarter,
@@ -57,14 +57,14 @@ class BlankSalesReportNotification extends Notification implements ShouldQueue {
     public function toDatabase( object $notifiable ): array {
         Log::info( 'BlankSalesReportNotification toDatabase', ['notifiable' => $notifiable] );
         return [
-            'message' => "A blank sales report for quarter {$this->quarter} ({$this->year}) has been generated. Check details at <a href='{$this->link}'>Sales Reports</a>.",
+            'message' => "A New sales report for quarter {$this->quarter} ({$this->year}) has been generated. Check details at <a href='{$this->link}'>Sales Reports</a>.",
         ];
     }
 
     public function toArray( object $notifiable ): array {
         Log::info( 'BlankSalesReportNotification toArray', ['notifiable' => $notifiable] );
         return [
-            'message' => "A blank sales report for quarter {$this->quarter} ({$this->year}) has been generated. Check details at <a href='{$this->link}'>Sales Reports</a>.",
+            'message' => "A New sales report for quarter {$this->quarter} ({$this->year}) has been generated. Check details at <a href='{$this->link}'>Sales Reports</a>.",
         ];
     }
 

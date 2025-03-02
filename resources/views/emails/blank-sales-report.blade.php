@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Blank Sales Report Notification</title>
+    <title>New sales report is available and requires your input</title>
 </head>
 <body style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: none; width: 100% !important; height: 100%; line-height: 1.6em; background-color: #ffffff; margin: 0; padding: 0;" bgcolor="#f6f9fc">
     <table width="100%" cellpadding="0" cellspacing="0" style="box-sizing: border-box; font-size: 14px; border-radius: 3px; background-color: #fff; margin: 0; padding: 0; border: 1px solid #e9e9e9;" bgcolor="#fff">
@@ -19,10 +19,10 @@
                     <!-- Content -->
                     <tr>
                         <td style="box-sizing: border-box; padding: 20px; border-radius: 3px; background-color: #f6f9fc; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);" bgcolor="#f6f9fc">
-                            <h1 style="color: #45a049; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0 0 20px; font-size: 22px; font-weight: bold; text-align: center;">Blank Sales Report Notification</h1>
+                            <h1 style="color: #45a049; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0 0 20px; font-size: 22px; font-weight: bold; text-align: center;">New sales report is available and requires your input</h1>
                             <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0 0 20px; font-size: 14px; color: #000000;">Dear {{ $growerName ?? 'User' }},</p>
                             <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0 0 20px; font-size: 14px; color: #000000;">
-                                A blank sales report for quarter <strong>{{ $quarter ?? '' }}</strong> of <strong>{{ $year ?? '' }}</strong> has been generated.
+                                A New sales report for quarter <strong>{{ $quarter ?? '' }}</strong> of <strong>{{ $year ?? '' }}</strong> has been generated.
                             </p>
                             <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0 0 20px; font-size: 14px; color: #000000;">
                                 {{ $aboutQuarters ?? '' }}

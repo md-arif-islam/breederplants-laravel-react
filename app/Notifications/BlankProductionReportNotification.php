@@ -44,7 +44,7 @@ class BlankProductionReportNotification extends Notification implements ShouldQu
         Log::info( 'BlankProductionReportNotification toMail', ['notifiable' => $notifiable] );
         $growerName = $this->grower->grower->contact_person ?? $this->grower->company_name;
         return ( new MailMessage )
-            ->subject( 'Blank Production Report Notification' )
+            ->subject( 'New production report is available and requires your input' )
             ->view( 'emails.blank-production-report', [
                 'growerName' => $growerName,
                 'quarter' => $this->quarter,
@@ -57,14 +57,14 @@ class BlankProductionReportNotification extends Notification implements ShouldQu
     public function toDatabase( object $notifiable ): array {
         Log::info( 'BlankProductionReportNotification toDatabase', ['notifiable' => $notifiable] );
         return [
-            'message' => "A blank production report for quarter {$this->quarter} ({$this->year}) has been generated. Check details at <a href='{$this->link}'>Production Reports</a>.",
+            'message' => "A New production reportfor quarter {$this->quarter} ({$this->year}) has been generated. Check details at <a href='{$this->link}'>Production Reports</a>.",
         ];
     }
 
     public function toArray( object $notifiable ): array {
         Log::info( 'BlankProductionReportNotification toArray', ['notifiable' => $notifiable] );
         return [
-            'message' => "A blank production report for quarter {$this->quarter} ({$this->year}) has been generated. Check details at <a href='{$this->link}'>Production Reports</a>.",
+            'message' => "A New production reportfor quarter {$this->quarter} ({$this->year}) has been generated. Check details at <a href='{$this->link}'>Production Reports</a>.",
         ];
     }
 
