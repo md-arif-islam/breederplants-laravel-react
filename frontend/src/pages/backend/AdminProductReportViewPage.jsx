@@ -74,6 +74,8 @@ export default function AdminProductionReportViewPage() {
         ? JSON.parse(currentProductionReport.data)
         : {};
 
+    console.log(currentProductionReport);
+
     return (
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">
             <div className="container mx-auto px-4 py-8">
@@ -113,32 +115,67 @@ export default function AdminProductionReportViewPage() {
                             </div>
                         </div>
 
-                        <div className="table-responsive">
+                        <div className="table-responsive mt-6">
                             <table className="table-auto w-full border border-gray-200">
                                 <thead>
                                     <tr className="bg-gray-50">
                                         <th className="px-4 py-2 border-b font-medium text-gray-900">
-                                            Name
+                                            Product Name
                                         </th>
-                                        <th className="px-4 py-2 border-b font-medium text-gray-900">
-                                            Quantity
-                                        </th>
+                                        {reportData &&
+                                            reportData.length > 0 &&
+                                            Object.keys(reportData[0])
+                                                .filter(
+                                                    (key) =>
+                                                        key !== "product_id" &&
+                                                        key !== "product_name"
+                                                )
+                                                .map((field, index) => (
+                                                    <th
+                                                        key={index}
+                                                        className="px-4 py-2 border-b font-medium text-gray-900"
+                                                    >
+                                                        {field
+                                                            .toUpperCase()
+                                                            .replace(/_/g, " ")}
+                                                    </th>
+                                                ))}
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {Object.entries(reportData).map(
-                                        ([field, quantity]) => (
-                                            <tr key={field}>
+                                    {reportData && reportData.length > 0 ? (
+                                        reportData.map((data, index) => (
+                                            <tr key={index}>
                                                 <td className="px-4 py-2 border-b text-gray-700">
-                                                    {field
-                                                        .toUpperCase()
-                                                        .replace(/_/g, " ")}
+                                                    {data.product_name}
                                                 </td>
-                                                <td className="px-4 py-2 border-b text-gray-700 text-center">
-                                                    {quantity}
-                                                </td>
+                                                {Object.keys(data)
+                                                    .filter(
+                                                        (key) =>
+                                                            key !==
+                                                                "product_id" &&
+                                                            key !==
+                                                                "product_name"
+                                                    )
+                                                    .map((field, i) => (
+                                                        <td
+                                                            key={i}
+                                                            className="px-4 py-2 border-b text-gray-700 text-center"
+                                                        >
+                                                            {data[field]}
+                                                        </td>
+                                                    ))}
                                             </tr>
-                                        )
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td
+                                                colSpan="100%"
+                                                className="px-4 py-2 text-center text-gray-700"
+                                            >
+                                                No report data available.
+                                            </td>
+                                        </tr>
                                     )}
                                 </tbody>
                             </table>

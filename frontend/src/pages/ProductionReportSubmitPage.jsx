@@ -19,38 +19,74 @@ export default function ProductionReportSubmitPage() {
     useEffect(() => {
         // page title
         document.title = "Submit Production Reports - Breederplants";
-    });
+    }, []);
 
     const navigate = useNavigate();
+
+    // Parse reporting values once
+    const reportingValues = currentProductionReport
+        ? JSON.parse(currentProductionReport.grower_production_reporting_values)
+        : [];
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         const formData = new FormData(e.target);
 
-        const data = {};
+        // Build an object keyed by product_id containing the report field values
+        const productionDataMap = {};
 
+        // First, process product name inputs
         for (let [key, value] of formData.entries()) {
-            if (key.startsWith("report")) {
-                if (!data.report) data.report = {};
-                const id = key.match(/\[(.*?)\]/)[1];
-                data.report[id] = value;
-            } else if (key.startsWith("quantity")) {
-                if (!data.quantity) data.quantity = {};
-                const id = key.match(/\[(.*?)\]/)[1];
-                data.quantity[id] = value;
-            } else if (key === "quarter") {
-                data.quarter = value;
-            } else if (key === "year") {
-                data.year = value;
+            if (key.startsWith("prod_name")) {
+                // Key pattern: prod_name[product_id]
+                const match = key.match(/prod_name\[(.*?)\]/);
+                if (match) {
+                    const productId = match[1];
+                    if (!productionDataMap[productId]) {
+                        productionDataMap[productId] = {
+                            product_id: productId,
+                        };
+                    }
+                    productionDataMap[productId]["product_name"] = value;
+                }
             }
         }
 
-        data.quarters_array = JSON.stringify(
-            currentProductionReport?.quarters_array
-        );
+        // Next, process quantity inputs (the numbers entered by the user)
+        for (let [key, value] of formData.entries()) {
+            if (key.startsWith("quantity")) {
+                // Key format: quantity[product_id][report_field]
+                const match = key.match(/quantity\[(.*?)\]\[(.*?)\]/);
+                if (match) {
+                    const productId = match[1];
+                    const field = match[2];
+                    if (!productionDataMap[productId]) {
+                        productionDataMap[productId] = {
+                            product_id: productId,
+                        };
+                    }
+                    // Save 0 if the input is empty, otherwise save the actual value.
+                    productionDataMap[productId][field] =
+                        value.trim() === "" ? 0 : value;
+                }
+            }
+        }
 
-        console.log(data);
+        // Convert the map to an array
+        const productionData = Object.values(productionDataMap);
+
+        // Prepare the final data payload
+        const data = {
+            quarter: formData.get("quarter"),
+            year: formData.get("year"),
+            quarters_array: JSON.stringify(
+                currentProductionReport?.quarters_array
+            ),
+            production: productionData,
+        };
+
+        console.log("Final data payload:", data);
 
         const res = await submitProductionReport(data);
         if (res.status === 200) {
@@ -67,7 +103,7 @@ export default function ProductionReportSubmitPage() {
                         <h2 className="text-xl sm:text-2xl font-bold mb-2">
                             Submit production report for{" "}
                             {currentProductionReport?.quarters_array &&
-                                currentProductionReport?.quarters_array.map(
+                                currentProductionReport.quarters_array.map(
                                     (q, index, array) => (
                                         <span key={index}>
                                             {q.quarter.charAt(0).toUpperCase() +
@@ -113,50 +149,80 @@ export default function ProductionReportSubmitPage() {
                                             <thead>
                                                 <tr className="bg-gray-50">
                                                     <th className="text-left p-2 sm:p-4 text-sm sm:text-sm font-semibold text-gray-600">
-                                                        Name
+                                                        Product Name
                                                     </th>
 
-                                                    <th className="text-left p-2 sm:p-4 text-sm sm:text-sm font-semibold text-gray-600">
-                                                        Quantity
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {currentProductionReport &&
-                                                    JSON.parse(
-                                                        currentProductionReport?.grower_production_reporting_values
-                                                    ).map((report, index) => (
-                                                        <tr
-                                                            key={index}
-                                                            className="border-t"
-                                                        >
-                                                            <td className="p-2 sm:p-4 text-gray-800 text-sm sm:text-sm">
+                                                    {reportingValues.map(
+                                                        (report, index) => (
+                                                            <th
+                                                                key={index}
+                                                                className="text-left p-2 sm:p-4 text-sm sm:text-sm font-semibold text-gray-600"
+                                                            >
                                                                 {report
                                                                     .toUpperCase()
                                                                     .replace(
                                                                         /_/g,
                                                                         " "
                                                                     )}
-                                                            </td>
-
-                                                            <td className="p-2 sm:p-4 text-sm sm:text-sm">
-                                                                <input
-                                                                    type="hidden"
-                                                                    name={`report[${report}]`}
-                                                                    value={
-                                                                        report
+                                                            </th>
+                                                        )
+                                                    )}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {currentProductionReport &&
+                                                    currentProductionReport.grower_products.map(
+                                                        (prod, index) => (
+                                                            <tr
+                                                                key={index}
+                                                                className="border-t"
+                                                            >
+                                                                <td className="p-2 sm:p-4 text-gray-800 text-sm sm:text-sm">
+                                                                    <input
+                                                                        type="hidden"
+                                                                        name={`prod_name[${prod.product.id}]`}
+                                                                        value={
+                                                                            prod
+                                                                                .product
+                                                                                .cultivar
+                                                                        }
+                                                                    />
+                                                                    {
+                                                                        prod
+                                                                            .product
+                                                                            .cultivar
                                                                     }
-                                                                />
-
-                                                                <input
-                                                                    type="number"
-                                                                    name={`quantity[${index}]`}
-                                                                    placeholder="Enter amount"
-                                                                    className="w-full max-w-[200px] px-2 sm:px-3 py-1 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-sm sm:text-sm"
-                                                                />
-                                                            </td>
-                                                        </tr>
-                                                    ))}
+                                                                </td>
+                                                                {reportingValues.map(
+                                                                    (
+                                                                        report,
+                                                                        i
+                                                                    ) => (
+                                                                        <td
+                                                                            key={
+                                                                                i
+                                                                            }
+                                                                            className="p-2 sm:p-4 text-sm sm:text-sm"
+                                                                        >
+                                                                            <input
+                                                                                type="hidden"
+                                                                                name={`report[${prod.product.id}][${report}]`}
+                                                                                value={
+                                                                                    report
+                                                                                }
+                                                                            />
+                                                                            <input
+                                                                                type="number"
+                                                                                name={`quantity[${prod.product.id}][${report}]`}
+                                                                                placeholder="Enter amount"
+                                                                                className="w-full max-w-[200px] px-2 sm:px-3 py-1 sm:py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-sm sm:text-sm"
+                                                                            />
+                                                                        </td>
+                                                                    )
+                                                                )}
+                                                            </tr>
+                                                        )
+                                                    )}
                                             </tbody>
                                         </table>
                                     </div>

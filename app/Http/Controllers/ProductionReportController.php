@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\ProductionReportExport;
 use App\Http\Controllers\Controller;
 use App\Models\Grower;
+use App\Models\GrowerProduct;
 use App\Models\ProductionReport;
 use App\Notifications\ProductionReportSubmittedNotification;
 use Carbon\Carbon;
@@ -578,9 +579,10 @@ class ProductionReportController extends Controller {
         }
 
         $grower = Grower::where( "user_id", Auth::user()->id )->first();
+        $grower_products = GrowerProduct::with( "product" )->where( "grower_id", Auth::user()->grower->id )->get();
         $grower_production_reporting_values = $grower->production_reporting_values;
 
-        return response()->json( compact( "grower_production_reporting_values", "year", "quarter", "start_date", "end_date", "quarters_array" ) );
+        return response()->json( compact( "grower_production_reporting_values", "year", "quarter", "start_date", "end_date", "quarters_array", "grower_products" ) );
 
     }
 
@@ -588,28 +590,17 @@ class ProductionReportController extends Controller {
      * Store a newly created resource in storage.
      */
     public function store( Request $request ) {
-
-        // Validate the input data
+        // Validate the incoming request
         $request->validate( [
-            "quantity" => "required|array",
-            "quantity.*" => "required|integer|min:1",
-            "report" => "required|array",
+            "production" => "required|array",
             "quarter" => "required|string",
             "year" => "required|integer",
             "quarters_array" => "required|json",
         ] );
 
-        // Process the production data as report:quantity
-        $productionData = [];
-        $reportItems = $request->report;
-        $quantities = $request->quantity;
-        $i = 0;
-        foreach ( $reportItems as $field => $label ) {
-            $productionData[$field] = $quantities[$i] ?? null;
-            $i++;
-        }
+        // Get the production data directly from the request payload
+        $productionData = $request->production;
 
-        // Fetch the grower associated with the authenticated user
         $growerId = Auth::user()->grower->id;
 
         // Check if a production report already exists
@@ -645,7 +636,8 @@ class ProductionReportController extends Controller {
 
         // Send notification to admin
         try {
-            Notification::route( 'mail', 'info@onlinewithyou.nl' )
+            Notification::route( 'mail', 'arifislamdev@gmail.com' )
+            // Notification::route( 'mail', 'info@onlinewithyou.nl' )
                 ->notify( new ProductionReportSubmittedNotification( $productionReport, $grower, $excelFile, 'admin' ) );
             Log::info( "Production report submitted by " . $grower->company_name . " for " . ucwords( $productionReport->quarter ) . " " . $productionReport->year . " (admin notified)." );
         } catch ( \Exception $e ) {

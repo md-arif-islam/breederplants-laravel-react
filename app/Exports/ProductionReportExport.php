@@ -2,6 +2,9 @@
 
 namespace App\Exports;
 
+use App\Models\GrowerProduct;
+use App\Models\Product; // add this at the top with your other use statements
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\WithDrawings;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithStyles;
@@ -13,12 +16,20 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class ProductionReportExport implements WithDrawings, WithEvents, WithStyles {
+
     protected $productionReport;
     protected $grower;
+    protected $productsMap; // Map of GrowerProduct.id => GrowerProduct (with product relation)
 
     public function __construct( $productionReport, $grower ) {
         $this->productionReport = $productionReport;
         $this->grower = $grower;
+        // Build a mapping of grower product id to product details
+        $this->productsMap = GrowerProduct::with( 'product' )
+            ->where( 'grower_id', $this->grower->id )
+            ->get()
+            ->keyBy( 'id' );
+
     }
 
     /**
@@ -47,6 +58,7 @@ class ProductionReportExport implements WithDrawings, WithEvents, WithStyles {
             AfterSheet::class => function ( AfterSheet $event ) {
                 $sheet = $event->sheet->getDelegate();
 
+                // (Existing header setup omitted for brevity - retain static header cells)
                 $sheet->setCellValue( 'A8', 'Quantities sold under contract number: ' );
                 $sheet->setCellValue( 'L8', $this->grower->agreement_number ?? 0 );
 
@@ -68,44 +80,80 @@ class ProductionReportExport implements WithDrawings, WithEvents, WithStyles {
                 $sheet->setCellValue( 'H19', $this->grower->phone ?? '' );
                 $sheet->setCellValue( 'H20', $this->grower->company_email ?? '' );
 
+                // Report summary
                 $sheet->setCellValue( 'C24', 'Production Reports' );
                 $sheet->setCellValue( 'H24', 'Year:' );
-                $sheet->setCellValue( 'I24', ( $this->productionReport->year ) . ' - ' . ucwords( $this->productionReport->quarter ) );
+                $sheet->setCellValue( 'I24', $this->productionReport->year . ' - ' . ucwords( $this->productionReport->quarter ) );
 
-                $sheet->setCellValue( 'C25', 'Name' );
-                $sheet->setCellValue( 'H25', 'Quantity' );
+                // ---- Build the production data table matching the frontend ----
 
-                // Data rows: assume productionReport->data is a json encoded object with key => quantity pairs.
-                $reportData = json_decode( $this->productionReport->data, true );
-                $rowIndex = 26;
-                foreach ( $reportData as $field => $quantity ) {
+                // Retrieve the reporting values from the grower settings
+                // (assumed stored as JSON, e.g. ["rooted_cuttings","young_plants_pot",...])
+                $reportingValues = json_decode( $this->grower->production_reporting_values, true );
 
-                    $field = str_replace( '_', ' ', $field );
+                // Prepare header row starting at row 25; starting from column C
+                // Column C: "Product Name", then one column per reporting value.
+                $headerRow = [];
+                $headerRow[] = 'Product Name';
+                foreach ( $reportingValues as $report ) {
+                    // Format header label (uppercase, replace underscores with spaces)
+                    $headerRow[] = strtoupper( str_replace( '_', ' ', $report ) );
+                }
 
-                    $sheet->setCellValue( 'C' . $rowIndex, ucfirst( $field ) );
-                    $sheet->setCellValue( 'H' . $rowIndex, $quantity );
-
-                    // Apply border to quantity cell.
-                    $sheet->getStyle( 'H' . $rowIndex )->applyFromArray( [
-                        'borders' => [
-                            'allBorders' => [
-                                'borderStyle' => Border::BORDER_THIN,
-                            ],
-                        ],
-                    ] );
-
-                    // Alternate row background
-                    if ( $rowIndex % 2 == 0 ) {
-                        $sheet->getStyle( "C{$rowIndex}:K{$rowIndex}" )->applyFromArray( [
-                            'fill' => [
-                                'fillType' => Fill::FILL_SOLID,
-                                'startColor' => [
-                                    'argb' => 'E0E0E0',
-                                ],
-                            ],
-                        ] );
+                // Helper: get Excel column letter by index (1=A, 2=B, etc.)
+                $getColumnLetter = function ( $index ) {
+                    $letter = '';
+                    while ( $index > 0 ) {
+                        $mod = ( $index - 1 ) % 26;
+                        $letter = chr( 65 + $mod ) . $letter;
+                        $index = intval( ( $index - $mod ) / 26 );
                     }
-                    $rowIndex++;
+                    return $letter;
+                };
+
+                // Write header row starting column C (which is column 3)
+                $startColIndex = 3;
+                $headerRowNumber = 25;
+                foreach ( $headerRow as $i => $headerText ) {
+                    $colLetter = $getColumnLetter( $startColIndex + $i );
+                    $sheet->setCellValue( $colLetter . $headerRowNumber, $headerText );
+                    // Optionally apply bold formatting
+                    $sheet->getStyle( $colLetter . $headerRowNumber )
+                        ->getFont()->setBold( true );
+                }
+
+                // Now display data rows starting at row 26.
+                $dataRows = json_decode( $this->productionReport->data, true );
+
+                $currentRow = 26;
+                foreach ( $dataRows as $data ) {
+
+                    $productName = $data['product_name'];
+
+                    // Write product name in column C
+                    $sheet->setCellValue( $getColumnLetter( $startColIndex ) . $currentRow, $productName );
+
+                    // Write each reporting field in subsequent columns
+                    foreach ( $reportingValues as $j => $field ) {
+                        $colLetter = $getColumnLetter( $startColIndex + 1 + $j );
+                        $value = isset( $data[$field] ) ? $data[$field] : '';
+                        $sheet->setCellValue( $colLetter . $currentRow, $value );
+                    }
+
+                    // Apply border to the row (example for all data columns)
+                    $lastColLetter = $getColumnLetter( $startColIndex + count( $headerRow ) - 1 );
+
+                    // Optionally set alternate row background
+                    if ( $currentRow % 2 == 0 ) {
+                        $sheet->getStyle( "{$getColumnLetter( $startColIndex )}{$currentRow}:{$lastColLetter}{$currentRow}" )
+                            ->applyFromArray( [
+                                'fill' => [
+                                    'fillType' => Fill::FILL_SOLID,
+                                    'startColor' => ['argb' => 'FFE0E0E0'],
+                                ],
+                            ] );
+                    }
+                    $currentRow++;
                 }
             },
         ];
@@ -129,7 +177,7 @@ class ProductionReportExport implements WithDrawings, WithEvents, WithStyles {
     }
 
     public function styles( Worksheet $sheet ) {
-
+        // Existing styling code...
         // Hide B column
         $sheet->getColumnDimension( 'B' )->setVisible( false );
 
