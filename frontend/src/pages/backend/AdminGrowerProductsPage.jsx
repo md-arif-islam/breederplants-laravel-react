@@ -386,7 +386,7 @@ export default function AdminGrowerProductsPage() {
                             <div className="p-6">
                                 <div className="flex justify-between items-center mb-6">
                                     <h2 className="text-xl font-semibold">
-                                        Add Grower Product
+                                        Add product to grower
                                     </h2>
                                     <button
                                         onClick={closeAddModal}
@@ -397,9 +397,9 @@ export default function AdminGrowerProductsPage() {
                                 </div>
 
                                 <form onSubmit={handleAddProduct}>
-                                    <div className="mb-6">
+                                    <div className="mb-6 space-y-3">
                                         <div>
-                                            <label className="block text-sm font-medium mb-1">
+                                            <label className="block text-base font-medium mb-3">
                                                 Product
                                             </label>
                                             <select
@@ -428,11 +428,14 @@ export default function AdminGrowerProductsPage() {
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-medium mb-1">
-                                                Unit Price{" "}
+                                            <label className="block text-base font-medium mb-3">
+                                                Royalty Fee{" "}
                                                 <span className="text-red-500">
                                                     *
                                                 </span>
+                                                <p className="font-normal text-sm text-gray-500">
+                                                    Royalty Fee of the product.
+                                                </p>
                                             </label>
                                             <input
                                                 type="number"
@@ -446,7 +449,7 @@ export default function AdminGrowerProductsPage() {
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-medium mb-1">
+                                            <label className="block text-base font-medium mb-3">
                                                 Stock{" "}
                                                 <span className="text-red-500">
                                                     *
@@ -495,7 +498,7 @@ export default function AdminGrowerProductsPage() {
                                 <form onSubmit={handleEditProduct}>
                                     <div className="mb-6">
                                         <div>
-                                            <label className="block text-sm font-medium mb-1">
+                                            <label className="block text-base font-medium mb-3">
                                                 Unit Price{" "}
                                                 <span className="text-red-500">
                                                     *
@@ -513,7 +516,7 @@ export default function AdminGrowerProductsPage() {
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-medium mb-1">
+                                            <label className="block text-base font-medium mb-3">
                                                 Stock{" "}
                                                 <span className="text-red-500">
                                                     *
@@ -562,7 +565,7 @@ export default function AdminGrowerProductsPage() {
                                 <form onSubmit={handleAddQuantity}>
                                     <div className="mb-6">
                                         <div>
-                                            <label className="block text-sm font-medium mb-1">
+                                            <label className="block text-base font-medium mb-3">
                                                 Quantity to Add{" "}
                                                 <span className="text-red-500">
                                                     *
