@@ -103,8 +103,9 @@ export default function ProductionReportSubmitPage() {
                         <h2 className="text-xl sm:text-2xl font-bold mb-2">
                             Submit production report for{" "}
                             {currentProductionReport?.quarters_array &&
-                                currentProductionReport.quarters_array.map(
-                                    (q, index, array) => (
+                                [...currentProductionReport.quarters_array]
+                                    .reverse()
+                                    .map((q, index, array) => (
                                         <span key={index}>
                                             {q.quarter.charAt(0).toUpperCase() +
                                                 q.quarter.slice(1)}{" "}
@@ -113,8 +114,7 @@ export default function ProductionReportSubmitPage() {
                                                 ? ", "
                                                 : ""}
                                         </span>
-                                    )
-                                )}
+                                    ))}
                         </h2>
                         <p className="text-sm sm:text-base">
                             Please submit your production for the period from{" "}

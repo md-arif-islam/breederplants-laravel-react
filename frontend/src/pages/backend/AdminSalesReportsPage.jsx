@@ -223,11 +223,15 @@ export default function AdminSalesReportsPage() {
                                                     <tr
                                                         key={report.id}
                                                         className="hover:bg-gray-100 transition-colors duration-200 cursor-pointer"
-                                                        onClick={() =>
-                                                            navigate(
-                                                                `/admin/sales-reports/${report.id}`
-                                                            )
-                                                        }
+                                                        onClick={() => {
+                                                            if (
+                                                                report.submission_date
+                                                            ) {
+                                                                navigate(
+                                                                    `/admin/sales-reports/${report.id}`
+                                                                );
+                                                            }
+                                                        }}
                                                     >
                                                         <td className="px-4 py-2 border-b text-left">
                                                             {
@@ -244,6 +248,7 @@ export default function AdminSalesReportsPage() {
                                                                 ? JSON.parse(
                                                                       report.quarters_array
                                                                   )
+                                                                      .reverse()
                                                                       .map(
                                                                           (q) =>
                                                                               `${q.quarter.toUpperCase()} - ${

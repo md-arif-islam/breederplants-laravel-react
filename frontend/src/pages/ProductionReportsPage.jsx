@@ -76,35 +76,39 @@ export default function ProductionReportsPage() {
                                                         {report?.quarters_array &&
                                                             JSON.parse(
                                                                 report?.quarters_array
-                                                            ).map(
-                                                                (
-                                                                    q,
-                                                                    index,
-                                                                    array
-                                                                ) => (
-                                                                    <span
-                                                                        key={
-                                                                            index
-                                                                        }
-                                                                    >
-                                                                        {q.quarter
-                                                                            .charAt(
-                                                                                0
-                                                                            )
-                                                                            .toUpperCase() +
-                                                                            q.quarter.slice(
+                                                            )
+                                                                .reverse()
+                                                                .map(
+                                                                    (
+                                                                        q,
+                                                                        index,
+                                                                        array
+                                                                    ) => (
+                                                                        <span
+                                                                            key={
+                                                                                index
+                                                                            }
+                                                                        >
+                                                                            {q.quarter
+                                                                                .charAt(
+                                                                                    0
+                                                                                )
+                                                                                .toUpperCase() +
+                                                                                q.quarter.slice(
+                                                                                    1
+                                                                                )}{" "}
+                                                                            -{" "}
+                                                                            {
+                                                                                q.year
+                                                                            }
+                                                                            {index !==
+                                                                            array.length -
                                                                                 1
-                                                                            )}{" "}
-                                                                        -{" "}
-                                                                        {q.year}
-                                                                        {index !==
-                                                                        array.length -
-                                                                            1
-                                                                            ? ", "
-                                                                            : ""}
-                                                                    </span>
-                                                                )
-                                                            )}
+                                                                                ? ", "
+                                                                                : ""}
+                                                                        </span>
+                                                                    )
+                                                                )}
                                                     </h2>
                                                 </div>
 
