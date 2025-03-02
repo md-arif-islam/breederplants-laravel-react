@@ -52,7 +52,7 @@ class SendSampleDateNotifications extends Command {
                 $variety_name = $varietyReport->variety_name;
 
                 // Generate the URL for the variety report
-                $varietyReportUrl = "https://google.com";
+                $varietyReportUrl = env( 'FRONTEND_URL' ) . "/variety-reports/{$varietyReport->id}";
 
                 try {
                     $grower->notify( new SampleDateNotification( $varietyReport, $grower, $formatted_date, $varietyReportUrl ) );
