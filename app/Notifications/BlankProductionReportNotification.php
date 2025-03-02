@@ -76,20 +76,20 @@ class BlankProductionReportNotification extends Notification implements ShouldQu
         ] );
     }
     // Todo: Fcm not working
-    public function toFcm( object $notifiable ) {
-        Log::info( 'BlankProductionReportNotification toFcm', ['notifiable' => $notifiable] );
-        return [
-            'fcm_token' => $this->grower->fcm_token,
-            'notification' => [
-                'title' => "Breederplants Notification",
-                'body' => "You missed the sample date for  Please check your report and take action as soon as possible.",
-            ],
-            'data' => [
-                'variety_name' => "variety_name",
-                'sample_date' => "12/12/2021",
-                'url' => "https://breederplants.com",
-            ],
-        ];
-    }
+    // public function toFcm( object $notifiable ) {
+    //     Log::info( 'BlankProductionReportNotification toFcm', ['notifiable' => $notifiable] );
+    //     return [
+    //         'fcm_token' => $this->grower->fcm_token,
+    //         'notification' => [
+    //             'title' => "Breederplants Notification",
+    //             'body' => "You missed the sample date for  Please check your report and take action as soon as possible.",
+    //         ],
+    //         'data' => [
+    //             'variety_name' => "variety_name",
+    //             'sample_date' => "12/12/2021",
+    //             'url' => "https://breederplants.com",
+    //         ],
+    //     ];
+    // }
 
 }

@@ -19,7 +19,7 @@
                     <!-- Content -->
                     <tr>
                         <td style="box-sizing: border-box; padding: 20px; border-radius: 3px; background-color: #f6f9fc; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);" bgcolor="#f6f9fc">
-                            <h1 style="color: #45a049; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0 0 20px; font-size: 22px; font-weight: bold; text-align: center;">Blank Sales Report Notification</h1>
+                            <h1 style="color: #45a049; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0 0 20px; font-size: 22px; font-weight: bold; text-align: center;">Blank Production Report Notification</h1>
                             <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0 0 20px; font-size: 14px; color: #000000;">Dear {{ $growerName ?? 'User' }},</p>
                             <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0 0 20px; font-size: 14px; color: #000000;">
                                 A blank production report for quarter <strong>{{ $quarter ?? '' }}</strong> of <strong>{{ $year ?? '' }}</strong> has been generated.
@@ -33,7 +33,7 @@
                                         <table cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td style="border-radius: 50px; background-color: #45a049;">
-                                                    <a href="{{ $link ?? '#' }}" style="font-size: 14px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; border-radius: 50px; padding: 10px 20px; border: 1px solid #45a049; display: inline-block; font-weight: bold;" target="_blank">View Sales Report</a>
+                                                    <a href="{{ $link ?? '#' }}" style="font-size: 14px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; border-radius: 50px; padding: 10px 20px; border: 1px solid #45a049; display: inline-block; font-weight: bold;" target="_blank">View Production Report</a>
                                                 </td>
                                             </tr>
                                         </table>
