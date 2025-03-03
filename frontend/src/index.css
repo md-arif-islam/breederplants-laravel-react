@@ -22,9 +22,14 @@ body{
 .active svg.breeder{
     fill: #ffffff;
 }
+.active svg.product{
+    fill: #ffffff;
+}
 
 
 .notification-span a{
     color: #4caf50;
     font-weight: 600;
 }
+
+
