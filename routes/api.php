@@ -12,32 +12,29 @@ use App\Http\Controllers\BreederController;
 use App\Http\Controllers\GrowerController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProductionReportController;
+use App\Http\Controllers\Public\PublicVarietyReportController;
 use App\Http\Controllers\SalesReportController;
 use App\Http\Controllers\VarietyReportController;
 use App\Http\Controllers\VarietySampleController;
 use Illuminate\Support\Facades\Route;
 
+// -------------------- Guest routes related to authentication ----------------------
 Route::post( '/admin/register', [AuthController::class, 'registerAdmin'] );
 Route::post( '/login', [AuthController::class, 'login'] );
 Route::post( '/send-reset-link-email', [AuthController::class, 'sendResetLinkEmail'] );
-
 Route::post( '/logout', [AuthController::class, 'logout'] )->middleware( 'auth:sanctum' );
-
 Route::get( '/reset-password/{token}', [AuthController::class, 'showResetForm'] )->name( 'password.reset' );
-// ----------------------
 Route::post( '/reset-password', [AuthController::class, 'resetPassword'] )->name( 'password.update' );
-
 Route::get( '/user', [AuthController::class, 'authCheck'] );
 
+// -------------------- Authenticated routes ----------------------
 Route::middleware( 'auth:sanctum' )->group( function () {
-
     Route::post( '/logout', [AuthController::class, 'logout'] );
     Route::get( '/user', [AuthController::class, 'authCheck'] );
-
 } );
 
+// -------------------- Admin routes ----------------------
 Route::prefix( 'admin' )->middleware( ['auth:sanctum', \App\Http\Middleware\AdminMiddleware::class] )->group( function () {
-
     // export routes
     Route::get( '/breeders/export-csv', [BreederController::class, 'exportCSV'] );
     Route::get( '/growers/export-csv', [GrowerController::class, 'exportCSV'] );
@@ -112,6 +109,7 @@ Route::prefix( 'admin' )->middleware( ['auth:sanctum', \App\Http\Middleware\Admi
 
 } );
 
+// -------------------- Grower routes ----------------------
 Route::middleware( 'auth:sanctum' )->group( function () {
     Route::get( '/variety-reports', [VarietyReportController::class, 'index'] );
     Route::get( '/variety-reports/{id}', [VarietyReportController::class, 'show'] );
@@ -135,6 +133,12 @@ Route::middleware( 'auth:sanctum' )->group( function () {
     Route::post( '/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'] );
     Route::post( '/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'] );
 
+} );
+
+// -------------------- Public routes ----------------------
+Route::prefix( 'public' )->group( function () {
+    Route::get( '/variety-reports', [PublicVarietyReportController::class, 'index'] );
+    Route::get( '/variety-reports/{id}', [PublicVarietyReportController::class, 'show'] );
 } );
 
 Route::get( '/clear', function () {
