@@ -7,7 +7,6 @@ on:
 
 jobs:
   ftp-deploy:
-    environment: "plesk-onlinewithyou"
     runs-on: ubuntu-latest
 
     steps:
@@ -27,7 +26,7 @@ jobs:
         with:
           node-version: "20"
 
-      # 🚀 Build the Portal Frontend (Saved in Laravel's public/dist/)
+      # 🚀 Build the Portal Frontend (for breederplants.onlinewithyou.nl)
       - name: Build Portal Frontend
         run: |
           cd frontend
@@ -35,7 +34,7 @@ jobs:
           npm run build -- --mode production
           cd ..
 
-      # 🚀 Build the Public App (Deployed separately)
+      # 🚀 Build the Public App Frontend (for app-breederplants.onlinewithyou.nl)
       - name: Build Public Frontend
         run: |
           cd frontend-app
@@ -43,8 +42,8 @@ jobs:
           npm run build -- --mode production
           cd ..
 
-      # 🚀 Deploy Laravel + Portal Frontend (public/dist/)
-      - name: FTP Deploy Laravel & Portal
+      # 🚀 Deploy Portal Frontend (breederplants.onlinewithyou.nl)
+      - name: FTP Deploy Portal to breederplants.onlinewithyou.nl
         uses: SamKirkland/FTP-Deploy-Action@v4.3.1
         with:
           server: ${{ secrets.SERVER }}
@@ -58,8 +57,8 @@ jobs:
             **/node_modules/**
             fileToExclude.txt
 
-      # 🚀 Deploy Public App to app.breederplants.nl
-      - name: FTP Deploy Public App
+      # 🚀 Deploy Public App to app-breederplants.onlinewithyou.nl
+      - name: FTP Deploy Public App to app-breederplants.onlinewithyou.nl
         uses: SamKirkland/FTP-Deploy-Action@v4.3.1
         with:
           server: ${{ secrets.SERVER }}
