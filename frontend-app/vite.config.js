@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
     }
 
     return {
-        base: "/dist/",
+        base: "/",
         plugins: [react()],
         server: {
             host: true,
