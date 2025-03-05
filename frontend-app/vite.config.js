@@ -9,13 +9,13 @@ export default defineConfig(({ mode }) => {
     }
 
     return {
-        base: "/",
+        base: "./",
         plugins: [react()],
         server: {
             host: true,
         },
         build: {
-            outDir: "./dist",
+            outDir: "./dist", // Keeps the build output inside "dist"
             emptyOutDir: true,
         },
     };
