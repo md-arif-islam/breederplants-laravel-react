@@ -7,6 +7,7 @@ on:
 
 jobs:
   ftp-deploy:
+    environment: "plesk-onlinewithyou"
     runs-on: ubuntu-latest
 
     steps:
@@ -50,6 +51,21 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           local-dir: ./
+          server-dir: /
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            fileToExclude.txt
+
+      # 🚀 Deploy Public App to app-breederplants.onlinewithyou.nl
+      - name: FTP Deploy Public App to app-breederplants.onlinewithyou.nl
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.1
+        with:
+          server: ${{ secrets.SERVER_APP }}
+          username: ${{ secrets.USERNAME_APP }}
+          password: ${{ secrets.PASSWORD_APP }}
+          local-dir: frontend-app/dist/
           server-dir: /
           exclude: |
             **/.git*
