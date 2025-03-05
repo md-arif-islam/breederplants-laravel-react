@@ -42,14 +42,14 @@ jobs:
           npm run build -- --mode production
           cd ..
 
-      # 🚀 Deploy Public App to app-breederplants.onlinewithyou.nl
-      - name: FTP Deploy Public App to app-breederplants.onlinewithyou.nl
+      # 🚀 Deploy Portal Frontend (breederplants.onlinewithyou.nl)
+      - name: FTP Deploy Portal to breederplants.onlinewithyou.nl
         uses: SamKirkland/FTP-Deploy-Action@v4.3.1
         with:
-          server: ${{ secrets.SERVER_APP }}
-          username: ${{ secrets.USERNAME_APP }}
-          password: ${{ secrets.PASSWORD_APP }}
-          local-dir: frontend-app/dist/
+          server: ${{ secrets.SERVER }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          local-dir: ./
           server-dir: /
           exclude: |
             **/.git*
