@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Leaf } from "lucide-react";
 
 import VarietyReportCard from "../components/VarietyReportCard";
@@ -7,12 +7,22 @@ import { useVarietyReportStore } from "../store/useVarietyReportStore";
 import { useStore } from "../store/useStore";
 
 const VarietyReportsPage = () => {
-    const { varietyReports, getVarietyReportsByUser } = useVarietyReportStore();
-    const { authUser } = useStore();
+    const [searchQuery, setSearchQuery] = useState("");
+    const [sort, setSort] = useState("");
+    const [growerId, setGrowerId] = useState("");
+
+    const {
+        isLoading,
+        getAllVarietyReports,
+        varietyReports,
+        currentPage,
+        totalPages,
+        growers,
+    } = useVarietyReportStore();
 
     useEffect(() => {
-        getVarietyReportsByUser(authUser.id);
-    }, [authUser.id, getVarietyReportsByUser]);
+        getAllVarietyReports(currentPage, searchQuery, sort, growerId);
+    }, [currentPage, searchQuery, sort, growerId, getAllVarietyReports]);
 
     useEffect(() => {
         document.title = "Variety Reports - Breederplants";

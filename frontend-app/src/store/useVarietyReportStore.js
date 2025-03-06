@@ -19,7 +19,7 @@ export const useVarietyReportStore = create((set, get) => ({
         set({ isLoading: true });
         try {
             const res = await axiosInstance.get(
-                `/api/admin/variety-reports?page=${page}&search=${searchQuery}&sort=${sort}&grower_id=${growerId}`
+                `/api/public/variety-reports?page=${page}&search=${searchQuery}&sort=${sort}&grower_id=${growerId}`
             );
             set({
                 varietyReports: res.data.varietyReports.data,
