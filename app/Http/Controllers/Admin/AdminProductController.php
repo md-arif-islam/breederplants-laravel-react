@@ -21,9 +21,11 @@ class AdminProductController extends Controller {
 
     public function store( Request $request ) {
         $request->validate( [
+            'images' => 'nullable|array',
             'genus' => 'required|string|max:255',
             'species' => 'required|string|max:255',
             'cultivar' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
             'plant_id' => 'nullable|integer',
             'protection_number' => 'nullable|integer',
             'cpvo_expiration_date' => 'nullable|date',
@@ -54,9 +56,11 @@ class AdminProductController extends Controller {
 
     public function update( Request $request, $id ) {
         $request->validate( [
+            'images' => 'nullable|array',
             'genus' => 'required|string|max:255',
             'species' => 'required|string|max:255',
             'cultivar' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
             'plant_id' => 'nullable|integer',
             'protection_number' => 'nullable|integer',
             'cpvo_expiration_date' => 'nullable|date',

@@ -14,9 +14,11 @@ class Product extends Model {
      * @var array<int, string>
      */
     protected $fillable = [
+        'images', // New JSON field for thumbnails
         'genus',
         'species',
         'cultivar',
+        'description', // New text field for product description
         'plant_id',
         'protection_number',
         'cpvo_expiration_date',
@@ -40,5 +42,6 @@ class Product extends Model {
         'sun_icon' => 'boolean',
         'edible_icon' => 'boolean',
         'partial_shade_icon' => 'boolean',
+        'images' => 'array', // Cast images as an array
     ];
 }
