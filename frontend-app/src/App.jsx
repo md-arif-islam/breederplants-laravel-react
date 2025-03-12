@@ -7,6 +7,7 @@ import FrontendLayout from "./layout/FrontendLayout";
 
 import PublicProductsPage from "./pages/PublicProductsPage";
 import PublicProductViewPage from "./pages/PublicProductViewPage";
+import PublicContactPage from "./pages/PublicContactPage";
 
 const App = () => {
     const loadingBarRef = useRef(null);
@@ -32,6 +33,8 @@ const App = () => {
                         path="/products/:id"
                         element={<PublicProductViewPage />}
                     />
+
+                    <Route path="/contact" element={<PublicContactPage />} />
                 </Route>
             </Routes>
             <Toaster />
