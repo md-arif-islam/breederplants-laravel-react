@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->json( 'images' )->first();
 
             // Add description column after the cultivar column
-            $table->text( 'description' )->after( 'cultivar' );
+            $table->text( 'description' )->nullable()->after( 'cultivar' );
         } );
     }
 
