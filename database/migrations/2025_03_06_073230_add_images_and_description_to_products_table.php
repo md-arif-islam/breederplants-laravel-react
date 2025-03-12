@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void {
         Schema::table( 'products', function ( Blueprint $table ) {
             // Add images column as the first column
-            $table->json( 'images' )->first();
+            $table->json( 'images' )->after( 'id' );
 
             // Add description column after the cultivar column
             $table->text( 'description' )->nullable()->after( 'cultivar' );

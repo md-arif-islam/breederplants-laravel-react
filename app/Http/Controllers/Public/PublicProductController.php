@@ -20,7 +20,10 @@ class PublicProductController extends Controller {
     }
 
     public function show( $id ) {
-        $product = Product::findOrFail( $id );
+        $product = Product::with( [
+            'breeders',
+            'growers',
+        ] )->findOrFail( $id );
         return response()->json( ['product' => $product] );
     }
 }

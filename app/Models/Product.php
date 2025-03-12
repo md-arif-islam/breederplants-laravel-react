@@ -44,4 +44,20 @@ class Product extends Model {
         'partial_shade_icon' => 'boolean',
         'images' => 'array', // Cast images as an array
     ];
+
+    public function breederProducts() {
+        return $this->hasMany( BreederProduct::class );
+    }
+
+    public function breeders() {
+        return $this->belongsToMany( Breeder::class, 'breeder_products' );
+    }
+
+    public function growerProducts() {
+        return $this->hasMany( GrowerProduct::class );
+    }
+
+    public function growers() {
+        return $this->belongsToMany( Grower::class, 'grower_products' );
+    }
 }
