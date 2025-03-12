@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Leaf, X } from "lucide-react";
 import { useProductStore } from "../../store/useProductStore";
-import { useStore } from "../../store/useStore";
 
 export default function AdminProductCreatePage() {
     const { isLoading, createProduct } = useProductStore();
-    const { breeders, getAllBreeders } = useStore();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        document.title = "Create Product - Breederplants";
+    }, []);
+
     const [formData, setFormData] = useState({
-        breeder_id: "",
         genus: "",
         species: "",
         cultivar: "",
+        description: "",
         plant_id: "",
         protection_number: "",
         cpvo_expiration_date: "",
@@ -20,47 +23,70 @@ export default function AdminProductCreatePage() {
         sun_icon: false,
         edible_icon: false,
         partial_shade_icon: false,
-        blooming_time_icon: false,
         blooming_period: "",
-        pruning_icon: false,
         pruning_period: "",
-        winter_hardy_icon: false,
         temperature: "",
-        height_icon: false,
         height: "",
-        width_icon: false,
         width: "",
+        images: [],
     });
 
-    useEffect(() => {
-        document.title = "Create Product - Breederplants";
-    }, []);
+    const [imagePreviews, setImagePreviews] = useState([]);
+    const [loadedImages, setLoadedImages] = useState({});
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const fileToBase64 = (file) =>
+        new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+            reader.readAsDataURL(file);
+        });
+
+    const handleNewImage = async (e) => {
+        const files = Array.from(e.target.files);
         try {
-            const response = await createProduct(formData);
-            if (response.status === 200) {
-                navigate(`/admin/products`);
-            }
-        } catch (error) {
-            console.error("Failed to create product:", error);
+            const base64Images = await Promise.all(files.map(fileToBase64));
+            setFormData((prev) => ({
+                ...prev,
+                images: [...prev.images, ...base64Images],
+            }));
+            setImagePreviews((prev) => [...prev, ...base64Images]);
+        } catch (err) {
+            console.error("Error converting files to base64", err);
         }
     };
 
-    useEffect(() => {
-        // Fetch all breeders
-        getAllBreeders();
-    }, [getAllBreeders]);
+    const removeImage = (index) => {
+        setFormData((prev) => ({
+            ...prev,
+            images: prev.images.filter((_, i) => i !== index),
+        }));
+        setImagePreviews((prev) => prev.filter((_, i) => i !== index));
+        setLoadedImages((prev) => {
+            const updated = { ...prev };
+            delete updated[index];
+            return updated;
+        });
+    };
+
+    const handleImgLoad = (index) => {
+        setLoadedImages((prev) => ({ ...prev, [index]: true }));
+    };
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setFormData((prevFormData) => {
-            return {
-                ...prevFormData,
-                [name]: type === "checkbox" ? checked : value,
-            };
-        });
+        setFormData((prev) => ({
+            ...prev,
+            [name]: type === "checkbox" ? checked : value,
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const response = await createProduct(formData);
+        if (response.status === 200) {
+            navigate(`/admin/products/`);
+        }
     };
 
     if (isLoading) {
@@ -75,262 +101,260 @@ export default function AdminProductCreatePage() {
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">
             <div className="container mx-auto px-4 py-8">
                 <div className="bg-white rounded-lg shadow p-6 mb-6">
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div className="grid gap-6 md:grid-cols-2">
-                            <div>
-                                <label className="block text-sm font-medium mb-1">
-                                    Breeder
-                                </label>
-                                <select
-                                    name="breeder_id"
-                                    value={formData.breeder_id}
-                                    onChange={handleChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                                >
-                                    <option value="">Select Breeder</option>
-                                    {breeders?.map((breeder) => (
-                                        <option
-                                            key={breeder.id}
-                                            value={breeder.id}
+                    <form
+                        onSubmit={handleSubmit}
+                        encType="multipart/form-data"
+                        className="space-y-4"
+                    >
+                        {/* Images Section */}
+                        <div className="mb-4 lg:mb-8">
+                            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2">
+                                {imagePreviews.map((image, index) => (
+                                    <div key={index} className="relative">
+                                        {!loadedImages[index] && (
+                                            <div className="absolute inset-0 flex items-center justify-center bg-gray-200 rounded-lg">
+                                                <Leaf className="h-5 w-5 text-gray-400 animate-pulse" />
+                                            </div>
+                                        )}
+                                        <img
+                                            src={
+                                                image.startsWith("data:")
+                                                    ? image
+                                                    : `${
+                                                          import.meta.env
+                                                              .VITE_API_URL
+                                                      }/${image}`
+                                            }
+                                            alt={`Image ${index}`}
+                                            className="w-full h-32 md:h-40 lg:h-60 object-cover rounded-lg"
+                                            onLoad={() => handleImgLoad(index)}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => removeImage(index)}
+                                            className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
                                         >
-                                            {breeder.company_name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium mb-1">
-                                    Plant ID
-                                </label>
-                                <input
-                                    type="number"
-                                    name="plant_id"
-                                    value={formData.plant_id}
-                                    onChange={handleChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium mb-1">
-                                    Genus
-                                </label>
-                                <input
-                                    type="text"
-                                    name="genus"
-                                    value={formData.genus}
-                                    onChange={handleChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium mb-1">
-                                    Species
-                                </label>
-                                <input
-                                    type="text"
-                                    name="species"
-                                    value={formData.species}
-                                    onChange={handleChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium mb-1">
-                                    Cultivar
-                                </label>
-                                <input
-                                    type="text"
-                                    name="cultivar"
-                                    value={formData.cultivar}
-                                    onChange={handleChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium mb-1">
-                                    Protection Number
-                                </label>
-                                <input
-                                    type="number"
-                                    name="protection_number"
-                                    value={formData.protection_number}
-                                    onChange={handleChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium mb-1">
-                                    CPVO Expiration Date
-                                </label>
-                                <input
-                                    type="date"
-                                    name="cpvo_expiration_date"
-                                    value={formData.cpvo_expiration_date || ""}
-                                    onChange={handleChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium mb-1">
-                                    Royalty Fee
-                                </label>
-                                <input
-                                    type="number"
-                                    name="royalty_fee"
-                                    step="0.01"
-                                    value={formData.royalty_fee}
-                                    onChange={handleChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium mb-1">
-                                    Blooming Period
-                                </label>
-                                <input
-                                    type="text"
-                                    name="blooming_period"
-                                    value={formData.blooming_period}
-                                    onChange={handleChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium mb-1">
-                                    Pruning Period
-                                </label>
-                                <input
-                                    type="text"
-                                    name="pruning_period"
-                                    value={formData.pruning_period}
-                                    onChange={handleChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium mb-1">
-                                    Temperature
-                                </label>
-                                <input
-                                    type="number"
-                                    name="temperature"
-                                    value={formData.temperature}
-                                    onChange={handleChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium mb-1">
-                                    Height
-                                </label>
-                                <input
-                                    type="number"
-                                    name="height"
-                                    value={formData.height}
-                                    onChange={handleChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium mb-1">
-                                    Width
-                                </label>
-                                <input
-                                    type="number"
-                                    name="width"
-                                    value={formData.width}
-                                    onChange={handleChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium mb-1">
+                                            <X className="h-4 w-4" />
+                                        </button>
+                                    </div>
+                                ))}
+                                <label className="flex items-center justify-center h-32 md:h-40 lg:h-60 border-2 border-dashed rounded-lg cursor-pointer hover:border-green-500">
                                     <input
-                                        type="checkbox"
-                                        name="sun_icon"
-                                        checked={formData.sun_icon}
-                                        onChange={handleChange}
-                                        className="mr-2"
+                                        type="file"
+                                        multiple
+                                        accept="image/*"
+                                        className="hidden"
+                                        onChange={handleNewImage}
                                     />
-                                    Sun Icon
+                                    <span className="text-gray-500 text-sm">
+                                        Add Images
+                                    </span>
                                 </label>
                             </div>
+                        </div>
 
+                        <div className="grid gap-6 md:grid-cols-2">
+                            {/* First Column */}
                             <div>
-                                <label className="block text-sm font-medium mb-1">
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-1">
+                                        Genus{" "}
+                                        <span className="text-red-500">*</span>
+                                    </label>
                                     <input
-                                        type="checkbox"
-                                        name="edible_icon"
-                                        checked={formData.edible_icon}
+                                        type="text"
+                                        name="genus"
+                                        value={formData.genus}
                                         onChange={handleChange}
-                                        className="mr-2"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
                                     />
-                                    Edible Icon
-                                </label>
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-1">
+                                        Species{" "}
+                                        <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="species"
+                                        value={formData.species}
+                                        onChange={handleChange}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-1">
+                                        Cultivar
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="cultivar"
+                                        value={formData.cultivar}
+                                        onChange={handleChange}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-1">
+                                        Description
+                                    </label>
+                                    <textarea
+                                        name="description"
+                                        value={formData.description}
+                                        onChange={handleChange}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                        rows="3"
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-1">
+                                        Plant ID
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="plant_id"
+                                        value={formData.plant_id}
+                                        onChange={handleChange}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-1">
+                                        Protection Number
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="protection_number"
+                                        value={formData.protection_number}
+                                        onChange={handleChange}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-1">
+                                        CPVO Expiration Date
+                                    </label>
+                                    <input
+                                        type="date"
+                                        name="cpvo_expiration_date"
+                                        value={
+                                            formData.cpvo_expiration_date || ""
+                                        }
+                                        onChange={handleChange}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                    />
+                                </div>
                             </div>
 
+                            {/* Second Column */}
                             <div>
-                                <label className="block text-sm font-medium mb-1">
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-1">
+                                        Royalty Fee
+                                    </label>
                                     <input
-                                        type="checkbox"
-                                        name="partial_shade_icon"
-                                        checked={formData.partial_shade_icon}
+                                        type="number"
+                                        name="royalty_fee"
+                                        step="0.01"
+                                        value={formData.royalty_fee}
                                         onChange={handleChange}
-                                        className="mr-2"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
                                     />
-                                    Partial Shade Icon
-                                </label>
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium mb-1">
+                                </div>
+                                <div className="mb-4 flex items-center space-x-2">
+                                    <label className="mr-2 flex items-center">
+                                        <input
+                                            type="checkbox"
+                                            name="sun_icon"
+                                            checked={formData.sun_icon}
+                                            onChange={handleChange}
+                                            className="mr-1"
+                                        />
+                                        Sun Icon
+                                    </label>
+                                    <label className="mr-2 flex items-center">
+                                        <input
+                                            type="checkbox"
+                                            name="edible_icon"
+                                            checked={formData.edible_icon}
+                                            onChange={handleChange}
+                                            className="mr-1"
+                                        />
+                                        Edible Icon
+                                    </label>
+                                    <label className="flex items-center">
+                                        <input
+                                            type="checkbox"
+                                            name="partial_shade_icon"
+                                            checked={
+                                                formData.partial_shade_icon
+                                            }
+                                            onChange={handleChange}
+                                            className="mr-1"
+                                        />
+                                        Partial Shade Icon
+                                    </label>
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-1">
+                                        Blooming Period
+                                    </label>
                                     <input
-                                        type="checkbox"
-                                        name="blooming_time_icon"
-                                        checked={formData.blooming_time_icon}
+                                        type="text"
+                                        name="blooming_period"
+                                        value={formData.blooming_period}
                                         onChange={handleChange}
-                                        className="mr-2"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
                                     />
-                                    Blooming Time Icon
-                                </label>
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium mb-1">
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-1">
+                                        Pruning Period
+                                    </label>
                                     <input
-                                        type="checkbox"
-                                        name="pruning_icon"
-                                        checked={formData.pruning_icon}
+                                        type="text"
+                                        name="pruning_period"
+                                        value={formData.pruning_period}
                                         onChange={handleChange}
-                                        className="mr-2"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
                                     />
-                                    Pruning Icon
-                                </label>
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium mb-1">
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-1">
+                                        Temperature
+                                    </label>
                                     <input
-                                        type="checkbox"
-                                        name="winter_hardy_icon"
-                                        checked={formData.winter_hardy_icon}
+                                        type="number"
+                                        name="temperature"
+                                        value={formData.temperature}
                                         onChange={handleChange}
-                                        className="mr-2"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
                                     />
-                                    Winter Hardy Icon
-                                </label>
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-1">
+                                        Height
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="height"
+                                        value={formData.height}
+                                        onChange={handleChange}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-1">
+                                        Width
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="width"
+                                        value={formData.width}
+                                        onChange={handleChange}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                    />
+                                </div>
                             </div>
                         </div>
 
