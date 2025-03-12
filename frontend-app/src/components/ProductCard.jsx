@@ -3,17 +3,19 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Leaf } from "lucide-react";
 
-export default function VarietyReportCard({ report }) {
+export default function ProductCard({ product }) {
     const [imgLoaded, setImgLoaded] = useState(false); // state to track image load
 
-    const thumbnailUrl =
-        report.thumbnail && !report.thumbnail.startsWith("data:")
-            ? `${import.meta.env.VITE_API_URL}/${report.thumbnail}`
-            : report.thumbnail || "/placeholder.svg";
+    const rawImage =
+        (product && JSON.parse(product.images)[0]) || "/placeholder.svg";
+    const imageUrl =
+        rawImage && !rawImage.startsWith("data:")
+            ? `${import.meta.env.VITE_API_URL}/${rawImage}`
+            : rawImage;
 
     return (
         <Link
-            to={`/variety-reports/${report.id}`}
+            to={`/variety-reports/${product.id}`}
             className="bg-white rounded-2xl p-2 flex items-center gap-4 mb-4 drop-shadow-md hover:shadow-xl"
         >
             <div className="w-20 h-20 lg:w-28 lg:h-28 flex-shrink-0 relative">
@@ -23,8 +25,8 @@ export default function VarietyReportCard({ report }) {
                     </div>
                 )}
                 <img
-                    src={thumbnailUrl}
-                    alt={report.variety_name}
+                    src={imageUrl}
+                    alt="Variety Sample"
                     loading="lazy"
                     onLoad={() => setImgLoaded(true)}
                     className={`w-full h-full object-cover rounded-xl transition-opacity duration-300 ${
@@ -32,26 +34,14 @@ export default function VarietyReportCard({ report }) {
                     }`}
                 />
             </div>
+
             <div className="flex-1 min-w-0">
-                <h3 className="text-md md:text-xl font-semibold text-gray-900 mb-1">
-                    {report.variety_name}
-                </h3>
-                {report.start_date && (
-                    <p className="text-gray-600 text-xs md:text-sm">
-                        Start Date: {report.start_date}
-                    </p>
-                )}
-                {report.end_date && (
-                    <p className="text-gray-600 text-xs md:text-sm">
-                        End Date: {report.end_date}
-                    </p>
-                )}
-                {report.samples_schedule && (
-                    <p className="text-gray-600 text-xs md:text-sm">
-                        Next Sample Date:{" "}
-                        {JSON.parse(report.samples_schedule)[0]}
-                    </p>
-                )}
+                <p className="text-sm md:text-xl font-semibold text-gray-900 mb-1">
+                    {product?.genus} {product?.species} {product?.cultivar}
+                </p>
+                <p className="text-xs md:text-sm font-semibold text-gray-500 mb-1">
+                    {product?.description}
+                </p>
             </div>
             <ChevronRight className="w-6 h-6 text-gray-400 flex-shrink-0" />
         </Link>

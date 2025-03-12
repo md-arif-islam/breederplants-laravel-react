@@ -12,7 +12,7 @@ use App\Http\Controllers\BreederController;
 use App\Http\Controllers\GrowerController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProductionReportController;
-use App\Http\Controllers\Public\PublicVarietyReportController;
+use App\Http\Controllers\Public\PublicProductController;
 use App\Http\Controllers\SalesReportController;
 use App\Http\Controllers\VarietyReportController;
 use App\Http\Controllers\VarietySampleController;
@@ -137,8 +137,8 @@ Route::middleware( 'auth:sanctum' )->group( function () {
 
 // -------------------- Public routes ----------------------
 Route::prefix( 'public' )->group( function () {
-    Route::get( '/variety-reports', [PublicVarietyReportController::class, 'index'] );
-    Route::get( '/variety-reports/{id}', [PublicVarietyReportController::class, 'show'] );
+    Route::get( '/products', [PublicProductController::class, 'index'] );
+    Route::get( '/products/{id}', [PublicProductController::class, 'show'] );
 } );
 
 Route::get( '/clear', function () {
