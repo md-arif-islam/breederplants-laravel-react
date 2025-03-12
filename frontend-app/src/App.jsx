@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import FrontendLayout from "./layout/FrontendLayout";
 
 import PublicProductsPage from "./pages/PublicProductsPage";
+import PublicProductViewPage from "./pages/PublicProductViewPage";
 
 const App = () => {
     const loadingBarRef = useRef(null);
@@ -27,6 +28,10 @@ const App = () => {
             <Routes>
                 <Route element={<FrontendLayout />}>
                     <Route path="/" element={<PublicProductsPage />} />
+                    <Route
+                        path="/products/:id"
+                        element={<PublicProductViewPage />}
+                    />
                 </Route>
             </Routes>
             <Toaster />

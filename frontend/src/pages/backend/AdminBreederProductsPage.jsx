@@ -47,8 +47,6 @@ export default function AdminBreederProductsPage() {
     const closeAddModal = () => {
         setShowAddModal(false);
         setSelectedProduct(null);
-        setUnitPrice("");
-        setStock("");
     };
 
     const handleAddProduct = async (e) => {
