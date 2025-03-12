@@ -15,7 +15,7 @@ export default function ProductCard({ product }) {
 
     return (
         <Link
-            to={`/variety-reports/${product.id}`}
+            to={`/products/${product.id}`}
             className="bg-white rounded-2xl p-2 flex items-center gap-4 mb-4 drop-shadow-md hover:shadow-xl"
         >
             <div className="w-20 h-20 lg:w-28 lg:h-28 flex-shrink-0 relative">
@@ -39,8 +39,10 @@ export default function ProductCard({ product }) {
                 <p className="text-sm md:text-xl font-semibold text-gray-900 mb-1">
                     {product?.genus} {product?.species} {product?.cultivar}
                 </p>
-                <p className="text-xs md:text-sm font-semibold text-gray-500 mb-1">
-                    {product?.description}
+                <p className="text-sm md:text-sm font-semibold text-gray-500 mb-1">
+                    {product?.description && product.description.length > 50
+                        ? product.description.substring(0, 50) + "..."
+                        : product?.description}
                 </p>
             </div>
             <ChevronRight className="w-6 h-6 text-gray-400 flex-shrink-0" />
