@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminBreederProductController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminGrowerProductController;
 use App\Http\Controllers\Admin\AdminProductController;
@@ -96,6 +97,11 @@ Route::prefix( 'admin' )->middleware( ['auth:sanctum', \App\Http\Middleware\Admi
     Route::put( '/growers/{grower_id}/products/{id}', [AdminGrowerProductController::class, 'update'] );
     Route::delete( '/growers/{grower_id}/products/{id}', [AdminGrowerProductController::class, 'destroy'] );
     Route::put( '/growers/{grower_id}/products/{id}/add-quantity', [AdminGrowerProductController::class, 'addQuantity'] );
+
+    Route::get( '/breeders/{breeder_id}/products', [AdminBreederProductController::class, 'index'] );
+    Route::post( '/breeders/{breeder_id}/products', [AdminBreederProductController::class, 'store'] );
+    Route::get( '/breeders/{breeder_id}/products/{id}', [AdminBreederProductController::class, 'show'] );
+    Route::delete( '/breeders/{breeder_id}/products/{id}', [AdminBreederProductController::class, 'destroy'] );
 
     // Sales Reports
     Route::get( '/sales-reports', [AdminSalesReportController::class, 'index'] );
