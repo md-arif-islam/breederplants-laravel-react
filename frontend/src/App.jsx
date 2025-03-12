@@ -48,6 +48,7 @@ import AdminProductionReportsPage from "./pages/backend/AdminProductionReportsPa
 import ProductionReportsPage from "./pages/ProductionReportsPage";
 import ProductionReportSubmitPage from "./pages/ProductionReportSubmitPage";
 import AdminProductionReportViewPage from "./pages/backend/AdminProductReportViewPage";
+import AdminBreederProductsPage from "./pages/backend/AdminBreederProductsPage";
 
 const App = () => {
     const { authUser, isCheckingAuth, checkAuth } = useStore();
@@ -253,6 +254,11 @@ const App = () => {
                     <Route
                         path="breeders/create"
                         element={<AdminBreederCreatePage />}
+                    />
+
+                    <Route
+                        path="breeders/:id/products"
+                        element={<AdminBreederProductsPage />}
                     />
 
                     <Route path="products" element={<AdminProductsPage />} />
