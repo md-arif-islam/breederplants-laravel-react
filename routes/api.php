@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\AdminProductionReportController;
 use App\Http\Controllers\Admin\AdminSalesReportController;
 use App\Http\Controllers\Admin\AdminVarietyReportController;
 use App\Http\Controllers\Admin\AdminVarietySampleController;
+use App\Http\Controllers\Admin\CategoryController; // Added for category CRUD
+use App\Http\Controllers\Admin\TagController; // Added for tag CRUD
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\BreederController;
 use App\Http\Controllers\GrowerController;
@@ -121,6 +123,18 @@ Route::prefix( 'admin' )->middleware( ['auth:sanctum', \App\Http\Middleware\Admi
     Route::get( '/production-reports', [AdminProductionReportController::class, 'index'] );
     Route::get( '/production-reports/{id}', [AdminProductionReportController::class, 'show'] );
     Route::delete( '/production-reports/{id}/empty', [AdminProductionReportController::class, 'empty'] )->name( 'production-reports.empty' );
+
+    // Category CRUD
+    Route::get( '/categories', [CategoryController::class, 'index'] );
+    Route::post( '/categories', [CategoryController::class, 'store'] );
+    Route::put( '/categories/{category}', [CategoryController::class, 'update'] );
+    Route::delete( '/categories/{category}', [CategoryController::class, 'destroy'] );
+
+    // Tag CRUD
+    Route::get( '/tags', [TagController::class, 'index'] );
+    Route::post( '/tags', [TagController::class, 'store'] );
+    Route::put( '/tags/{tag}', [TagController::class, 'update'] );
+    Route::delete( '/tags/{tag}', [TagController::class, 'destroy'] );
 
 } );
 
