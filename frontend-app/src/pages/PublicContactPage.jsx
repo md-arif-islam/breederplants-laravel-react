@@ -36,7 +36,10 @@ export default function PublicContactPage() {
             <div className="container mx-auto">
                 <div className="-mt-12 z-10 relative">
                     <div className="min-h-screen bg-white rounded-t-3xl p-4 lg:p-6">
-                        <form className="space-y-4" onSubmit={handleSubmit}>
+                        <form
+                            className="space-y-4 max-w-2xl mx-auto"
+                            onSubmit={handleSubmit}
+                        >
                             <div className="space-y-4">
                                 <div>
                                     <label
