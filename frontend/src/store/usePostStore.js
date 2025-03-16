@@ -6,14 +6,28 @@ export const usePostStore = create((set) => ({
     isLoading: false,
     posts: [],
     currentPost: null,
+    currentPage: 1,
+    totalPages: 1,
+    categories: [],
+    tags: [],
 
-    getAllPosts: async (page = 1, searchQuery = "") => {
+    getAllPosts: async (
+        page = 1,
+        searchQuery = "",
+        category = "",
+        tag = "",
+        sort = ""
+    ) => {
         set({ isLoading: true });
         try {
             const res = await axiosInstance.get(
-                `/api/admin/posts?page=${page}&search=${searchQuery}`
+                `/api/admin/posts?page=${page}&search=${searchQuery}&category=${category}&tags=${tag}&sort=${sort}`
             );
-            set({ posts: res.data.data }); // Assuming posts are in res.data.data
+            set({
+                posts: res.data.data,
+                currentPage: res.data.current_page,
+                totalPages: res.data.last_page,
+            }); // Assuming posts are in res.data.data
         } catch (error) {
             const message =
                 error?.response?.data?.message || "Error fetching posts";
@@ -89,7 +103,8 @@ export const usePostStore = create((set) => ({
     getAllCategories: async () => {
         set({ isLoading: true });
         try {
-            const res = await axiosInstance.get(`/api/admin/categories`);
+            const res = await axiosInstance.get(`/api/admin/posts/categories`);
+            set({ categories: res.data });
             return res.data;
         } catch (error) {
             toast.error(
@@ -103,7 +118,10 @@ export const usePostStore = create((set) => ({
     createCategory: async (data) => {
         set({ isLoading: true });
         try {
-            const res = await axiosInstance.post(`/api/admin/categories`, data);
+            const res = await axiosInstance.post(
+                `/api/admin/posts/categories`,
+                data
+            );
             toast.success(res.data.message);
             return res;
         } catch (error) {
@@ -119,7 +137,7 @@ export const usePostStore = create((set) => ({
         set({ isLoading: true });
         try {
             const res = await axiosInstance.put(
-                `/api/admin/categories/${id}`,
+                `/api/admin/posts/categories/${id}`,
                 data
             );
             toast.success(res.data.message);
@@ -137,7 +155,7 @@ export const usePostStore = create((set) => ({
         set({ isLoading: true });
         try {
             const res = await axiosInstance.delete(
-                `/api/admin/categories/${id}`
+                `/api/admin/posts/categories/${id}`
             );
             toast.success(res.data.message);
             return res;
@@ -155,7 +173,8 @@ export const usePostStore = create((set) => ({
     getAllTags: async () => {
         set({ isLoading: true });
         try {
-            const res = await axiosInstance.get(`/api/admin/tags`);
+            const res = await axiosInstance.get(`/api/admin/posts/tags`);
+            set({ tags: res.data });
             return res.data;
         } catch (error) {
             toast.error(
@@ -169,7 +188,7 @@ export const usePostStore = create((set) => ({
     createTag: async (data) => {
         set({ isLoading: true });
         try {
-            const res = await axiosInstance.post(`/api/admin/tags`, data);
+            const res = await axiosInstance.post(`/api/admin/posts/tags`, data);
             toast.success(res.data.message);
             return res;
         } catch (error) {
@@ -182,7 +201,10 @@ export const usePostStore = create((set) => ({
     updateTag: async (id, data) => {
         set({ isLoading: true });
         try {
-            const res = await axiosInstance.put(`/api/admin/tags/${id}`, data);
+            const res = await axiosInstance.put(
+                `/api/admin/posts/tags/${id}`,
+                data
+            );
             toast.success(res.data.message);
             return res;
         } catch (error) {
@@ -195,7 +217,9 @@ export const usePostStore = create((set) => ({
     deleteTag: async (id) => {
         set({ isLoading: true });
         try {
-            const res = await axiosInstance.delete(`/api/admin/tags/${id}`);
+            const res = await axiosInstance.delete(
+                `/api/admin/posts/tags/${id}`
+            );
             toast.success(res.data.message);
             return res;
         } catch (error) {
