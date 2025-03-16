@@ -61,6 +61,11 @@ class User extends Authenticatable {
         return $this->hasOne( Breeder::class );
     }
 
+    // Added posts relationship for seeder usage.
+    public function posts() {
+        return $this->hasMany( Post::class );
+    }
+
     // Relationships
     public function varietyReportsAsGrower() {
         return $this->hasMany( VarietyReport::class, 'grower_id' );
