@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminBreederProductController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminGrowerProductController;
+use App\Http\Controllers\Admin\AdminPostController;
 use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Admin\AdminProductionReportController;
 use App\Http\Controllers\Admin\AdminSalesReportController;
@@ -103,6 +104,13 @@ Route::prefix( 'admin' )->middleware( ['auth:sanctum', \App\Http\Middleware\Admi
     Route::post( '/breeders/{breeder_id}/products', [AdminBreederProductController::class, 'store'] );
     Route::get( '/breeders/{breeder_id}/products/{id}', [AdminBreederProductController::class, 'show'] );
     Route::delete( '/breeders/{breeder_id}/products/{id}', [AdminBreederProductController::class, 'destroy'] );
+
+    // Posts API routes
+    Route::get( '/posts', [AdminPostController::class, 'index'] );
+    Route::post( '/posts', [AdminPostController::class, 'store'] );
+    Route::get( '/posts/{post}', [AdminPostController::class, 'show'] );
+    Route::put( '/posts/{post}', [AdminPostController::class, 'update'] );
+    Route::delete( '/posts/{post}', [AdminPostController::class, 'destroy'] );
 
     // Sales Reports
     Route::get( '/sales-reports', [AdminSalesReportController::class, 'index'] );
