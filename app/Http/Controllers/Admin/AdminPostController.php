@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class AdminPostController extends Controller {
@@ -147,5 +150,68 @@ class AdminPostController extends Controller {
 
         $post->delete();
         return response()->json( ['message' => 'Post deleted successfully'] );
+    }
+
+    // Category CRUD methods
+    public function indexCategories() {
+        Log::info( 'Fetching categories' );
+        $categories = Category::all();
+        return response()->json( $categories );
+    }
+
+    public function storeCategory( Request $request ) {
+        $validated = $request->validate( [
+            'name' => 'required|string|max:255',
+            'slug' => 'required|string|unique:categories,slug',
+        ] );
+        $category = Category::create( $validated );
+        return response()->json( ['message' => 'Category created successfully', 'category' => $category], 201 );
+    }
+
+    public function updateCategory( Request $request, $category ) {
+        $cat = Category::findOrFail( $category );
+        $validated = $request->validate( [
+            'name' => 'sometimes|required|string|max:255',
+            'slug' => 'sometimes|required|string|unique:categories,slug,' . $cat->id,
+        ] );
+        $cat->update( $validated );
+        return response()->json( ['message' => 'Category updated successfully', 'category' => $cat] );
+    }
+
+    public function destroyCategory( $category ) {
+        $cat = Category::findOrFail( $category );
+        $cat->delete();
+        return response()->json( ['message' => 'Category deleted successfully'] );
+    }
+
+    // Tag CRUD methods
+    public function indexTags() {
+        $tags = Tag::all();
+        return response()->json( $tags );
+    }
+
+    public function storeTag( Request $request ) {
+        $validated = $request->validate( [
+            'name' => 'required|string|max:255',
+            'slug' => 'required|string|unique:tags,slug',
+        ] );
+        $tag = Tag::create( $validated );
+        return response()->json( ['message' => 'Tag created successfully', 'tag' => $tag], 201 );
+    }
+
+    public function updateTag( Request $request, $tag ) {
+        $tg = Tag::findOrFail( $tag );
+        $validated = $request->validate( [
+            'name' => 'sometimes|required|string|max:255',
+            'slug' => 'sometimes|required|string|unique:tags,slug,' . $tg->id,
+        ] );
+        $tg->update( $validated );
+        return response()->json( ['message' => 'Tag updated successfully', 'tag' => $tg] );
+    }
+
+    public function destroyTag( $tag ) {
+        $tg = Tag::findOrFail( $tag );
+        $tg->delete();
+        return response()->json( ['message' => 'Tag deleted successfully'] );
     }
 }

@@ -107,13 +107,6 @@ Route::prefix( 'admin' )->middleware( ['auth:sanctum', \App\Http\Middleware\Admi
     Route::get( '/breeders/{breeder_id}/products/{id}', [AdminBreederProductController::class, 'show'] );
     Route::delete( '/breeders/{breeder_id}/products/{id}', [AdminBreederProductController::class, 'destroy'] );
 
-    // Posts API routes
-    Route::get( '/posts', [AdminPostController::class, 'index'] );
-    Route::post( '/posts', [AdminPostController::class, 'store'] );
-    Route::get( '/posts/{post}', [AdminPostController::class, 'show'] );
-    Route::put( '/posts/{post}', [AdminPostController::class, 'update'] );
-    Route::delete( '/posts/{post}', [AdminPostController::class, 'destroy'] );
-
     // Sales Reports
     Route::get( '/sales-reports', [AdminSalesReportController::class, 'index'] );
     Route::get( '/sales-reports/{id}', [AdminSalesReportController::class, 'show'] );
@@ -125,16 +118,23 @@ Route::prefix( 'admin' )->middleware( ['auth:sanctum', \App\Http\Middleware\Admi
     Route::delete( '/production-reports/{id}/empty', [AdminProductionReportController::class, 'empty'] )->name( 'production-reports.empty' );
 
     // Category CRUD
-    Route::get( '/categories', [CategoryController::class, 'index'] );
-    Route::post( '/categories', [CategoryController::class, 'store'] );
-    Route::put( '/categories/{category}', [CategoryController::class, 'update'] );
-    Route::delete( '/categories/{category}', [CategoryController::class, 'destroy'] );
+    Route::get( '/posts/categories', [AdminPostController::class, 'indexCategories'] );
+    Route::post( '/posts/categories', [AdminPostController::class, 'storeCategory'] );
+    Route::put( '/posts/categories/{category}', [AdminPostController::class, 'updateCategory'] );
+    Route::delete( '/posts/categories/{category}', [AdminPostController::class, 'destroyCategory'] );
 
     // Tag CRUD
-    Route::get( '/tags', [TagController::class, 'index'] );
-    Route::post( '/tags', [TagController::class, 'store'] );
-    Route::put( '/tags/{tag}', [TagController::class, 'update'] );
-    Route::delete( '/tags/{tag}', [TagController::class, 'destroy'] );
+    Route::get( '/posts/tags', [AdminPostController::class, 'indexTags'] );
+    Route::post( '/posts/tags', [AdminPostController::class, 'storeTag'] );
+    Route::put( '/posts/tags/{tag}', [AdminPostController::class, 'updateTag'] );
+    Route::delete( '/posts/tags/{tag}', [AdminPostController::class, 'destroyTag'] );
+
+    // Posts API routes
+    Route::get( '/posts', [AdminPostController::class, 'index'] );
+    Route::post( '/posts', [AdminPostController::class, 'store'] );
+    Route::get( '/posts/{post}', [AdminPostController::class, 'show'] );
+    Route::put( '/posts/{post}', [AdminPostController::class, 'update'] );
+    Route::delete( '/posts/{post}', [AdminPostController::class, 'destroy'] );
 
 } );
 
