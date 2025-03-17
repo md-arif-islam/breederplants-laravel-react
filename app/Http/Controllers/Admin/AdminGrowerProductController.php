@@ -40,7 +40,7 @@ class AdminGrowerProductController extends Controller {
 
         return response()->json(
             [
-                'message' => 'Grower Product Detail added successfully.',
+                'message' => 'Product added successfully.',
             ]
         );
     }
@@ -85,7 +85,7 @@ class AdminGrowerProductController extends Controller {
 
         return response()->json(
             [
-                'message' => 'Grower Product Detail updated successfully.',
+                'message' => 'Product updated successfully.',
                 'growerProduct' => $growerProduct,
             ]
         );
@@ -97,7 +97,7 @@ class AdminGrowerProductController extends Controller {
 
         return response()->json(
             [
-                'message' => 'Grower Product Detail deleted successfully.',
+                'message' => 'Product deleted successfully.',
             ]
         );
     }

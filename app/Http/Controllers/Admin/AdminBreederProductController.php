@@ -36,13 +36,13 @@ class AdminBreederProductController extends Controller {
 
         return response()->json(
             [
-                'message' => 'Breeder Product Detail added successfully.',
+                'message' => 'Product added successfully.',
             ]
         );
     }
 
     public function show( $breeder_id, $id ) {
-        // Fetch all breeder product details for the specified breeder
+        // Fetch all Products for the specified breeder
         $breederProducts = BreederProduct::find( $id )
             ->with( ['breeder', 'product'] )
             ->get();
@@ -59,7 +59,7 @@ class AdminBreederProductController extends Controller {
 
         return response()->json(
             [
-                'message' => 'Breeder Product Detail deleted successfully.',
+                'message' => 'Product deleted successfully.',
             ]
         );
     }
