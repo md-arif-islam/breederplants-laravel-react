@@ -60,7 +60,7 @@ export default function VarietySampleUpdatePage() {
                 seed_color: varietySample.seed_color || "",
                 amount_of_seeds:
                     varietySample.amount_of_seeds?.toString() || "",
-                status: varietySample.status?.toString() || "1",
+                status: "1",
                 note: varietySample.note || "",
                 images: images,
             }));
@@ -558,35 +558,15 @@ export default function VarietySampleUpdatePage() {
                                     />
                                 </div>
                             </div>
-
-                            {/* Status Field */}
-                            <div className="mb-2 lg:mb-4">
-                                <label className="block text-sm md:text-sm font-medium text-gray-700">
-                                    Status
-                                </label>
-                                <select
-                                    name="status"
-                                    value={formData.status}
-                                    onChange={(e) =>
-                                        setFormData({
-                                            ...formData,
-                                            status: e.target.value,
-                                        })
-                                    }
-                                    className="mt-1 w-full px-2 py-1 md:px-3 md:py-2 bg-gray-50 border border-gray-300 rounded-md text-sm md:text-sm"
-                                >
-                                    <option value="1">Active</option>
-                                    <option value="0">Inactive</option>
-                                </select>
-                            </div>
                         </div>
 
                         {/* Submit Button */}
-                        <div className="border rounded-full p-2 mt-8">
+
+                        <div className="mt-6">
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="w-full text-center align-middle h-12 rounded-full text-sm lg:text-lg bg-primary hover:bg-secondary text-white font-semibold transition-colors flex items-center justify-center"
+                                className="w-full rounded h-10 bg-primary hover:bg-green-700 text-white transition-colors flex items-center justify-center"
                             >
                                 {isLoading ? (
                                     <Loader2 className="h-5 w-5 animate-spin mr-2" />

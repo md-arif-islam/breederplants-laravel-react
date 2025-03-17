@@ -85,69 +85,73 @@ export function VarietySampleCard({ sample, varietyReportId, onDelete }) {
             <div className="p-4 grid gap-2 text-sm">
                 <div className="grid grid-cols-2">
                     <span className="text-gray-600">Sample Date</span>
-                    <span className="justify-self-end">
+                    <span className="justify-self-end uppercase">
                         {sample.sample_date}
                     </span>
                 </div>
                 <div className="grid grid-cols-2">
                     <span className="text-gray-600">Leaf Color</span>
-                    <span className="justify-self-end">
+                    <span className="justify-self-end uppercase">
                         {sample.leaf_color}
                     </span>
                 </div>
                 <div className="grid grid-cols-2">
                     <span className="text-gray-600">Amount of Branches</span>
-                    <span className="justify-self-end">
+                    <span className="justify-self-end uppercase">
                         {sample.amount_of_branches}
                     </span>
                 </div>
                 <div className="grid grid-cols-2">
                     <span className="text-gray-600">Flower Buds</span>
-                    <span className="justify-self-end">
+                    <span className="justify-self-end uppercase">
                         {sample.flower_buds}
                     </span>
                 </div>
                 <div className="grid grid-cols-2">
                     <span className="text-gray-600">Branch Color</span>
-                    <span className="justify-self-end">
+                    <span className="justify-self-end uppercase">
                         {sample.branch_color}
                     </span>
                 </div>
                 <div className="grid grid-cols-2">
                     <span className="text-gray-600">Roots</span>
-                    <span className="justify-self-end">{sample.roots}</span>
+                    <span className="justify-self-end uppercase">
+                        {sample.roots}
+                    </span>
                 </div>
                 <div className="grid grid-cols-2">
                     <span className="text-gray-600">Flower Color</span>
-                    <span className="justify-self-end">
+                    <span className="justify-self-end uppercase">
                         {sample.flower_color}
                     </span>
                 </div>
                 <div className="grid grid-cols-2">
                     <span className="text-gray-600">Flower Petals</span>
-                    <span className="justify-self-end">
+                    <span className="justify-self-end uppercase">
                         {sample.flower_petals}
                     </span>
                 </div>
                 <div className="grid grid-cols-2">
                     <span className="text-gray-600">Flowering Time</span>
-                    <span className="justify-self-end">
+                    <span className="justify-self-end uppercase">
                         {sample.flowering_time}
                     </span>
                 </div>
                 <div className="grid grid-cols-2">
                     <span className="text-gray-600">Length of Flowering</span>
-                    <span className="justify-self-end">
+                    <span className="justify-self-end uppercase">
                         {sample.length_of_flowering}
                     </span>
                 </div>
                 <div className="grid grid-cols-2">
                     <span className="text-gray-600">Seeds</span>
-                    <span className="justify-self-end">{sample.seeds}</span>
+                    <span className="justify-self-end uppercase">
+                        {sample.seeds}
+                    </span>
                 </div>
                 <div className="grid grid-cols-2">
                     <span className="text-gray-600">Amount of Seeds</span>
-                    <span className="justify-self-end">
+                    <span className="justify-self-end uppercase">
                         {sample.amount_of_seeds}
                     </span>
                 </div>

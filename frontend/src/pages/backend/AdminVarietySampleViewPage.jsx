@@ -102,7 +102,7 @@ export default function AdminVarietySampleViewPage() {
                                 <h3 className="text-sm font-medium text-gray-500">
                                     Sample Date
                                 </h3>
-                                <p className="mt-1">
+                                <p className="mt-1 uppercase">
                                     {varietySample.sample_date}
                                 </p>
                             </div>
@@ -110,7 +110,7 @@ export default function AdminVarietySampleViewPage() {
                                 <h3 className="text-sm font-medium text-gray-500">
                                     Leaf Color
                                 </h3>
-                                <p className="mt-1">
+                                <p className="mt-1 uppercase">
                                     {varietySample.leaf_color}
                                 </p>
                             </div>
@@ -118,7 +118,7 @@ export default function AdminVarietySampleViewPage() {
                                 <h3 className="text-sm font-medium text-gray-500">
                                     Amount of Branches
                                 </h3>
-                                <p className="mt-1">
+                                <p className="mt-1 uppercase">
                                     {varietySample.amount_of_branches}
                                 </p>
                             </div>
@@ -126,7 +126,7 @@ export default function AdminVarietySampleViewPage() {
                                 <h3 className="text-sm font-medium text-gray-500">
                                     Flower Buds
                                 </h3>
-                                <p className="mt-1">
+                                <p className="mt-1 uppercase">
                                     {varietySample.flower_buds}
                                 </p>
                             </div>
@@ -134,7 +134,7 @@ export default function AdminVarietySampleViewPage() {
                                 <h3 className="text-sm font-medium text-gray-500">
                                     Branch Color
                                 </h3>
-                                <p className="mt-1">
+                                <p className="mt-1 uppercase">
                                     {varietySample.branch_color}
                                 </p>
                             </div>
@@ -142,13 +142,15 @@ export default function AdminVarietySampleViewPage() {
                                 <h3 className="text-sm font-medium text-gray-500">
                                     Roots
                                 </h3>
-                                <p className="mt-1">{varietySample.roots}</p>
+                                <p className="mt-1 uppercase">
+                                    {varietySample.roots}
+                                </p>
                             </div>
                             <div>
                                 <h3 className="text-sm font-medium text-gray-500">
                                     Flower Color
                                 </h3>
-                                <p className="mt-1">
+                                <p className="mt-1 uppercase">
                                     {varietySample.flower_color}
                                 </p>
                             </div>
@@ -156,7 +158,7 @@ export default function AdminVarietySampleViewPage() {
                                 <h3 className="text-sm font-medium text-gray-500">
                                     Flower Petals
                                 </h3>
-                                <p className="mt-1">
+                                <p className="mt-1 uppercase">
                                     {varietySample.flower_petals}
                                 </p>
                             </div>
@@ -164,7 +166,7 @@ export default function AdminVarietySampleViewPage() {
                                 <h3 className="text-sm font-medium text-gray-500">
                                     Flowering Time
                                 </h3>
-                                <p className="mt-1">
+                                <p className="mt-1 uppercase">
                                     {varietySample.flowering_time}
                                 </p>
                             </div>
@@ -172,7 +174,7 @@ export default function AdminVarietySampleViewPage() {
                                 <h3 className="text-sm font-medium text-gray-500">
                                     Length of Flowering
                                 </h3>
-                                <p className="mt-1">
+                                <p className="mt-1 uppercase">
                                     {varietySample.length_of_flowering}
                                 </p>
                             </div>
@@ -180,13 +182,15 @@ export default function AdminVarietySampleViewPage() {
                                 <h3 className="text-sm font-medium text-gray-500">
                                     Seeds
                                 </h3>
-                                <p className="mt-1">{varietySample.seeds}</p>
+                                <p className="mt-1 uppercase">
+                                    {varietySample.seeds}
+                                </p>
                             </div>
                             <div>
                                 <h3 className="text-sm font-medium text-gray-500">
                                     Seed Color
                                 </h3>
-                                <p className="mt-1">
+                                <p className="mt-1 uppercase">
                                     {varietySample.seed_color}
                                 </p>
                             </div>
@@ -194,18 +198,8 @@ export default function AdminVarietySampleViewPage() {
                                 <h3 className="text-sm font-medium text-gray-500">
                                     Amount of Seeds
                                 </h3>
-                                <p className="mt-1">
+                                <p className="mt-1 uppercase">
                                     {varietySample.amount_of_seeds}
-                                </p>
-                            </div>
-                            <div>
-                                <h3 className="text-sm font-medium text-gray-500">
-                                    Status
-                                </h3>
-                                <p className="mt-1">
-                                    {varietySample.status === 0
-                                        ? "Inactive"
-                                        : "Active"}
                                 </p>
                             </div>
                         </div>
