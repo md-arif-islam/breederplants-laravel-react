@@ -17,6 +17,7 @@ use App\Http\Controllers\GrowerController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProductionReportController;
 use App\Http\Controllers\Public\PublicContactController;
+use App\Http\Controllers\Public\PublicPostController;
 use App\Http\Controllers\Public\PublicProductController;
 use App\Http\Controllers\SalesReportController;
 use App\Http\Controllers\VarietyReportController;
@@ -168,7 +169,12 @@ Route::middleware( 'auth:sanctum' )->group( function () {
 Route::prefix( 'public' )->group( function () {
     Route::get( '/products', [PublicProductController::class, 'index'] );
     Route::get( '/products/{id}', [PublicProductController::class, 'show'] );
+
     Route::post( '/contact', [PublicContactController::class, 'store'] );
+
+    // The PublicPostController now supports filtering posts by tag id or slug.
+    Route::get( '/posts', [PublicPostController::class, 'index'] );
+    Route::get( '/posts/{post}', [PublicPostController::class, 'show'] );
 } );
 
 Route::get( '/clear', function () {
