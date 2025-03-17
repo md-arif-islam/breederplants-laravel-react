@@ -11,12 +11,13 @@ const AdminDashboardPage = () => {
     }, [getDashboardStats]);
 
     useEffect(() => {
-        document.title = "Admin Dashboard - Breederplants";
+        document.title = "Dashboard - Breederplants";
     }, []);
 
     const stats = dashboardStats || {};
 
     return (
+        // TODO: Add perfect icons
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">
             <div className="px-6 py-8 mx-auto">
                 <div className="mt-4">
@@ -189,6 +190,59 @@ const AdminDashboardPage = () => {
                                         </h4>
                                         <div className="text-gray-500">
                                             Submitted Sales Reports
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* News */}
+                            <div className="w-full px-6 sm:w-1/2 lg:w-1/3 xl:w-1/4 mb-4">
+                                <div className="flex items-center px-5 py-6 bg-white rounded-md shadow">
+                                    <div className="p-3 bg-primary bg-opacity-75 rounded-full">
+                                        <File className="w-8 h-8 text-white" />
+                                    </div>
+                                    <div className="mx-5">
+                                        <h4 className="text-2xl font-semibold text-gray-700">
+                                            {stats.totalNews || 0}
+                                        </h4>
+                                        <div className="text-gray-500">
+                                            News
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Not Submitted Production Reports */}
+                            <div className="w-full px-6 sm:w-1/2 lg:w-1/3 xl:w-1/4 mb-4">
+                                <div className="flex items-center px-5 py-6 bg-white rounded-md shadow">
+                                    <div className="p-3 bg-primary bg-opacity-75 rounded-full">
+                                        <File className="w-8 h-8 text-white" />
+                                    </div>
+                                    <div className="mx-5">
+                                        <h4 className="text-2xl font-semibold text-gray-700">
+                                            {stats.notSubmittedProductionReportCountAtCurrentQuarter ||
+                                                0}
+                                        </h4>
+                                        <div className="text-gray-500">
+                                            Pending Production Reports
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Submitted Production Reports */}
+                            <div className="w-full px-6 sm:w-1/2 lg:w-1/3 xl:w-1/4 mb-4">
+                                <div className="flex items-center px-5 py-6 bg-white rounded-md shadow">
+                                    <div className="p-3 bg-primary bg-opacity-75 rounded-full">
+                                        <File className="w-8 h-8 text-white" />
+                                    </div>
+                                    <div className="mx-5">
+                                        <h4 className="text-2xl font-semibold text-gray-700">
+                                            {stats.submittedProductionReportCountAtCurrentQuarter ||
+                                                0}
+                                        </h4>
+                                        <div className="text-gray-500">
+                                            Submitted Production Reports
                                         </div>
                                     </div>
                                 </div>
