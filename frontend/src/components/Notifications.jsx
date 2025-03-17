@@ -118,7 +118,7 @@ const Notifications = () => {
 
     return (
         // Removed 'relative' here so the dropdown can be positioned via 'fixed'
-        <div className="flex flex-row items-center">
+        <div className="flex flex-row items-center justify-center ">
             {authUser?.role === "admin" && (
                 <Link to="/admin/dashboard" className="notification mx-1">
                     <img
