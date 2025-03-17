@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Pencil, Trash2, Download, TreePineIcon } from "lucide-react";
-import hydrangeaImg from "../../assets/images/hydrangea-paniculata.jpg";
+"use client";
+
+import { useEffect, useState } from "react";
 import { useStore } from "../../store/useStore";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -10,16 +10,17 @@ export default function AdminBreederViewPage() {
 
     // Fetch id from URL
     const { id } = useParams();
-
     const navigate = useNavigate();
-
-    useEffect(() => {
-        document.title = "Breeder Details - Breederplants";
-    }, []);
 
     useEffect(() => {
         getBreeder(id);
     }, [getBreeder, id]);
+
+    useEffect(() => {
+        document.title = currentBreeder?.company_name
+            ? `Breeder - ${currentBreeder.company_name} - Breederplants`
+            : "Breeder - Breederplants";
+    }, [currentBreeder?.company_name]);
 
     const handleDelete = async (e) => {
         e.preventDefault();
@@ -27,15 +28,57 @@ export default function AdminBreederViewPage() {
     };
 
     const confirmDelete = async () => {
-        setShowPopup(false);
         const response = await deleteBreeder(id);
         if (response.status === 200) {
             navigate(`/admin/breeders`);
         }
+        setShowPopup(false);
     };
 
     const cancelDelete = () => {
         setShowPopup(false);
+    };
+
+    // Helper function to display values or N/A
+    const displayValue = (value, isLink = false, type = "") => {
+        if (!value) return <span className="text-gray-500">N/A</span>;
+
+        if (isLink && type === "website") {
+            return (
+                <a
+                    href={value.startsWith("http") ? value : `https://${value}`}
+                    className="text-blue-600 hover:underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    {value}
+                </a>
+            );
+        }
+
+        if (isLink && type === "phone") {
+            return (
+                <a
+                    href={`tel:${value}`}
+                    className="text-blue-600 hover:underline"
+                >
+                    {value}
+                </a>
+            );
+        }
+
+        return value;
+    };
+
+    // Helper function to safely parse JSON and handle null/undefined values
+    const safelyParseJSON = (jsonString) => {
+        if (!jsonString) return null;
+        try {
+            return JSON.parse(jsonString);
+        } catch (error) {
+            console.error("Error parsing JSON:", error);
+            return null;
+        }
     };
 
     if (isLoading) {
@@ -46,27 +89,43 @@ export default function AdminBreederViewPage() {
         );
     }
 
+    // Safely parse JSON data
+    const salesReportingQuarters = safelyParseJSON(
+        currentBreeder?.sales_reporting_quarter
+    );
+    const productionReportingQuarters = safelyParseJSON(
+        currentBreeder?.production_reporting_quarter
+    );
+    const productionReportingValues = safelyParseJSON(
+        currentBreeder?.production_reporting_values
+    );
+
     return (
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">
             <div className="container mx-auto px-4 py-8">
-                {/* Sample Details */}
                 <div className="bg-white rounded-lg shadow">
                     <div className="p-6">
-                        <div className="grid gap-4 sm:grid-cols-2">
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+                            <h2 className="text-xl font-bold text-gray-800 mb-2 sm:mb-0">
+                                Breeder Details
+                            </h2>
+                        </div>
+
+                        <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
                             <div className="space-y-2">
                                 <h3 className="text-sm font-medium text-gray-500">
                                     Breeder ID
                                 </h3>
-                                <p className="mt-1">
-                                    {currentBreeder?.username}
+                                <p className="font-medium text-gray-900">
+                                    {displayValue(currentBreeder?.username)}
                                 </p>
                             </div>
                             <div className="space-y-2">
                                 <h3 className="text-sm font-medium text-gray-500">
                                     Company Name
                                 </h3>
-                                <p className="mt-1">
-                                    {currentBreeder?.company_name}
+                                <p className="font-medium text-gray-900">
+                                    {displayValue(currentBreeder?.company_name)}
                                 </p>
                             </div>
 
@@ -74,129 +133,152 @@ export default function AdminBreederViewPage() {
                                 <h3 className="text-sm font-medium text-gray-500">
                                     Company Email
                                 </h3>
-                                <p className="mt-1">
-                                    {currentBreeder?.company_email}
+                                <p className="font-medium text-gray-900">
+                                    {displayValue(
+                                        currentBreeder?.company_email
+                                    )}
                                 </p>
                             </div>
                             <div className="space-y-2">
                                 <h3 className="text-sm font-medium text-gray-500">
                                     Contact Person
                                 </h3>
-                                <p className="mt-1">
-                                    {currentBreeder?.contact_person}
+                                <p className="font-medium text-gray-900">
+                                    {displayValue(
+                                        currentBreeder?.contact_person
+                                    )}
                                 </p>
                             </div>
                             <div className="space-y-2">
                                 <h3 className="text-sm font-medium text-gray-500">
                                     Phone
                                 </h3>
-                                <p className="mt-1">
-                                    <a href={`tel:${currentBreeder?.phone}`}>
-                                        {currentBreeder?.phone}
-                                    </a>
+                                <p className="font-medium text-gray-900">
+                                    {displayValue(
+                                        currentBreeder?.phone,
+                                        true,
+                                        "phone"
+                                    )}
                                 </p>
                             </div>
                             <div className="space-y-2">
                                 <h3 className="text-sm font-medium text-gray-500">
                                     Website
                                 </h3>
-                                <p className="mt-1">
-                                    {currentBreeder?.website && (
-                                        <a
-                                            href={currentBreeder.website}
-                                            className="text-blue-500 hover:underline"
-                                        >
-                                            {currentBreeder.website}
-                                        </a>
+                                <p className="font-medium text-gray-900">
+                                    {displayValue(
+                                        currentBreeder?.website,
+                                        true,
+                                        "website"
                                     )}
                                 </p>
                             </div>
                         </div>
 
-                        <div className="mt-6 border-t border-gray-100 pt-4">
-                            <div className="grid gap-4 sm:grid-cols-2 mt-2">
-                                <div className="space-y-2">
-                                    <h3 className="text-sm font-medium text-gray-500">
-                                        Street
-                                    </h3>
-                                    <p className="mt-1">
-                                        {currentBreeder?.street}
-                                    </p>
-                                </div>
-                                <div className="space-y-2">
-                                    <h3 className="text-sm font-medium text-gray-500">
-                                        City
-                                    </h3>
-                                    <p className="mt-1">
-                                        {currentBreeder?.city}
-                                    </p>
-                                </div>
+                        <div className="my-6 border-t border-gray-200"></div>
 
-                                <div className="space-y-2">
-                                    <h3 className="text-sm font-medium text-gray-500">
-                                        Postal Code
-                                    </h3>
-                                    <p className="mt-1">
-                                        {currentBreeder?.postal_code}
-                                    </p>
-                                </div>
-                                <div className="space-y-2">
-                                    <h3 className="text-sm font-medium text-gray-500">
-                                        Country
-                                    </h3>
-                                    <p className="mt-1">
-                                        {currentBreeder?.country}
-                                    </p>
-                                </div>
+                        <h3 className="text-lg font-semibold mb-4 text-gray-800">
+                            Address Information
+                        </h3>
+                        <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
+                            <div className="space-y-2">
+                                <h3 className="text-sm font-medium text-gray-500">
+                                    Street
+                                </h3>
+                                <p className="font-medium text-gray-900">
+                                    {displayValue(currentBreeder?.street)}
+                                </p>
+                            </div>
+                            <div className="space-y-2">
+                                <h3 className="text-sm font-medium text-gray-500">
+                                    City
+                                </h3>
+                                <p className="font-medium text-gray-900">
+                                    {displayValue(currentBreeder?.city)}
+                                </p>
+                            </div>
 
-                                <div className="space-y-2">
-                                    <h3 className="text-sm font-medium text-gray-500">
-                                        Status
-                                    </h3>
-                                    <p className="mt-1">
-                                        <span
-                                            className={`inline-flex items-center px-2 py-1 rounded-full text-sm font-medium ${
-                                                currentBreeder?.user?.status ===
-                                                "active"
-                                                    ? "bg-green-100 text-green-800"
-                                                    : "bg-yellow-100 text-yellow-800"
-                                            }`}
-                                        >
-                                            {currentBreeder?.user?.status ===
-                                            "active"
-                                                ? "Active"
-                                                : "Inactive"}
-                                        </span>
-                                    </p>
-                                </div>
+                            <div className="space-y-2">
+                                <h3 className="text-sm font-medium text-gray-500">
+                                    Postal Code
+                                </h3>
+                                <p className="font-medium text-gray-900">
+                                    {displayValue(currentBreeder?.postal_code)}
+                                </p>
+                            </div>
+                            <div className="space-y-2">
+                                <h3 className="text-sm font-medium text-gray-500">
+                                    Country
+                                </h3>
+                                <p className="font-medium text-gray-900">
+                                    {displayValue(currentBreeder?.country)}
+                                </p>
                             </div>
                         </div>
 
-                        <div className="flex gap-2 pt-8">
+                        <div className="flex flex-wrap gap-2 pt-8">
                             <button
                                 className="inline-flex items-center px-3 py-2 text-sm font-medium border rounded-md hover:bg-gray-50"
                                 onClick={() =>
                                     navigate(`/admin/breeders/${id}/edit`)
                                 }
                             >
-                                <Pencil className="mr-2 h-4 w-4" />
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-4 w-4 mr-2"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                                    />
+                                </svg>
                                 Edit
                             </button>
                             <button
                                 className="inline-flex items-center px-3 py-2 text-sm font-medium border rounded-md hover:bg-gray-50"
                                 onClick={handleDelete}
                             >
-                                <Trash2 className="mr-2 h-4 w-4" />
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-4 w-4 mr-2"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                    />
+                                </svg>
                                 Delete
                             </button>
-
                             <button
                                 onClick={() =>
                                     navigate(`/admin/breeders/${id}/products`)
                                 }
                                 className="inline-flex items-center px-3 py-2 text-sm font-medium border rounded-md hover:bg-gray-50"
                             >
-                                <TreePineIcon className="mr-2 h-4 w-4" />
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-4 w-4 mr-2"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                                    />
+                                </svg>
                                 Breeder Products
                             </button>
                         </div>

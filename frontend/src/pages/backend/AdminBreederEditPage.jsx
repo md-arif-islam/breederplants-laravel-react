@@ -279,29 +279,6 @@ export default function AdminBreederEditPage() {
                                     className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md"
                                 />
                             </div>
-
-                            <div>
-                                <label className="block text-sm font-medium mb-1">
-                                    Status{" "}
-                                    <span className="text-red-500">*</span>
-                                </label>
-                                <select
-                                    value={formData.is_active}
-                                    onChange={(e) =>
-                                        setFormData({
-                                            ...formData,
-                                            is_active:
-                                                e.target.value === "true"
-                                                    ? true
-                                                    : false,
-                                        })
-                                    }
-                                    className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md"
-                                >
-                                    <option value="true">Active</option>
-                                    <option value="false">Inactive</option>
-                                </select>
-                            </div>
                         </div>
                         <button
                             type="submit"
@@ -317,60 +294,68 @@ export default function AdminBreederEditPage() {
                     <h2 className="text-xl font-semibold mb-4">
                         Change Password
                     </h2>
-                    <form onSubmit={handlePasswordSubmit} className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-medium mb-1">
-                                Password <span className="text-red-500">*</span>
-                            </label>
-                            <div className="flex gap-2">
+                    <form
+                        onSubmit={handlePasswordSubmit}
+                        className="space-y-4 overflow-hidden"
+                    >
+                        <div className="grid gap-6 md:grid-cols-2 ">
+                            <div>
+                                <label className="block text-sm font-medium mb-1">
+                                    Password{" "}
+                                    <span className="text-red-500">*</span>
+                                </label>
+                                <div className="flex gap-2">
+                                    <input
+                                        type={
+                                            showPassword ? "text" : "password"
+                                        }
+                                        value={passwordData.password}
+                                        onChange={(e) =>
+                                            setPasswordData({
+                                                ...passwordData,
+                                                password: e.target.value,
+                                            })
+                                        }
+                                        className="flex-1 px-3 py-2 bg-white border border-gray-300 rounded-md"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={generatePassword}
+                                        className="px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                                    >
+                                        Generate
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            setShowPassword(!showPassword)
+                                        }
+                                        className="px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                                    >
+                                        Show
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-1">
+                                    Confirm Password{" "}
+                                    <span className="text-red-500">*</span>
+                                </label>
                                 <input
                                     type={showPassword ? "text" : "password"}
-                                    value={passwordData.password}
+                                    value={passwordData.password_confirmation}
                                     onChange={(e) =>
                                         setPasswordData({
                                             ...passwordData,
-                                            password: e.target.value,
+                                            password_confirmation:
+                                                e.target.value,
                                         })
                                     }
-                                    className="flex-1 px-3 py-2 bg-white border border-gray-300 rounded-md"
+                                    className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md"
                                 />
-                                <button
-                                    type="button"
-                                    onClick={generatePassword}
-                                    className="px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-                                >
-                                    Generate
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() =>
-                                        setShowPassword(!showPassword)
-                                    }
-                                    className="px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-                                >
-                                    Show
-                                </button>
                             </div>
                         </div>
-
-                        <div>
-                            <label className="block text-sm font-medium mb-1">
-                                Confirm Password{" "}
-                                <span className="text-red-500">*</span>
-                            </label>
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                value={passwordData.password_confirmation}
-                                onChange={(e) =>
-                                    setPasswordData({
-                                        ...passwordData,
-                                        password_confirmation: e.target.value,
-                                    })
-                                }
-                                className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md"
-                            />
-                        </div>
-
                         <button
                             type="submit"
                             className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"

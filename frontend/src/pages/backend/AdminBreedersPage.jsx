@@ -21,7 +21,7 @@ export default function AdminBreederPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        document.title = "Admin Breeders - Breederplants";
+        document.title = "Breeders - Breederplants";
     }, []);
 
     // Fetch all breeders on mount (or whenever currentPage changes).
@@ -134,9 +134,9 @@ export default function AdminBreederPage() {
                                                 <tr>
                                                     <td
                                                         colSpan={7}
-                                                        className="text-center bg-red-100 p-5 rounded-md"
+                                                        className="text-center py-4 bg-red-100 p-5 rounded-md"
                                                     >
-                                                        No breeder found.
+                                                        No breeders found.
                                                     </td>
                                                 </tr>
                                             )}
