@@ -292,7 +292,8 @@ const App = () => {
                         path="news/categories"
                         element={<AdminNewsCategoriesPage />}
                     />
-                    <Route path="news/:id" element={<AdminNewsTagsPage />} />
+                    <Route path="news/tags" element={<AdminNewsTagsPage />} />
+                    <Route path="news/:id" element={<AdminNewsViewPage />} />
                     <Route
                         path="news/:id/edit"
                         element={<AdminNewsUpdatePage />}

@@ -137,6 +137,9 @@ export default function AdminNewsPage() {
                             <thead>
                                 <tr className="bg-green-600 h-16 rounded-md shadow">
                                     <th className="px-4 py-2 border-b text-left text-white font-semibold">
+                                        Thumbnail
+                                    </th>
+                                    <th className="px-4 py-2 border-b text-left text-white font-semibold">
                                         Title
                                     </th>
                                     <th className="px-4 py-2 border-b text-left text-white font-semibold">
@@ -154,7 +157,7 @@ export default function AdminNewsPage() {
                                 {isLoading ? (
                                     <tr>
                                         <td
-                                            colSpan={4}
+                                            colSpan={5}
                                             className="text-center py-4"
                                         >
                                             <div className="animate-pulse">
@@ -168,7 +171,7 @@ export default function AdminNewsPage() {
                                         {!isLoading && posts?.length === 0 && (
                                             <tr>
                                                 <td
-                                                    colSpan={4}
+                                                    colSpan={5}
                                                     className="text-center py-4 bg-red-100 p-5 rounded-md"
                                                 >
                                                     No news found.
@@ -186,6 +189,18 @@ export default function AdminNewsPage() {
                                                         );
                                                     }}
                                                 >
+                                                    <td className="px-4 py-2 border-b text-left">
+                                                        <img
+                                                            src={`${
+                                                                import.meta.env
+                                                                    .VITE_API_URL
+                                                            }/${
+                                                                post.thumbnail
+                                                            }`}
+                                                            alt={post.title}
+                                                            className="w-16 h-16 object-cover rounded"
+                                                        />
+                                                    </td>
                                                     <td className="px-4 py-2 border-b text-left">
                                                         {post.title}
                                                     </td>

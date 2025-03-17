@@ -8,6 +8,8 @@ import FrontendLayout from "./layout/FrontendLayout";
 import PublicProductsPage from "./pages/PublicProductsPage";
 import PublicProductViewPage from "./pages/PublicProductViewPage";
 import PublicContactPage from "./pages/PublicContactPage";
+import PublicNewsPage from "./pages/PublicNewsPage";
+import PublicNewsViewPage from "./pages/PublicNewsViewPage";
 
 const App = () => {
     const loadingBarRef = useRef(null);
@@ -35,6 +37,8 @@ const App = () => {
                     />
 
                     <Route path="/contact" element={<PublicContactPage />} />
+                    <Route path="/news" element={<PublicNewsPage />} />
+                    <Route path="/news/:id" element={<PublicNewsViewPage />} />
                 </Route>
             </Routes>
             <Toaster />

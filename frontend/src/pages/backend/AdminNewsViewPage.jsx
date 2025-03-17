@@ -77,9 +77,11 @@ export default function AdminNewsViewPage() {
                                 <h2 className="text-2xl font-bold text-gray-800">
                                     {currentPost.title}
                                 </h2>
-                                <p className="mt-4 text-gray-700">
-                                    {currentPost.description}
-                                </p>
+                                <iframe
+                                    srcDoc={currentPost.description}
+                                    title="News Description"
+                                    className="mt-4 w-full h-96 border rounded" // Adjust height as needed
+                                />
                             </div>
 
                             <div className="pt-4">

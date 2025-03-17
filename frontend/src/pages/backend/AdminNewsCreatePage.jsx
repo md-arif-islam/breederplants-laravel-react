@@ -6,6 +6,8 @@ import { usePostStore } from "../../store/usePostStore";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { MultiSelect } from "../../components/backend/MultiSelect";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 export default function AdminNewsCreatePage() {
     const navigate = useNavigate();
@@ -69,6 +71,13 @@ export default function AdminNewsCreatePage() {
         }
     };
 
+    const handleDescriptionChange = (value) => {
+        setFormData({
+            ...formData,
+            description: value,
+        });
+    };
+
     return (
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">
             <div className="container mx-auto px-4 py-8">
@@ -102,17 +111,11 @@ export default function AdminNewsCreatePage() {
                                         Description{" "}
                                         <span className="text-red-500">*</span>
                                     </label>
-                                    <textarea
-                                        required
+                                    <ReactQuill
                                         value={formData.description}
-                                        onChange={(e) =>
-                                            setFormData({
-                                                ...formData,
-                                                description: e.target.value,
-                                            })
-                                        }
+                                        onChange={handleDescriptionChange}
                                         placeholder="Enter news description"
-                                        className="mt-1 w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
+                                        className="mt-1 w-full"
                                     />
                                 </div>
 
