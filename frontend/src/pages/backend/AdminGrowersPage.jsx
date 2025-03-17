@@ -153,7 +153,7 @@ export default function AdminGrowerPage() {
                                                     )
                                                 }
                                             >
-                                                <td className="px-4 py-5 text-primary font-medium border-b">
+                                                <td className="px-4 py-2 text-primary font-medium border-b">
                                                     {grower.username}
                                                 </td>
                                                 <td className="px-4 py-2 text-[#353535] border-b">
