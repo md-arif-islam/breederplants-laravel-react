@@ -53,6 +53,8 @@ import AdminNewsPage from "./pages/backend/AdminNewsPage";
 import AdminNewsViewPage from "./pages/backend/AdminNewsViewPage";
 import AdminNewsUpdatePage from "./pages/backend/AdminNewsUpdatePage";
 import AdminNewsCreatePage from "./pages/backend/AdminNewsCreatePage"; // Import the new page
+import AdminNewsCategoriesPage from "./pages/backend/AdminNewsCategoriesPage";
+import AdminNewsTagsPage from "./pages/backend/AdminNewsTagsPage";
 
 const App = () => {
     const { authUser, isCheckingAuth, checkAuth } = useStore();
@@ -286,7 +288,11 @@ const App = () => {
                         element={<AdminProductionReportViewPage />}
                     />
                     <Route path="news" element={<AdminNewsPage />} />
-                    <Route path="news/:id" element={<AdminNewsViewPage />} />
+                    <Route
+                        path="news/categories"
+                        element={<AdminNewsCategoriesPage />}
+                    />
+                    <Route path="news/:id" element={<AdminNewsTagsPage />} />
                     <Route
                         path="news/:id/edit"
                         element={<AdminNewsUpdatePage />}
