@@ -7,8 +7,9 @@ use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class AdminPostController extends Controller {
     // Display a listing of posts.
@@ -64,15 +65,20 @@ class AdminPostController extends Controller {
         $validated = $request->validate( [
             'title' => 'required|string|max:255',
             'description' => 'required',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'thumbnail' => 'nullable|string',
             'user_id' => 'required|integer',
             'categories' => 'nullable|array',
             'tags' => 'nullable|array',
         ] );
 
-        if ( $request->hasFile( 'thumbnail' ) ) {
-            $thumbnailPath = $request->file( 'thumbnail' )->store( 'thumbnails', 'public' );
-            $validated['thumbnail'] = $thumbnailPath;
+        if ( isset( $validated['thumbnail'] ) ) {
+            if ( preg_match( '/^data:image\/(\w+);base64,/', $validated['thumbnail'] ) ) {
+                $relativePath = $this->saveImage( $validated['thumbnail'] );
+                $validated['thumbnail'] = $relativePath;
+            } else {
+                // nothing
+            }
+
         }
 
         $post = Post::create( $validated );
@@ -108,19 +114,27 @@ class AdminPostController extends Controller {
         $validated = $request->validate( [
             'title' => 'required|string|max:255',
             'description' => 'required',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'thumbnail' => 'nullable|string',
             'categories' => 'nullable|array',
             'tags' => 'nullable|array',
         ] );
 
         // Handle thumbnail update
-        if ( $request->hasFile( 'thumbnail' ) ) {
-            // Delete old thumbnail
-            if ( $post->thumbnail ) {
-                Storage::delete( 'public/' . $post->thumbnail );
+        if ( isset( $request['thumbnail'] ) ) {
+            if ( preg_match( '/^data:image\/(\w+);base64,/', $request['thumbnail'] ) ) {
+
+                if ( $post->thumbnail ) {
+                    if ( file_exists( $post->thumbnail ) ) {
+                        unlink( $post->thumbnail );
+                    }
+                }
+
+                $relativePath = $this->saveImage( $request['thumbnail'] );
+                $validated['thumbnail'] = $relativePath;
+            } else {
+
             }
-            $thumbnailPath = $request->file( 'thumbnail' )->store( 'thumbnails', 'public' );
-            $validated['thumbnail'] = $thumbnailPath;
+
         }
 
         $post->update( $validated );
@@ -145,11 +159,47 @@ class AdminPostController extends Controller {
     public function destroy( Post $post ) {
         // Delete thumbnail
         if ( $post->thumbnail ) {
-            Storage::delete( 'public/' . $post->thumbnail );
+            if ( file_exists( $post->thumbnail ) ) {
+                unlink( $post->thumbnail );
+            }
         }
 
         $post->delete();
         return response()->json( ['message' => 'Post deleted successfully'] );
+    }
+
+    private function saveImage( $image ) {
+        // Check if image is valid base64 string
+        if ( preg_match( '/^data:image\/(\w+);base64,/', $image, $type ) ) {
+            // Take out the base64 encoded text without mime type
+            $image = substr( $image, strpos( $image, ',' ) + 1 );
+            // Get file extension
+            $type = strtolower( $type[1] ); // jpg, png, gif
+
+            // Check if file is an image
+            if ( !in_array( $type, ['jpg', 'jpeg', 'gif', 'png'] ) ) {
+                throw new \Exception( 'invalid image type' );
+            }
+            $image = str_replace( ' ', '+', $image );
+            $image = base64_decode( $image );
+
+            if ( $image === false ) {
+                throw new \Exception( 'base64_decode failed' );
+            }
+        } else {
+            throw new \Exception( 'did not match data URI with image data' );
+        }
+
+        $dir = 'images/news/';
+        $file = Str::random() . '.' . $type;
+        $absolutePath = public_path( $dir );
+        $relativePath = $dir . $file;
+        if ( !File::exists( $absolutePath ) ) {
+            File::makeDirectory( $absolutePath, 0755, true );
+        }
+        file_put_contents( $relativePath, $image );
+
+        return $relativePath;
     }
 
     // Category CRUD methods
