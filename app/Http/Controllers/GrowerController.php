@@ -41,7 +41,6 @@ class GrowerController extends Controller {
             'username' => 'required|string|max:255|unique:growers,username',
             'company_email' => 'required|string|email|max:255|unique:users,email',
             'password' => 'nullable|string|min:4|confirmed',
-            'is_active' => 'required|boolean',
             'company_name' => 'required|string|max:255',
             'contact_person' => 'required|string|max:255',
             'street' => 'required|string|max:255',
@@ -65,7 +64,7 @@ class GrowerController extends Controller {
             'email' => $request->company_email,
             'password' => $request->password,
             'role' => 'grower',
-            'is_active' => $request->is_active,
+            'is_active' => true,
         ] );
 
         // Create grower
@@ -116,7 +115,7 @@ class GrowerController extends Controller {
             'username' => 'required|string|max:255|unique:growers,username,' . $grower->id,
             'company_email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:4|confirmed',
-            'is_active' => 'required|boolean',
+
             'company_name' => 'required|string|max:255',
             'contact_person' => 'required|string|max:255',
             'street' => 'required|string|max:255',
@@ -136,7 +135,7 @@ class GrowerController extends Controller {
 
         $user->update( [
             'email' => $request->company_email,
-            'is_active' => $request->is_active,
+            'is_active' => true,
         ] );
 
         $grower->update( [
