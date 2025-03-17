@@ -55,7 +55,6 @@ export const usePostStore = create((set) => ({
         set({ isLoading: true });
         try {
             const res = await axiosInstance.post(`/api/admin/posts`, data);
-            toast.success(res.data.message);
             return res;
         } catch (error) {
             const message =
@@ -71,7 +70,6 @@ export const usePostStore = create((set) => ({
         set({ isLoading: true });
         try {
             const res = await axiosInstance.put(`/api/admin/posts/${id}`, data);
-            toast.success(res.data.message);
             return res;
         } catch (error) {
             const message =
@@ -87,7 +85,6 @@ export const usePostStore = create((set) => ({
         set({ isLoading: true });
         try {
             const res = await axiosInstance.delete(`/api/admin/posts/${id}`);
-            toast.success(res.data.message);
             return res;
         } catch (error) {
             const message =
@@ -122,7 +119,6 @@ export const usePostStore = create((set) => ({
                 `/api/admin/posts/categories`,
                 data
             );
-            toast.success(res.data.message);
             return res;
         } catch (error) {
             toast.error(
@@ -140,7 +136,6 @@ export const usePostStore = create((set) => ({
                 `/api/admin/posts/categories/${id}`,
                 data
             );
-            toast.success(res.data.message);
             return res;
         } catch (error) {
             toast.error(
@@ -157,7 +152,6 @@ export const usePostStore = create((set) => ({
             const res = await axiosInstance.delete(
                 `/api/admin/posts/categories/${id}`
             );
-            toast.success(res.data.message);
             return res;
         } catch (error) {
             toast.error(
@@ -189,7 +183,6 @@ export const usePostStore = create((set) => ({
         set({ isLoading: true });
         try {
             const res = await axiosInstance.post(`/api/admin/posts/tags`, data);
-            toast.success(res.data.message);
             return res;
         } catch (error) {
             toast.error(error?.response?.data?.message || "Error creating tag");
@@ -205,7 +198,6 @@ export const usePostStore = create((set) => ({
                 `/api/admin/posts/tags/${id}`,
                 data
             );
-            toast.success(res.data.message);
             return res;
         } catch (error) {
             toast.error(error?.response?.data?.message || "Error updating tag");
@@ -220,7 +212,6 @@ export const usePostStore = create((set) => ({
             const res = await axiosInstance.delete(
                 `/api/admin/posts/tags/${id}`
             );
-            toast.success(res.data.message);
             return res;
         } catch (error) {
             toast.error(error?.response?.data?.message || "Error deleting tag");
