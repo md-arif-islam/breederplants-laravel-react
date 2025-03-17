@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -50,7 +51,7 @@ class AdminPostController extends Controller {
             }
         }
 
-        $posts = $query->paginate( 6 );
+        $posts = $query->paginate( 10 );
 
         return response()->json( $posts );
     }
@@ -62,11 +63,13 @@ class AdminPostController extends Controller {
 
     // Store a newly created post.
     public function store( Request $request ) {
+
+        Log::info( $request->all() );
+
         $validated = $request->validate( [
             'title' => 'required|string|max:255',
             'description' => 'required',
             'thumbnail' => 'nullable|string',
-            'user_id' => 'required|integer',
             'categories' => 'nullable|array',
             'tags' => 'nullable|array',
         ] );
@@ -80,6 +83,8 @@ class AdminPostController extends Controller {
             }
 
         }
+
+        $validated['user_id'] = Auth::id();
 
         $post = Post::create( $validated );
 
