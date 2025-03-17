@@ -50,6 +50,7 @@ import ProductionReportSubmitPage from "./pages/ProductionReportSubmitPage";
 import AdminProductionReportViewPage from "./pages/backend/AdminProductReportViewPage";
 import AdminBreederProductsPage from "./pages/backend/AdminBreederProductsPage";
 import AdminNewsPage from "./pages/backend/AdminNewsPage";
+import AdminNewsViewPage from "./pages/backend/AdminNewsViewPage";
 
 const App = () => {
     const { authUser, isCheckingAuth, checkAuth } = useStore();
@@ -295,6 +296,7 @@ const App = () => {
                     />
 
                     <Route path="news" element={<AdminNewsPage />} />
+                    <Route path="news/:id" element={<AdminNewsViewPage />} />
                 </Route>
             </Routes>
             <Toaster />
