@@ -217,7 +217,6 @@ class AdminPostController extends Controller {
     public function storeCategory( Request $request ) {
         $validated = $request->validate( [
             'name' => 'required|string|max:255',
-            'slug' => 'required|string|unique:categories,slug',
         ] );
         $category = Category::create( $validated );
         return response()->json( ['message' => 'Category created successfully', 'category' => $category], 201 );
@@ -227,7 +226,6 @@ class AdminPostController extends Controller {
         $cat = Category::findOrFail( $category );
         $validated = $request->validate( [
             'name' => 'sometimes|required|string|max:255',
-            'slug' => 'sometimes|required|string|unique:categories,slug,' . $cat->id,
         ] );
         $cat->update( $validated );
         return response()->json( ['message' => 'Category updated successfully', 'category' => $cat] );
@@ -248,7 +246,6 @@ class AdminPostController extends Controller {
     public function storeTag( Request $request ) {
         $validated = $request->validate( [
             'name' => 'required|string|max:255',
-            'slug' => 'required|string|unique:tags,slug',
         ] );
         $tag = Tag::create( $validated );
         return response()->json( ['message' => 'Tag created successfully', 'tag' => $tag], 201 );
@@ -258,7 +255,6 @@ class AdminPostController extends Controller {
         $tg = Tag::findOrFail( $tag );
         $validated = $request->validate( [
             'name' => 'sometimes|required|string|max:255',
-            'slug' => 'sometimes|required|string|unique:tags,slug,' . $tg->id,
         ] );
         $tg->update( $validated );
         return response()->json( ['message' => 'Tag updated successfully', 'tag' => $tg] );
