@@ -51,6 +51,7 @@ import AdminProductionReportViewPage from "./pages/backend/AdminProductReportVie
 import AdminBreederProductsPage from "./pages/backend/AdminBreederProductsPage";
 import AdminNewsPage from "./pages/backend/AdminNewsPage";
 import AdminNewsViewPage from "./pages/backend/AdminNewsViewPage";
+import AdminNewsUpdatePage from "./pages/backend/AdminNewsUpdatePage";
 
 const App = () => {
     const { authUser, isCheckingAuth, checkAuth } = useStore();
@@ -204,27 +205,22 @@ const App = () => {
                         path="variety-reports/:id"
                         element={<AdminVarietyReportViewPage />}
                     />
-
                     <Route
                         path="variety-reports/:id/edit"
                         element={<AdminVarietyReportUpdatePage />}
                     />
-
                     <Route
                         path="variety-reports/:id/variety-sample/:sampleId"
                         element={<AdminVarietySampleViewPage />}
                     />
-
                     <Route
                         path="variety-reports/:id/variety-sample/create"
                         element={<AdminVarietySampleCreatePage />}
                     />
-
                     <Route
                         path="variety-reports/:id/variety-sample/:sampleId/edit"
                         element={<AdminVarietySampleUpdatePage />}
                     />
-
                     <Route path="growers" element={<AdminGrowerPage />} />
                     <Route
                         path="growers/:id"
@@ -238,12 +234,10 @@ const App = () => {
                         path="growers/create"
                         element={<AdminGrowerCreatePage />}
                     />
-
                     <Route
                         path="growers/:id/products"
                         element={<AdminGrowerProductsPage />}
                     />
-
                     <Route path="breeders" element={<AdminBreederPage />} />
                     <Route
                         path="breeders/:id"
@@ -257,12 +251,10 @@ const App = () => {
                         path="breeders/create"
                         element={<AdminBreederCreatePage />}
                     />
-
                     <Route
                         path="breeders/:id/products"
                         element={<AdminBreederProductsPage />}
                     />
-
                     <Route path="products" element={<AdminProductsPage />} />
                     <Route
                         path="products/:id"
@@ -276,7 +268,6 @@ const App = () => {
                         path="products/create"
                         element={<AdminProductCreatePage />}
                     />
-
                     <Route
                         path="sales-reports"
                         element={<AdminSalesReportsPage />}
@@ -289,14 +280,17 @@ const App = () => {
                         path="production-reports"
                         element={<AdminProductionReportsPage />}
                     />
-
                     <Route
                         path="production-reports/:id"
                         element={<AdminProductionReportViewPage />}
                     />
-
                     <Route path="news" element={<AdminNewsPage />} />
                     <Route path="news/:id" element={<AdminNewsViewPage />} />
+                    <Route
+                        path="news/:id/edit"
+                        element={<AdminNewsUpdatePage />}
+                    />{" "}
+                    {/* Add the new route */}
                 </Route>
             </Routes>
             <Toaster />
