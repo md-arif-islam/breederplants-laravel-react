@@ -13,6 +13,7 @@ import PublicNewsViewPage from "./pages/PublicNewsViewPage";
 // Newly created pages:
 import PublicCategoriesPage from "./pages/PublicCategoriesPage";
 import PublicTagsPage from "./pages/PublicTagsPage";
+import PublicAboutPage from "./pages/PublicAboutPage";
 
 const App = () => {
     const loadingBarRef = useRef(null);
@@ -40,6 +41,7 @@ const App = () => {
                         element={<PublicProductViewPage />}
                     />
                     <Route path="/contact" element={<PublicContactPage />} />
+                    <Route path="/about" element={<PublicAboutPage />} />
                     <Route path="/news" element={<PublicNewsPage />} />
                     <Route path="/news/:id" element={<PublicNewsViewPage />} />
                     <Route
