@@ -60,6 +60,7 @@ export default function AdminVarietyReportViewPage() {
         : null;
 
     return (
+        // TODO: Next Sample Date show today's date
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">
             <div className="container mx-auto px-4 py-8">
                 <div className="block space-y-4 md:space-y-0 md:grid gap-8 md:grid-cols-[300px,1fr]">

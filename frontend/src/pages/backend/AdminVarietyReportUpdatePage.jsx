@@ -57,7 +57,7 @@ export default function AdminVarietyReportUpdatePage() {
                 pot_size: report.pot_size,
                 pot_trial: report.pot_trial,
                 open_field_trial: report.open_field_trial,
-                status: report.status,
+                status: "1",
                 samples_schedule: JSON.parse(report.samples_schedule),
                 start_date: report.start_date,
                 end_date: report.end_date,
@@ -437,27 +437,6 @@ export default function AdminVarietyReportUpdatePage() {
                                         type="date"
                                         className="mt-1 w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
                                     />
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">
-                                        Status{" "}
-                                        <span className="text-red-500">*</span>
-                                    </label>
-                                    <select
-                                        required
-                                        value={formData.status}
-                                        onChange={(e) =>
-                                            setFormData({
-                                                ...formData,
-                                                status: e.target.value,
-                                            })
-                                        }
-                                        className="mt-1 w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
-                                    >
-                                        <option value="1">Active</option>
-                                        <option value="0">Inactive</option>
-                                    </select>
                                 </div>
                             </div>
                         </div>

@@ -404,27 +404,6 @@ export default function AdminVarietyReportCreatePage() {
                                         className="mt-1 w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
                                     />
                                 </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">
-                                        Status{" "}
-                                        <span className="text-red-500">*</span>
-                                    </label>
-                                    <select
-                                        required
-                                        value={formData.status}
-                                        onChange={(e) =>
-                                            setFormData({
-                                                ...formData,
-                                                status: e.target.value,
-                                            })
-                                        }
-                                        className="mt-1 w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
-                                    >
-                                        <option value="1">Active</option>
-                                        <option value="0">Inactive</option>
-                                    </select>
-                                </div>
                             </div>
                         </div>
 
