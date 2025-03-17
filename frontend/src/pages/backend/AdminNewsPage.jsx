@@ -108,9 +108,21 @@ export default function AdminNewsPage() {
                     </div>
                     <div className="flex gap-2">
                         <button
-                            onClick={() =>
-                                navigate("/admin/variety-reports/create")
-                            }
+                            onClick={() => navigate("/admin/news/categories")}
+                            className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-green-700"
+                        >
+                            Category
+                        </button>
+
+                        <button
+                            onClick={() => navigate("/admin/news/tags")}
+                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-green-700"
+                        >
+                            Tag
+                        </button>
+
+                        <button
+                            onClick={() => navigate("/admin/news/create")}
                             className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                         >
                             Create News
@@ -184,7 +196,7 @@ export default function AdminNewsPage() {
                                                                     key={
                                                                         category.id
                                                                     }
-                                                                    className="bg-green-600 text-white px-2 py-1 rounded-md mr-1"
+                                                                    className="bg-orange-600 text-white px-2 py-1 rounded-md mr-1"
                                                                 >
                                                                     {
                                                                         category.name
@@ -198,7 +210,7 @@ export default function AdminNewsPage() {
                                                             (tag) => (
                                                                 <span
                                                                     key={tag.id}
-                                                                    className="bg-green-600 text-white px-2 py-1 rounded-md mr-1"
+                                                                    className="bg-blue-600 text-white px-2 py-1 rounded-md mr-1"
                                                                 >
                                                                     {tag.name}
                                                                 </span>
