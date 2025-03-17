@@ -22,8 +22,6 @@ export default function AdminProductsPage() {
         getAllProducts(currentPage, searchQuery);
     }, [getAllProducts, currentPage, searchQuery]);
 
-    console.log(products);
-
     const handlePageChange = (page) => {
         getAllProducts(page, searchQuery);
     };
@@ -60,6 +58,9 @@ export default function AdminProductsPage() {
                             <thead>
                                 <tr className="bg-green-600 h-16 rounded-md shadow">
                                     <th className="px-4 py-5 border-b text-left text-white font-semibold">
+                                        Thumbnail
+                                    </th>{" "}
+                                    <th className="px-4 py-5 border-b text-left text-white font-semibold">
                                         Plant ID
                                     </th>
                                     <th className="px-4 py-5 border-b text-left text-white font-semibold">
@@ -70,9 +71,6 @@ export default function AdminProductsPage() {
                                     </th>
                                     <th className="px-4 py-5 border-b text-left text-white font-semibold">
                                         Cultivar
-                                    </th>
-                                    <th className="px-4 py-5 border-b text-left text-white font-semibold">
-                                        Breeder
                                     </th>
                                 </tr>
                             </thead>
@@ -112,6 +110,32 @@ export default function AdminProductsPage() {
                                                     )
                                                 }
                                             >
+                                                <td className="px-4 py-2 text-primary font-semibold border-b">
+                                                    {/* add image[0] */}
+                                                    {product.images &&
+                                                    JSON.parse(
+                                                        product.images
+                                                    )[0] ? (
+                                                        <img
+                                                            src={`${
+                                                                import.meta.env
+                                                                    .VITE_API_URL
+                                                            }/${
+                                                                JSON.parse(
+                                                                    product.images
+                                                                )[0]
+                                                            }`}
+                                                            alt={product.name}
+                                                            className="w-20 h-20 object-cover rounded"
+                                                        />
+                                                    ) : (
+                                                        <img
+                                                            src="/placeholder.svg"
+                                                            alt="Placeholder"
+                                                            className="w-20 h-20 object-cover rounded"
+                                                        />
+                                                    )}
+                                                </td>
                                                 <td className="px-4 py-5 text-primary font-semibold border-b">
                                                     {product.plant_id}
                                                 </td>
@@ -123,12 +147,6 @@ export default function AdminProductsPage() {
                                                 </td>
                                                 <td className="px-4 py-5 text-[#353535] border-b">
                                                     {product.cultivar}
-                                                </td>
-                                                <td className="px-4 py-5 text-[#353535] border-b">
-                                                    {
-                                                        product?.breeder
-                                                            ?.company_name
-                                                    }
                                                 </td>
                                             </tr>
                                         ))}

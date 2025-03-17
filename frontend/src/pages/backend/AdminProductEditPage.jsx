@@ -251,7 +251,7 @@ export default function AdminProductEditPage() {
                                         Plant ID
                                     </label>
                                     <input
-                                        type="number"
+                                        type="text"
                                         name="plant_id"
                                         value={formData.plant_id}
                                         onChange={handleChange}
@@ -263,7 +263,7 @@ export default function AdminProductEditPage() {
                                         Protection Number
                                     </label>
                                     <input
-                                        type="number"
+                                        type="text"
                                         name="protection_number"
                                         value={formData.protection_number}
                                         onChange={handleChange}

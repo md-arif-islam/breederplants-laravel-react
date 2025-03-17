@@ -83,6 +83,7 @@ export default function AdminProductCreatePage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // TODO: Not Uploading big image
         const response = await createProduct(formData);
         if (response.status === 200) {
             navigate(`/admin/products/`);
@@ -211,7 +212,7 @@ export default function AdminProductCreatePage() {
                                         Plant ID
                                     </label>
                                     <input
-                                        type="number"
+                                        type="text"
                                         name="plant_id"
                                         value={formData.plant_id}
                                         onChange={handleChange}
@@ -223,7 +224,7 @@ export default function AdminProductCreatePage() {
                                         Protection Number
                                     </label>
                                     <input
-                                        type="number"
+                                        type="text"
                                         name="protection_number"
                                         value={formData.protection_number}
                                         onChange={handleChange}

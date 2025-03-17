@@ -128,10 +128,10 @@ export default function AdminProductViewPage() {
                                 <span className="text-2xl mr-2">
                                     {currentProduct?.genus || ""}
                                 </span>
-                                <span className="text-xl italic">
+                                <span className="text-2xl">
                                     {currentProduct?.species || ""}
                                 </span>
-                                <span className="ml-2 text-lg">
+                                <span className="ml-2 text-2xl">
                                     {currentProduct?.cultivar || ""}
                                 </span>
                             </h2>
@@ -359,37 +359,22 @@ export default function AdminProductViewPage() {
                 </div>
             </div>
 
-            {/* Delete Confirmation Modal */}
             {showPopup && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
-                        <div className="flex items-center mb-4 text-red-600">
-                            <AlertCircle className="h-6 w-6 mr-2" />
-                            <h3 className="text-lg font-semibold">
-                                Confirm Deletion
-                            </h3>
-                        </div>
-                        <p className="mb-6 text-gray-600">
-                            Are you sure you want to delete{" "}
-                            <span className="font-medium">
-                                {currentProduct?.genus}{" "}
-                                {currentProduct?.species}{" "}
-                                {currentProduct?.cultivar}{" "}
-                            </span>
-                            ? This action cannot be undone.
-                        </p>
-                        <div className="flex justify-end gap-3">
+                <div className="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75">
+                    <div className="bg-white p-4 rounded-md shadow-md">
+                        <p>Are you sure you want to delete this product?</p>
+                        <div className="flex gap-2 mt-4">
                             <button
-                                className="px-4 py-2 text-sm font-medium rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
-                                onClick={cancelDelete}
+                                onClick={confirmDelete}
+                                className="inline-flex items-center px-3 py-2 text-sm font-medium border rounded-md hover:bg-gray-50"
                             >
-                                Cancel
+                                Yes
                             </button>
                             <button
-                                className="px-4 py-2 text-sm font-medium rounded-md bg-red-600 text-white hover:bg-red-700 transition-colors"
-                                onClick={confirmDelete}
+                                onClick={cancelDelete}
+                                className="inline-flex items-center px-3 py-2 text-sm font-medium border rounded-md hover:bg-gray-50"
                             >
-                                Delete
+                                No
                             </button>
                         </div>
                     </div>
