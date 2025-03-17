@@ -37,10 +37,12 @@ export const useVarietyReportStore = create((set, get) => ({
         }
     },
 
-    getVarietyReportsByUser: async (userId) => {
+    getVarietyReportsByUser: async (userId, page = 1) => {
         set({ isLoading: true });
         try {
-            const res = await axiosInstance.get(`/api/variety-reports`);
+            const res = await axiosInstance.get(
+                `/api/variety-reports?userId=${userId}&page=${page}`
+            );
             set({
                 varietyReports: res.data.varietyReports.data,
                 currentPage: res.data.varietyReports.current_page,
