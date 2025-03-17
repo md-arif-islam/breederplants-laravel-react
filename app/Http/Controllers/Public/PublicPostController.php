@@ -56,6 +56,7 @@ class PublicPostController extends Controller {
     }
 
     public function show( Post $post ) {
+        // This controller already supports loading a post with its category and tag relationships.
         return response()->json( $post->load( ['user', 'categories', 'tags'] ) ); // Load relationships
     }
 }

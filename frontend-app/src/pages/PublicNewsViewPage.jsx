@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { usePostStore } from "../store/usePostStore";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { Calendar, Leaf, Share2 } from "lucide-react";
 import PostCard from "../components/PostCard";
 
@@ -136,12 +136,14 @@ const PublicNewsViewPage = () => {
                                     {currentPost.categories &&
                                     currentPost.categories.length > 0
                                         ? currentPost.categories.map((cat) => (
-                                              <span
+                                              <Link
                                                   key={cat.id}
-                                                  className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-200"
+                                                  to={`/categories/${cat.slug}`}
                                               >
-                                                  {cat.name}
-                                              </span>
+                                                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-200">
+                                                      {cat.name}
+                                                  </span>
+                                              </Link>
                                           ))
                                         : null}
                                 </div>
@@ -210,12 +212,14 @@ const PublicNewsViewPage = () => {
                                         </h3>
                                         <div className="flex flex-wrap gap-2">
                                             {currentPost.tags.map((tag) => (
-                                                <span
+                                                <Link
                                                     key={tag.id}
-                                                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200"
+                                                    to={`/tags/${tag.slug}`}
                                                 >
-                                                    {tag.name}
-                                                </span>
+                                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                                                        {tag.name}
+                                                    </span>
+                                                </Link>
                                             ))}
                                         </div>
                                     </div>

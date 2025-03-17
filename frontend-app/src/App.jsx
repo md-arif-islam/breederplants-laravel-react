@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, Link } from "react-router-dom";
 import LoadingBar from "react-top-loading-bar";
 
 import { Toaster } from "react-hot-toast";
@@ -10,6 +10,9 @@ import PublicProductViewPage from "./pages/PublicProductViewPage";
 import PublicContactPage from "./pages/PublicContactPage";
 import PublicNewsPage from "./pages/PublicNewsPage";
 import PublicNewsViewPage from "./pages/PublicNewsViewPage";
+// Newly created pages:
+import PublicCategoriesPage from "./pages/PublicCategoriesPage";
+import PublicTagsPage from "./pages/PublicTagsPage";
 
 const App = () => {
     const loadingBarRef = useRef(null);
@@ -28,6 +31,7 @@ const App = () => {
     return (
         <div>
             <LoadingBar color="#000" ref={loadingBarRef} />
+
             <Routes>
                 <Route element={<FrontendLayout />}>
                     <Route path="/" element={<PublicProductsPage />} />
@@ -35,10 +39,14 @@ const App = () => {
                         path="/products/:id"
                         element={<PublicProductViewPage />}
                     />
-
                     <Route path="/contact" element={<PublicContactPage />} />
                     <Route path="/news" element={<PublicNewsPage />} />
                     <Route path="/news/:id" element={<PublicNewsViewPage />} />
+                    <Route
+                        path="/categories/:slug"
+                        element={<PublicCategoriesPage />}
+                    />
+                    <Route path="/tags/:slug" element={<PublicTagsPage />} />
                 </Route>
             </Routes>
             <Toaster />

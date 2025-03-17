@@ -63,4 +63,30 @@ export const usePostStore = create((set) => ({
             return [];
         }
     },
+
+    // New: Get posts by category
+    getPostsByCategory: async (slug) => {
+        try {
+            const res = await axiosInstance.get(
+                `/api/public/posts?category=${slug}`
+            );
+            return res.data.data;
+        } catch (error) {
+            toast.error("Failed to fetch posts by category");
+            return [];
+        }
+    },
+
+    // New: Get posts by tag
+    getPostsByTag: async (slug) => {
+        try {
+            const res = await axiosInstance.get(
+                `/api/public/posts?tags=${slug}`
+            );
+            return res.data.data;
+        } catch (error) {
+            toast.error("Failed to fetch posts by tag");
+            return [];
+        }
+    },
 }));

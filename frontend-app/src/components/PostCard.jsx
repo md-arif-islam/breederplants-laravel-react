@@ -38,6 +38,29 @@ export default function PostCard({ post }) {
                         ? post.description.substring(0, 100) + "..."
                         : post.description)}
             </p>
+            {/* Categories and Tags */}
+            <div className="mt-2 flex flex-wrap gap-2">
+                {post.categories &&
+                    post.categories.map((cat) => (
+                        <Link
+                            key={cat.id}
+                            to={`/categories/${cat.slug}`}
+                            className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-200 hover:bg-green-100"
+                        >
+                            {cat.name}
+                        </Link>
+                    ))}
+                {post.tags &&
+                    post.tags.map((tag) => (
+                        <Link
+                            key={tag.id}
+                            to={`/tags/${tag.slug}`}
+                            className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100"
+                        >
+                            {tag.name}
+                        </Link>
+                    ))}
+            </div>
         </Link>
     );
 }
