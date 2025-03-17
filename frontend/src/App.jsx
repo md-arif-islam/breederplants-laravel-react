@@ -52,6 +52,7 @@ import AdminBreederProductsPage from "./pages/backend/AdminBreederProductsPage";
 import AdminNewsPage from "./pages/backend/AdminNewsPage";
 import AdminNewsViewPage from "./pages/backend/AdminNewsViewPage";
 import AdminNewsUpdatePage from "./pages/backend/AdminNewsUpdatePage";
+import AdminNewsCreatePage from "./pages/backend/AdminNewsCreatePage"; // Import the new page
 
 const App = () => {
     const { authUser, isCheckingAuth, checkAuth } = useStore();
@@ -289,6 +290,10 @@ const App = () => {
                     <Route
                         path="news/:id/edit"
                         element={<AdminNewsUpdatePage />}
+                    />
+                    <Route
+                        path="news/create"
+                        element={<AdminNewsCreatePage />}
                     />{" "}
                     {/* Add the new route */}
                 </Route>
