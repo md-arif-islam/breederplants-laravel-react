@@ -65,11 +65,16 @@ export const usePostStore = create((set) => ({
     },
 
     // New: Get posts by category
-    getPostsByCategory: async (slug) => {
+    getPostsByCategory: async (slug, page = 1) => {
         try {
             const res = await axiosInstance.get(
-                `/api/public/posts?category=${slug}`
+                `/api/public/posts?category=${slug}&page=${page}`
             );
+            set({
+                posts: res.data.data,
+                currentPage: res.data.current_page,
+                totalPages: res.data.last_page,
+            }); // Assuming posts are in res.data.data
             return res.data.data;
         } catch (error) {
             toast.error("Failed to fetch posts by category");
@@ -78,11 +83,16 @@ export const usePostStore = create((set) => ({
     },
 
     // New: Get posts by tag
-    getPostsByTag: async (slug) => {
+    getPostsByTag: async (slug, page = 1) => {
         try {
             const res = await axiosInstance.get(
-                `/api/public/posts?tags=${slug}`
+                `/api/public/posts?tags=${slug}&page=${page}`
             );
+            set({
+                posts: res.data.data,
+                currentPage: res.data.current_page,
+                totalPages: res.data.last_page,
+            }); // Assuming posts are in res.data.data
             return res.data.data;
         } catch (error) {
             toast.error("Failed to fetch posts by tag");
