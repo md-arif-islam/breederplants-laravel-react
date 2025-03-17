@@ -222,7 +222,7 @@ export default function AdminNewsPage() {
                                                             new Date(
                                                                 post.created_at
                                                             ),
-                                                            "dd - mm - yyyy"
+                                                            "dd - MM - yyyy"
                                                         )}
                                                     </td>
                                                 </tr>
