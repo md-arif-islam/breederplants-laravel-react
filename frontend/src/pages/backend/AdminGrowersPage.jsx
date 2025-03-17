@@ -112,9 +112,6 @@ export default function AdminGrowerPage() {
                                     <th className="px-4 py-2 border-b text-left text-white font-semibold">
                                         Website
                                     </th>
-                                    <th className="px-4 py-2 border-b text-left text-white font-semibold">
-                                        Sales Reporting Quarters
-                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -153,7 +150,7 @@ export default function AdminGrowerPage() {
                                                     )
                                                 }
                                             >
-                                                <td className="px-4 py-2 text-primary font-medium border-b">
+                                                <td className="px-4 py-5 text-primary font-medium border-b">
                                                     {grower.username}
                                                 </td>
                                                 <td className="px-4 py-2 text-[#353535] border-b">
@@ -177,29 +174,6 @@ export default function AdminGrowerPage() {
                                                     >
                                                         {grower.website}
                                                     </a>
-                                                </td>
-                                                <td className="px-4 py-2 text-[#353535] border-b">
-                                                    <div className="flex items-center gap-2">
-                                                        <div className="flex items-center gap-1">
-                                                            {JSON.parse(
-                                                                grower.sales_reporting_quarter
-                                                            ).map(
-                                                                (
-                                                                    quarter,
-                                                                    index
-                                                                ) => (
-                                                                    <span
-                                                                        key={
-                                                                            index
-                                                                        }
-                                                                        className="text-sm bg-primary text-white px-2 py-1 rounded-md font-bold text-[12px] mr-1"
-                                                                    >
-                                                                        {quarter.toUpperCase()}
-                                                                    </span>
-                                                                )
-                                                            )}
-                                                        </div>
-                                                    </div>
                                                 </td>
                                             </tr>
                                         ))}

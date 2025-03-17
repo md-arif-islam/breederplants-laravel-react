@@ -17,7 +17,7 @@ export default function AdminGrowerCreatePage() {
         phone: "",
         website: "",
         company_email: "",
-        is_active: true,
+
         password: "",
         password_confirmation: "",
         agreement_number: "",
@@ -654,31 +654,8 @@ export default function AdminGrowerCreatePage() {
                                     </label>
                                 </div>
                             </div>
-
-                            <div>
-                                <label className="block text-sm font-medium mb-1">
-                                    Status{" "}
-                                    <span className="text-red-500">*</span>
-                                </label>
-                                <select
-                                    value={formData.is_active}
-                                    required
-                                    onChange={(e) =>
-                                        setFormData({
-                                            ...formData,
-                                            is_active:
-                                                e.target.value === "true"
-                                                    ? true
-                                                    : false,
-                                        })
-                                    }
-                                    className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md"
-                                >
-                                    <option value="true">Active</option>
-                                    <option value="false">Inactive</option>
-                                </select>
-                            </div>
-
+                        </div>
+                        <div className="grid gap-6 md:grid-cols-2">
                             <div>
                                 <label className="block text-sm font-medium mb-1">
                                     Password{" "}
