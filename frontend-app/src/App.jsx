@@ -14,6 +14,7 @@ import PublicNewsViewPage from "./pages/PublicNewsViewPage";
 import PublicCategoriesPage from "./pages/PublicCategoriesPage";
 import PublicTagsPage from "./pages/PublicTagsPage";
 import PublicAboutPage from "./pages/PublicAboutPage";
+import { PageTitleProvider } from "./context/PageTitleContext";
 
 const App = () => {
     const loadingBarRef = useRef(null);
@@ -30,29 +31,40 @@ const App = () => {
     }, [location]);
 
     return (
-        <div>
-            <LoadingBar color="#000" ref={loadingBarRef} />
+        <PageTitleProvider>
+            <div>
+                <LoadingBar color="#000" ref={loadingBarRef} />
 
-            <Routes>
-                <Route element={<FrontendLayout />}>
-                    <Route path="/" element={<PublicProductsPage />} />
-                    <Route
-                        path="/products/:id"
-                        element={<PublicProductViewPage />}
-                    />
-                    <Route path="/contact" element={<PublicContactPage />} />
-                    <Route path="/about" element={<PublicAboutPage />} />
-                    <Route path="/news" element={<PublicNewsPage />} />
-                    <Route path="/news/:id" element={<PublicNewsViewPage />} />
-                    <Route
-                        path="/categories/:slug"
-                        element={<PublicCategoriesPage />}
-                    />
-                    <Route path="/tags/:slug" element={<PublicTagsPage />} />
-                </Route>
-            </Routes>
-            <Toaster />
-        </div>
+                <Routes>
+                    <Route element={<FrontendLayout />}>
+                        <Route path="/" element={<PublicProductsPage />} />
+                        <Route
+                            path="/products/:id"
+                            element={<PublicProductViewPage />}
+                        />
+                        <Route
+                            path="/contact"
+                            element={<PublicContactPage />}
+                        />
+                        <Route path="/about" element={<PublicAboutPage />} />
+                        <Route path="/news" element={<PublicNewsPage />} />
+                        <Route
+                            path="/news/:id"
+                            element={<PublicNewsViewPage />}
+                        />
+                        <Route
+                            path="/categories/:slug"
+                            element={<PublicCategoriesPage />}
+                        />
+                        <Route
+                            path="/tags/:slug"
+                            element={<PublicTagsPage />}
+                        />
+                    </Route>
+                </Routes>
+                <Toaster />
+            </div>
+        </PageTitleProvider>
     );
 };
 
