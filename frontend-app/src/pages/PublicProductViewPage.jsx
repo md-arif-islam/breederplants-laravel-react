@@ -88,7 +88,7 @@ export default function VarietySampleShow() {
                                             onLoad={() =>
                                                 handleImgLoad(currImg)
                                             }
-                                            className={`block object-cover h-full md:h-[60vh] w-full max-w-full rounded-xl cursor-pointer transition-opacity duration-300 ${
+                                            className={`block object-cover h-full max-h-[50vh] md:h-[60vh] w-full max-w-full rounded-xl cursor-pointer transition-opacity duration-300 ${
                                                 loadedImages[currImg]
                                                     ? "opacity-100"
                                                     : "opacity-0"
@@ -144,7 +144,7 @@ export default function VarietySampleShow() {
 
                                 <div className="grid grid-cols-2 gap-4">
                                     {currentProduct?.partial_shade_icon && (
-                                        <div className="bg-white rounded-lg py-6 px-3 shadow-sm border border-gray-100 flex flex-row gap-2 items-center justify-center">
+                                        <div className="bg-white rounded-lg py-6 px-3 shadow-md border border-gray-100 flex flex-row gap-2 items-center justify-center">
                                             <svg
                                                 className="w-[30px] h-[30px] md:w-[40px] md:h-[40px]"
                                                 viewBox="0 0 24 25"
@@ -224,7 +224,7 @@ export default function VarietySampleShow() {
                                     )}
 
                                     {currentProduct?.sun_icon && (
-                                        <div className="bg-white rounded-lg py-6 px-3 shadow-sm border border-gray-100 flex flex-row gap-2 items-center justify-center">
+                                        <div className="bg-white rounded-lg py-6 px-3 shadow-md border border-gray-100 flex flex-row gap-2 items-center justify-center">
                                             <svg
                                                 className="w-[30px] h-[30px] md:w-[40px] md:h-[40px]"
                                                 viewBox="0 0 24 25"
@@ -292,7 +292,7 @@ export default function VarietySampleShow() {
                                     )}
 
                                     {currentProduct?.height && (
-                                        <div className="bg-white rounded-lg py-6 px-3 shadow-sm border border-gray-100 flex flex-row gap-2 items-center justify-center">
+                                        <div className="bg-white rounded-lg py-6 px-3 shadow-md border border-gray-100 flex flex-row gap-2 items-center justify-center">
                                             <svg
                                                 className="w-[30px] h-[30px] md:w-[40px] md:h-[40px]"
                                                 viewBox="0 0 24 25"
@@ -353,7 +353,7 @@ export default function VarietySampleShow() {
                                     )}
 
                                     {currentProduct?.width && (
-                                        <div className="bg-white rounded-lg py-6 px-3 shadow-sm border border-gray-100 flex flex-row gap-2 items-center justify-center">
+                                        <div className="bg-white rounded-lg py-6 px-3 shadow-md border border-gray-100 flex flex-row gap-2 items-center justify-center">
                                             <svg
                                                 className="w-[30px] h-[30px] md:w-[40px] md:h-[40px]"
                                                 viewBox="0 0 24 25"
@@ -422,7 +422,7 @@ export default function VarietySampleShow() {
                                     )}
 
                                     {currentProduct?.temperature && (
-                                        <div className="bg-white rounded-lg py-6 px-3 shadow-sm border border-gray-100 flex flex-row gap-2 items-center justify-center">
+                                        <div className="bg-white rounded-lg py-6 px-3 shadow-md border border-gray-100 flex flex-row gap-2 items-center justify-center">
                                             <svg
                                                 className="w-[30px] h-[30px] md:w-[40px] md:h-[40px]"
                                                 viewBox="0 0 24 25"
@@ -535,7 +535,7 @@ export default function VarietySampleShow() {
                                     )}
 
                                     {currentProduct?.pruning_period && (
-                                        <div className="bg-white rounded-lg py-6 px-3 shadow-sm border border-gray-100 flex flex-row gap-2 items-center justify-center">
+                                        <div className="bg-white rounded-lg py-6 px-3 shadow-md border border-gray-100 flex flex-row gap-2 items-center justify-center">
                                             <svg
                                                 className="w-[30px] h-[30px] md:w-[40px] md:h-[40px]"
                                                 viewBox="0 0 24 25"
@@ -596,7 +596,7 @@ export default function VarietySampleShow() {
                                     )}
 
                                     {currentProduct?.edible_icon && (
-                                        <div className="bg-white rounded-lg py-6 px-3 shadow-sm border border-gray-100 flex flex-row gap-2 items-center justify-center">
+                                        <div className="bg-white rounded-lg py-6 px-3 shadow-md border border-gray-100 flex flex-row gap-2 items-center justify-center">
                                             <svg
                                                 className="w-[30px] h-[30px] md:w-[40px] md:h-[40px]"
                                                 viewBox="0 0 24 25"
@@ -662,7 +662,7 @@ export default function VarietySampleShow() {
                                 )}
 
                                 {/* Breeders Section */}
-                                <div className=" py-4">
+                                <div className="py-4">
                                     <div
                                         className="flex items-center justify-start w-full cursor-pointer"
                                         onClick={() =>
@@ -704,14 +704,19 @@ export default function VarietySampleShow() {
                                             )}
                                         </div>
                                     </div>
-
-                                    {breedersOpen && (
-                                        <div className="mt-4 space-y-4">
+                                    <div
+                                        className={`mt-4 transition-all duration-300 overflow-hidden ${
+                                            breedersOpen
+                                                ? "max-h-[1000px] opacity-100"
+                                                : "max-h-0 opacity-0"
+                                        }`}
+                                    >
+                                        <div className="space-y-4">
                                             {currentProduct?.breeders?.map(
                                                 (breeder) => (
                                                     <div
                                                         key={breeder.id}
-                                                        className="border-2 border-[#E4E4E4] p-4 rounded-lg shadow"
+                                                        className="border border-gray-200 p-4 rounded-lg shadow"
                                                     >
                                                         <div className="flex justify-between items-start">
                                                             <div>
@@ -737,7 +742,6 @@ export default function VarietySampleShow() {
                                                                         breeder.country
                                                                     }
                                                                 </p>
-
                                                                 {breeder.website && (
                                                                     <a
                                                                         href={
@@ -758,11 +762,11 @@ export default function VarietySampleShow() {
                                                 )
                                             )}
                                         </div>
-                                    )}
+                                    </div>
                                 </div>
 
                                 {/* Growers Section */}
-                                <div className=" py-4">
+                                <div className="py-4">
                                     <div
                                         className="flex items-center justify-start w-full cursor-pointer"
                                         onClick={() =>
@@ -804,14 +808,19 @@ export default function VarietySampleShow() {
                                             )}
                                         </div>
                                     </div>
-
-                                    {growersOpen && (
-                                        <div className="mt-4 space-y-4">
+                                    <div
+                                        className={`mt-4 transition-all duration-300 overflow-hidden ${
+                                            growersOpen
+                                                ? "max-h-[1000px] opacity-100"
+                                                : "max-h-0 opacity-0"
+                                        }`}
+                                    >
+                                        <div className="space-y-4">
                                             {currentProduct?.growers?.map(
                                                 (grower) => (
                                                     <div
                                                         key={grower.id}
-                                                        className="border-2 border-[#E4E4E4] p-4 rounded-lg shadow"
+                                                        className="border border-gray-200 p-4 rounded-lg shadow"
                                                     >
                                                         <div className="flex justify-between items-start">
                                                             <div>
@@ -852,13 +861,12 @@ export default function VarietySampleShow() {
                                                                     </a>
                                                                 )}
                                                             </div>
-                                                            <div className="text-right"></div>
                                                         </div>
                                                     </div>
                                                 )
                                             )}
                                         </div>
-                                    )}
+                                    </div>
                                 </div>
                             </div>
                         </div>

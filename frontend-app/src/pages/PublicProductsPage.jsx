@@ -16,7 +16,7 @@ const PublicProductsPage = () => {
 
     useEffect(() => {
         document.title = "Products - Breederplants";
-        setTitle("Products");
+        setTitle("Catalog");
     }, [setTitle]);
 
     const handlePageChange = (page) => {
