@@ -8,7 +8,7 @@ export default function FrontendLayout() {
         <div className="min-h-screen flex flex-col">
             <Header />
             {/* Main content */}
-            <main className="flex-grow pb-16">
+            <main className="flex-grow pb-20 md:pb-24">
                 <Outlet />
             </main>
             {/* Bottom Navigation */}
