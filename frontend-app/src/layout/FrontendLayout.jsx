@@ -1,13 +1,18 @@
+import React from "react";
 import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
+import BottomNavigation from "../components/BottomNavigation";
 
-const FrontendLayout = () => {
+export default function FrontendLayout() {
     return (
-        <div>
+        <div className="min-h-screen flex flex-col">
             <Header />
-            <Outlet />
+            {/* Main content */}
+            <main className="flex-grow pb-16">
+                <Outlet />
+            </main>
+            {/* Bottom Navigation */}
+            <BottomNavigation />
         </div>
     );
-};
-
-export default FrontendLayout;
+}
