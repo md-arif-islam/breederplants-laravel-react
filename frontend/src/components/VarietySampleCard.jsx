@@ -35,12 +35,17 @@ export default function VarietySampleCard({ sample, varietyReportId }) {
                 />
             </div>
             <div className="flex-1 min-w-0">
-                <h3 className="text-sm md:text-xl font-semibold text-gray-900 mb-1">
+                <h3 className="text-md md:text-xl font-medium text-gray-900 mb-1">
                     Sample Date: {sample.sample_date}
                 </h3>
-                <h3 className="text-sm md:text-xl font-semibold text-gray-900 mb-1">
-                    Leaf Color: {sample.leaf_color.toUpperCase()}
-                </h3>
+                <p className="text-gray-600 text-xs md:text-sm">
+                    <strong>Leaf Color:</strong>{" "}
+                    {sample.leaf_color.toUpperCase()}
+                </p>
+                <p className="text-gray-600 text-xs md:text-sm">
+                    <strong>Branch Color:</strong>{" "}
+                    {sample.branch_color.toUpperCase()}
+                </p>
             </div>
             <ChevronRight className="w-6 h-6 text-gray-400 flex-shrink-0" />
         </Link>

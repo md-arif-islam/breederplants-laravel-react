@@ -1,11 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Leaf } from "lucide-react";
 
 import VarietyReportCard from "../components/VarietyReportCard";
 import PlantImg from "../assets/images/big.png";
 import { useVarietyReportStore } from "../store/useVarietyReportStore";
 import { useStore } from "../store/useStore";
-
 const VarietyReportsPage = () => {
     const {
         isLoading,
@@ -23,7 +22,7 @@ const VarietyReportsPage = () => {
 
     useEffect(() => {
         document.title = "Variety Reports - Breederplants";
-    }, []);
+    });
 
     const handlePageChange = (page) => {
         getVarietyReportsByUser(authUser.id, page);
