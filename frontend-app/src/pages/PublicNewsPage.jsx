@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { usePostStore } from "../store/usePostStore";
 import PostCard from "../components/PostCard";
+import { PageTitleContext } from "../context/PageTitleContext";
 
 const PublicNewsPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
+    const { setTitle } = useContext(PageTitleContext);
 
     const { isLoading, posts, currentPage, totalPages, getAllPosts } =
         usePostStore();
@@ -14,7 +16,8 @@ const PublicNewsPage = () => {
 
     useEffect(() => {
         document.title = "News - Breederplants";
-    }, []);
+        setTitle("News");
+    }, [setTitle]);
 
     const handlePageChange = (page) => {
         getAllPosts(page, searchQuery);
@@ -56,7 +59,7 @@ const PublicNewsPage = () => {
                             </div>
                         </div>
 
-                        <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-1 lg:gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-1 lg:gap-4">
                             {posts?.map((post) => (
                                 <PostCard key={post.id} post={post} />
                             ))}

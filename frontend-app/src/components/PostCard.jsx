@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Leaf, Pencil, Trash2 } from "lucide-react";
+import truncate from "html-truncate";
 
 export default function PostCard({ post }) {
     const [imgLoaded, setImgLoaded] = useState(false);
@@ -33,10 +34,16 @@ export default function PostCard({ post }) {
 
             <h2 className="text-xl font-semibold mt-4 mb-2">{post.title}</h2>
             <p className="text-gray-700">
-                {post.summary ||
-                    (post.description && post.description.length > 100
-                        ? post.description.substring(0, 100) + "..."
-                        : post.description)}
+                {post.description && (
+                    <div
+                        className="description-preview"
+                        dangerouslySetInnerHTML={{
+                            __html: truncate(post.description, 80, {
+                                ellipsis: "...",
+                            }),
+                        }}
+                    />
+                )}
             </p>
             {/* Categories and Tags */}
             <div className="mt-2 flex flex-wrap gap-2">

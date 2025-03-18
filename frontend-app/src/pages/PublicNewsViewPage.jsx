@@ -1,13 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { usePostStore } from "../store/usePostStore";
 import { useParams, Link } from "react-router-dom";
 import { Calendar, Leaf, Share2 } from "lucide-react";
 import PostCard from "../components/PostCard";
+import { PageTitleContext } from "../context/PageTitleContext";
+import parse from "html-react-parser";
 
 const PublicNewsViewPage = () => {
     const { currentPost, isLoading, getPost, getRelatedPosts } = usePostStore();
     const [imgLoaded, setImgLoaded] = useState(false);
     const [relatedPosts, setRelatedPosts] = useState([]);
+    const { setTitle } = useContext(PageTitleContext);
+
     const { id } = useParams();
 
     useEffect(() => {
@@ -18,7 +22,8 @@ const PublicNewsViewPage = () => {
         document.title = currentPost?.title
             ? `${currentPost.title} | Breederplants News`
             : "Beautiful News - Breederplants";
-    }, [currentPost?.title]);
+        setTitle(currentPost?.title || "News");
+    }, [currentPost, setTitle]);
 
     useEffect(() => {
         if (currentPost && currentPost.tags && currentPost.tags.length > 0) {
@@ -149,7 +154,7 @@ const PublicNewsViewPage = () => {
                                 </div>
 
                                 {/* Title */}
-                                <h1 className="text-3xl font-bold text-gray-800 leading-tight md:text-4xl">
+                                <h1 className="text-lg md:text-2xl font-bold text-gray-800 leading-tight ">
                                     {currentPost.title}
                                 </h1>
 
@@ -194,13 +199,7 @@ const PublicNewsViewPage = () => {
 
                             {/* Content */}
                             <div className="mt-8 prose max-w-none">
-                                <div
-                                    className="mt-6 rounded-lg overflow-hidden news-desc"
-                                    style={{ lineHeight: "1.6" }} // Add line height for better readability
-                                    dangerouslySetInnerHTML={{
-                                        __html: currentPost.description,
-                                    }}
-                                />
+                                {parse(currentPost.description || "")}
                             </div>
 
                             {/* Tags */}
@@ -226,20 +225,6 @@ const PublicNewsViewPage = () => {
                                 )}
                         </div>
                     </div>
-
-                    {/* Related Posts */}
-                    {relatedPosts.length > 0 && (
-                        <div className="mt-12 mb-16">
-                            <h2 className="text-2xl font-bold text-gray-800 mb-6">
-                                More from Breederplants
-                            </h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {relatedPosts.map((post) => (
-                                    <PostCard key={post.id} post={post} />
-                                ))}
-                            </div>
-                        </div>
-                    )}
                 </div>
             </div>
         </div>
