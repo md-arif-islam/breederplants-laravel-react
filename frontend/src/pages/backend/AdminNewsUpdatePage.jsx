@@ -5,10 +5,9 @@ import { Loader2 } from "lucide-react";
 import { usePostStore } from "../../store/usePostStore";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import {
-    SingleSelect,
-    MultiSelect,
-} from "../../components/backend/MultiSelect";
+import { MultiSelect } from "../../components/backend/MultiSelect";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 export default function AdminNewsUpdatePage() {
     const { id } = useParams();
@@ -22,6 +21,8 @@ export default function AdminNewsUpdatePage() {
         getAllCategories,
         tags,
         getAllTags,
+        createCategory,
+        createTag,
     } = usePostStore();
 
     const [formData, setFormData] = useState({
@@ -90,6 +91,54 @@ export default function AdminNewsUpdatePage() {
         }
     };
 
+    const handleDescriptionChange = (value) => {
+        setFormData({
+            ...formData,
+            description: value,
+        });
+    };
+
+    const handleCreateCategory = async (name) => {
+        try {
+            const res = await createCategory({ name });
+            console.log("createCategory response:", res);
+            const newCategoryId =
+                res?.data?.id || res?.data?.data?.id || res?.data?.category?.id;
+            if (!newCategoryId) {
+                toast.error("Error: Created category has no id");
+                return;
+            }
+            await getAllCategories();
+            setFormData((prev) => ({
+                ...prev,
+                categories: [...prev.categories, newCategoryId.toString()],
+            }));
+            toast.success("Category created successfully!");
+        } catch (error) {
+            toast.error("Error creating category");
+        }
+    };
+
+    const handleCreateTag = async (name) => {
+        try {
+            const res = await createTag({ name });
+            const newTagId =
+                res?.data?.id || res?.data?.data?.id || res?.data?.tag?.id;
+            if (!newTagId) {
+                toast.error("Error: Created tag has no id");
+                return;
+            }
+            await getAllTags();
+            setFormData((prev) => ({
+                ...prev,
+                tags: [...prev.tags, newTagId.toString()],
+            }));
+            toast.success("Tag created successfully!");
+        } catch (error) {
+            toast.error("Error creating tag");
+        }
+    };
+
     return (
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">
             <div className="container mx-auto px-4 py-8">
@@ -120,21 +169,15 @@ export default function AdminNewsUpdatePage() {
 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">
-                                        description{" "}
+                                        Description{" "}
                                         <span className="text-red-500">*</span>
                                     </label>
-                                    <textarea
-                                        required
+                                    <ReactQuill
                                         value={formData.description}
-                                        onChange={(e) =>
-                                            setFormData({
-                                                ...formData,
-                                                description: e.target.value,
-                                            })
-                                        }
+                                        onChange={handleDescriptionChange}
                                         placeholder="Enter news description"
-                                        className="mt-1 w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
-                                    ></textarea>
+                                        className="mt-1 w-full"
+                                    />
                                 </div>
 
                                 <div>
@@ -148,25 +191,7 @@ export default function AdminNewsUpdatePage() {
                                                 type="file"
                                                 className="hidden"
                                                 accept="image/*"
-                                                onChange={(e) => {
-                                                    const file =
-                                                        e.target.files[0];
-                                                    if (file) {
-                                                        const reader =
-                                                            new FileReader();
-                                                        reader.onloadend =
-                                                            () => {
-                                                                setFormData({
-                                                                    ...formData,
-                                                                    thumbnail:
-                                                                        reader.result,
-                                                                });
-                                                            };
-                                                        reader.readAsDataURL(
-                                                            file
-                                                        );
-                                                    }
-                                                }}
+                                                onChange={handleThumbnailChange}
                                             />
                                         </label>
                                         <span className="text-gray-500">
@@ -202,7 +227,7 @@ export default function AdminNewsUpdatePage() {
                             <div className="space-y-6">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">
-                                        Category
+                                        Categories
                                     </label>
                                     <MultiSelect
                                         options={categories || []}
@@ -213,7 +238,8 @@ export default function AdminNewsUpdatePage() {
                                                 categories: selectedCategories,
                                             })
                                         }
-                                        placeholder="Select Tags"
+                                        placeholder="Select Categories"
+                                        onCreate={handleCreateCategory}
                                     />
                                 </div>
 
@@ -231,6 +257,7 @@ export default function AdminNewsUpdatePage() {
                                             })
                                         }
                                         placeholder="Select Tags"
+                                        onCreate={handleCreateTag}
                                     />
                                 </div>
                             </div>
