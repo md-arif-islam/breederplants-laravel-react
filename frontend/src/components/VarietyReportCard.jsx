@@ -16,7 +16,7 @@ export default function VarietyReportCard({ report }) {
             to={`/variety-reports/${report.id}`}
             className="bg-white rounded-2xl p-2 flex items-center gap-4 mb-4 drop-shadow-md hover:shadow-xl"
         >
-            <div className="w-20 h-20 lg:w-28 lg:h-28 flex-shrink-0 relative">
+            <div className="w-20 h-20 md:w-28 md:h-28 lg:w-36 lg:h-36   flex-shrink-0 relative">
                 {!imgLoaded && (
                     <div className="absolute inset-0 flex items-center justify-center bg-gray-200 rounded-xl">
                         <Leaf className="w-8 h-8 text-gray-500 animate-pulse" />
