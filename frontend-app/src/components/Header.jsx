@@ -13,7 +13,7 @@ export default function Header() {
 
     return (
         <header className="bg-[#4CAF50] text-white p-6 pb-20 relative">
-            <div className="container mx-auto flex items-center justify-between">
+            <div className="container mx-auto flex items-center gap-4 justify-between">
                 <div className="flex items-center gap-4 grid-span-2">
                     <div className="py-1">
                         <button
