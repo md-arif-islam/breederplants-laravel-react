@@ -1,7 +1,8 @@
 import { Loader2 } from "lucide-react";
 import { useProductionReportStore } from "../store/useProductionReportStore";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
+import { PageTitleContext } from "../context/PageTitleContext";
 
 export default function ProductionReportSubmitPage() {
     const {
@@ -12,6 +13,8 @@ export default function ProductionReportSubmitPage() {
     } = useProductionReportStore();
 
     const { year, quarter } = useParams();
+    const { setTitle } = useContext(PageTitleContext);
+
     useEffect(() => {
         getProductionReport(year, quarter);
     }, [getProductionReport, year, quarter]);
@@ -19,7 +22,8 @@ export default function ProductionReportSubmitPage() {
     useEffect(() => {
         // page title
         document.title = "Submit Production Reports - Breederplants";
-    }, []);
+        setTitle("Submit Production Reports");
+    }, [setTitle]);
 
     const navigate = useNavigate();
 

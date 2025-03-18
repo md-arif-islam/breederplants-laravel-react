@@ -1,14 +1,21 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
-// Create the actual context
-export const PageTitleContext = createContext();
+// Provide a default value with a no-op setTitle for fallback.
+export const PageTitleContext = createContext({
+    title: "",
+    setTitle: () => {},
+});
 
-// Create a provider component
 export function PageTitleProvider({ children }) {
-    // This holds the current page title globally
     const [title, setTitle] = useState("");
+    const location = useLocation();
 
-    // The Provider gives `title` and `setTitle` to any nested components
+    // Reset the title to "" whenever the route changes.
+    useEffect(() => {
+        setTitle("");
+    }, [location.pathname]);
+
     return (
         <PageTitleContext.Provider value={{ title, setTitle }}>
             {children}

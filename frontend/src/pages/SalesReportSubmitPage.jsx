@@ -1,13 +1,17 @@
 import { Loader2 } from "lucide-react";
 import { useSalesReportStore } from "../store/useSalesReportStore";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
+import { PageTitleContext } from "../context/PageTitleContext";
 
 export default function SalesReportSubmitPage() {
     const { currentSalesReport, getSalesReport, isLoading, submitSalesReport } =
         useSalesReportStore();
 
     const { year, quarter } = useParams();
+    const navigate = useNavigate();
+    const { setTitle } = useContext(PageTitleContext);
+
     useEffect(() => {
         getSalesReport(year, quarter);
     }, [getSalesReport, year, quarter]);
@@ -15,9 +19,8 @@ export default function SalesReportSubmitPage() {
     useEffect(() => {
         // page title
         document.title = "Submit Sales Reports - Breederplants";
-    });
-
-    const navigate = useNavigate();
+        setTitle("Submit Sales Reports");
+    }, [setTitle]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

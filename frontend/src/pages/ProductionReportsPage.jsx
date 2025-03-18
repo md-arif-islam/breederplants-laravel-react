@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useProductionReportStore } from "../store/useProductionReportStore";
 import { Link, useNavigate } from "react-router-dom";
 import { useStore } from "../store/useStore";
+import { PageTitleContext } from "../context/PageTitleContext";
 
 export default function ProductionReportsPage() {
     const {
@@ -14,11 +15,13 @@ export default function ProductionReportsPage() {
 
     const { authUser } = useStore();
     const navigate = useNavigate();
+    const { setTitle } = useContext(PageTitleContext);
 
     useEffect(() => {
         // page title
         document.title = "Production Reports - Breederplants";
-    }, []);
+        setTitle("Production Reports");
+    }, [setTitle]);
 
     useEffect(() => {
         getAllProductionReports();

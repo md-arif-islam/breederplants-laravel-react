@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useSalesReportStore } from "../store/useSalesReportStore";
 import { Link, useNavigate } from "react-router-dom";
 import { useStore } from "../store/useStore";
+import { PageTitleContext } from "../context/PageTitleContext";
 
 export default function SalesReportsPage() {
     const {
@@ -15,10 +16,13 @@ export default function SalesReportsPage() {
     const { authUser } = useStore();
     const navigate = useNavigate();
 
+    const { setTitle } = useContext(PageTitleContext);
+
     useEffect(() => {
         // page title
         document.title = "Sales Reports - Breederplants";
-    }, []);
+        setTitle("Sales Reports");
+    }, [setTitle]);
 
     useEffect(() => {
         getAllSalesReports();

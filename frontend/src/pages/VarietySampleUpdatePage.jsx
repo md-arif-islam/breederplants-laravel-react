@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Leaf, Loader2, X } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useVarietySampleStore } from "../store/useVarietySampleStore";
+import { PageTitleContext } from "../context/PageTitleContext.jsx";
 
 export default function VarietySampleUpdatePage() {
     const {
@@ -32,9 +33,12 @@ export default function VarietySampleUpdatePage() {
         images: [],
     });
 
+    console.log(varietySample);
+
     const [imagePreviews, setImagePreviews] = useState([]);
     // New state to track each image load status
     const [loadedImages, setLoadedImages] = useState({});
+    const { setTitle } = useContext(PageTitleContext);
 
     useEffect(() => {
         getUserVarietySample(id, sampleId);
@@ -74,9 +78,13 @@ export default function VarietySampleUpdatePage() {
     }, [varietySample]);
 
     useEffect(() => {
-        // page title
-        document.title = "Edit Variety Sample - Breederplants";
-    });
+        if (!isLoading && varietySample) {
+            document.title = `${varietySample.variety_report.variety_name} Sample Edit`;
+            setTitle(
+                `${varietySample.variety_report.variety_name} Sample Edit`
+            );
+        }
+    }, [setTitle, isLoading]);
 
     const fileToBase64 = (file) =>
         new Promise((resolve, reject) => {

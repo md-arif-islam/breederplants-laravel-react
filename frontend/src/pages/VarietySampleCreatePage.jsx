@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Loader2, X } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useVarietySampleStore } from "../store/useVarietySampleStore";
+import { PageTitleContext } from "../context/PageTitleContext";
 
 export default function VarietySampleCreatePage() {
     const { isLoading, createUserVarietySample } = useVarietySampleStore();
@@ -30,6 +31,7 @@ export default function VarietySampleCreatePage() {
 
     // imagePreviews holds the display strings (base64 strings) for each image.
     const [imagePreviews, setImagePreviews] = useState([]);
+    const { setTitle } = useContext(PageTitleContext);
 
     // Helper: Convert a file to a base64 string.
     const fileToBase64 = (file) =>
@@ -89,8 +91,9 @@ export default function VarietySampleCreatePage() {
 
     useEffect(() => {
         // page title
-        document.title = "Create Variety Sample - Breederplants";
-    }, []);
+        document.title = "Add Sample - Breederplants";
+        setTitle("Add Sample");
+    }, [setTitle]);
 
     return (
         <div className="bg-gray-50 -mt-12">
@@ -585,7 +588,7 @@ export default function VarietySampleCreatePage() {
                                     {isLoading ? (
                                         <Loader2 className="h-5 w-5 animate-spin mr-2" />
                                     ) : (
-                                        "Create Variety Sample"
+                                        "Add Sample"
                                     )}
                                 </button>
                             </div>

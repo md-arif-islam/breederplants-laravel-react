@@ -1,9 +1,10 @@
 import { Leaf, PenBox } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useVarietySampleStore } from "../store/useVarietySampleStore";
 import prevIcon from "../assets/images/icon-previous.svg";
 import nextIcon from "../assets/images/icon-next.svg";
+import { PageTitleContext } from "../context/PageTitleContext";
 
 export default function VarietySampleShow() {
     const [currImg, setCurrImg] = useState(0);
@@ -13,16 +14,19 @@ export default function VarietySampleShow() {
         useVarietySampleStore();
     const { id, sampleId } = useParams();
     const navigate = useNavigate();
+    const { setTitle } = useContext(PageTitleContext);
 
     useEffect(() => {
         getUserVarietySample(id, sampleId);
     }, [getUserVarietySample, id, sampleId]);
 
     useEffect(() => {
-        if (varietySample?.variety_report) {
+        if (varietySample?.variety_report && !isLoading) {
             document.title =
                 varietySample?.variety_report?.variety_name +
                 " - Breederplants";
+
+            setTitle(varietySample?.variety_report?.variety_name + " Sample");
         }
     }, [varietySample]);
 
@@ -85,7 +89,7 @@ export default function VarietySampleShow() {
                                             onLoad={() =>
                                                 handleImgLoad(currImg)
                                             }
-                                            className={`block w-full max-w-full rounded-xl cursor-pointer transition-opacity duration-300 ${
+                                            className={`block object-cover w-full h-full md:h-[60vh] max-w-full rounded-xl cursor-pointer transition-opacity duration-300 ${
                                                 loadedImages[currImg]
                                                     ? "opacity-100"
                                                     : "opacity-0"
@@ -233,7 +237,7 @@ export default function VarietySampleShow() {
                         <div className="border rounded-full p-1 mt-4">
                             <Link
                                 to={`/variety-reports/${id}/variety-sample/${sampleId}/edit`}
-                                className="w-full text-center align-middle h-10 rounded-full text-sm bg-primary hover:bg-secondary text-white font-semibold transition-colors flex items-center justify-center"
+                                className="w-full text-center align-middle h-12 rounded-full text-sm lg:text-lg bg-primary hover:bg-secondary text-white font-semibold transition-colors flex items-center justify-center"
                             >
                                 <PenBox className="w-4 h-4 mr-2" />
                                 Change

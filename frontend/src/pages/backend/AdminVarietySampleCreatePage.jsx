@@ -89,7 +89,7 @@ export default function VarietySampleCreatePage() {
 
     useEffect(() => {
         // page title
-        document.title = "Create Variety Sample - Breederplants";
+        document.title = "Add Sample - Breederplants";
     });
 
     return (
@@ -520,7 +520,7 @@ export default function VarietySampleCreatePage() {
                                 {isLoading ? (
                                     <Loader2 className="h-5 w-5 animate-spin mr-2" />
                                 ) : (
-                                    "Create Variety Sample"
+                                    "Add Sample"
                                 )}
                             </button>
                         </div>
