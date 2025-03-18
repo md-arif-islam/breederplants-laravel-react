@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
-import Notifications from "./Notifications";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useStore } from "../store/useStore";
-import { EyeClosed, HamIcon, Menu, MenuIcon, X } from "lucide-react";
+import Notifications from "./Notifications";
+import { ChevronLeft, Menu, X } from "lucide-react";
+import { PageTitleContext } from "../context/PageTitleContext";
 
+// Helper to get initials from a name
 function getInitials(name) {
     if (!name) return "";
     const words = name.split(" ");
@@ -18,6 +20,13 @@ export default function Header() {
     const { authUser, checkAuth } = useStore();
     const [menuOpen, setMenuOpen] = useState(false);
 
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const isIndexPage = location.pathname === "/";
+    const { title } = useContext(PageTitleContext);
+
+    // Build nameLogo and userName as before
     let nameLogo = "";
     let userName = "";
 
@@ -42,60 +51,105 @@ export default function Header() {
         checkAuth();
     }, [checkAuth]);
 
-    useEffect(() => {
-        document.title = "Home - Breederplants";
-    }, []);
-
     return (
         <header className="bg-[#4CAF50] text-white p-6 pb-20 relative">
             <div className="container mx-auto flex items-center justify-between">
-                {/* Left side: Logo + user name */}
-                <div className="flex items-center gap-4">
-                    <Link
-                        to="/"
-                        className="w-12 h-12 bg-[#e9e9e9] rounded-full flex items-center justify-center text-primary font-semibold"
-                    >
-                        {nameLogo}
-                    </Link>
-                    <div>
-                        <p className="font-poppins font-normal text-[12px] md:text-[14px] leading-[1.00]">
-                            Welcome Back!
-                        </p>
-                        <Link to="/">
-                            <h2 className="text-base md:text-lg font-semibold font-poppins leading-[1.25]">
-                                {userName}
-                            </h2>
-                        </Link>
+                {/* LEFT COLUMN */}
+                {/* take 2 col */}
+                <div className="flex items-center gap-4 grid-span-2">
+                    {isIndexPage ? (
+                        <>
+                            <Link
+                                to="/"
+                                className="w-12 h-12 p-3 bg-[#e9e9e9] rounded-full
+                  flex items-center justify-center text-primary font-semibold"
+                            >
+                                {nameLogo}
+                            </Link>
+
+                            <div>
+                                <p className="font-poppins font-normal text-[12px] md:text-[14px] leading-[1.00]">
+                                    Welcome Back!
+                                </p>
+                                <Link to="/">
+                                    <h2 className="text-base md:text-lg font-semibold font-poppins leading-[1.25]">
+                                        {userName}
+                                    </h2>
+                                </Link>
+                            </div>
+                        </>
+                    ) : (
+                        <div className="py-1">
+                            <button
+                                className="block focus:outline-none relative"
+                                onClick={() => navigate(-1)}
+                                aria-label="Go Back"
+                            >
+                                <ChevronLeft
+                                    className="w-8 h-8 md:w-9 md:h-9 text-primary bg-white p-2 rounded-md
+                hover:scale-110 transition-transform duration-300"
+                                />
+                            </button>
+                        </div>
+                    )}
+                </div>
+
+                {/* MIDDLE COLUMN: Only show the page title if NOT on the index page */}
+                <div className="text-center">
+                    {!isIndexPage && (
+                        <h2 className="text-base md:text-xl font-semibold">
+                            {title}
+                        </h2>
+                    )}
+                </div>
+
+                {/* RIGHT COLUMN */}
+                <div className="flex items-center justify-end gap-2">
+                    {/* Desktop notifications */}
+                    <div className="hidden md:block">
+                        <Notifications />
                     </div>
-                </div>
 
-                {/* Desktop notifications/icons */}
-                <div className="hidden md:block">
-                    <Notifications />
+                    {/* Hamburger (mobile only) */}
+                    {!isIndexPage ? (
+                        // If we are NOT on the index page, show hamburger on the right
+                        <button
+                            className="block md:hidden focus:outline-none relative"
+                            onClick={() => setMenuOpen(!menuOpen)}
+                            aria-label="Toggle Menu"
+                        >
+                            <Menu
+                                className="w-8 h-8 text-primary bg-white p-2 rounded-md
+                hover:scale-110 transition-transform duration-300"
+                            />
+                        </button>
+                    ) : (
+                        // If we are on the index page, we can still show the hamburger for mobile
+                        <button
+                            className="block md:hidden focus:outline-none relative"
+                            onClick={() => setMenuOpen(!menuOpen)}
+                            aria-label="Toggle Menu"
+                        >
+                            <Menu
+                                className="w-8 h-8 text-primary bg-white p-2 rounded-md
+                hover:scale-110 transition-transform duration-300"
+                            />
+                        </button>
+                    )}
                 </div>
-
-                {/* Hamburger button (mobile only) */}
-                <button
-                    className="block md:hidden focus:outline-none relative w-8 h-6"
-                    onClick={() => setMenuOpen(!menuOpen)}
-                    aria-label="Toggle Menu"
-                >
-                    <Menu className="w-8 h-8" />
-                </button>
             </div>
 
             {/*
-        Off-screen "canvas" from the TOP.
-        Slides down via translateY(-100%) -> translateY(0).
-        Full width, so you can place your entire menu / notifications.
+        Mobile panel that slides down from the top
+        when hamburger is clicked.
       */}
             <div
                 className={`fixed top-0 left-0 w-full bg-[#4CAF50] text-white
-                    transform transition-transform duration-300 ease-in-out
-                    z-50 p-4
-                    ${menuOpen ? "translate-y-0" : "-translate-y-full"}`}
+          transform transition-transform duration-300 ease-in-out
+          z-50 p-4
+          ${menuOpen ? "translate-y-0" : "-translate-y-full"}`}
             >
-                {/* Wrapper for close button to align at the right */}
+                {/* Close icon */}
                 <div className="flex justify-end">
                     <button
                         className="text-white font-semibold focus:outline-none"
@@ -105,6 +159,8 @@ export default function Header() {
                     </button>
                 </div>
 
+                {/* Place anything you want in the mobile menu,
+            e.g., <Notifications />, other nav links, etc. */}
                 <Notifications />
             </div>
         </header>

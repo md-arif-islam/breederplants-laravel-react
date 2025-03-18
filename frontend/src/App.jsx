@@ -6,7 +6,6 @@ import LoginPage from "./pages/LoginPage";
 import VarietyReportsPage from "./pages/VarietyReportsPage";
 import VarietyReportShow from "./pages/VarietyReportShowPage";
 
-import Header from "./components/Header";
 import { Toaster } from "react-hot-toast";
 import FrontendLayout from "./layout/FrontendLayout";
 import BackendLayout from "./layout/BackendLayout";
@@ -16,7 +15,6 @@ import AdminVarietyReportViewPage from "./pages/backend/AdminVarietyReportViewPa
 import AdminVarietySampleViewPage from "./pages/backend/AdminVarietySampleViewPage";
 import AdminVarietyReportCreatePage from "./pages/backend/AdminVarietyReportCreatePage";
 import { useStore } from "./store/useStore";
-import { Loader } from "lucide-react";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import AdminGrowerPage from "./pages/backend/AdminGrowersPage";
@@ -55,6 +53,7 @@ import AdminNewsUpdatePage from "./pages/backend/AdminNewsUpdatePage";
 import AdminNewsCreatePage from "./pages/backend/AdminNewsCreatePage"; // Import the new page
 import AdminNewsCategoriesPage from "./pages/backend/AdminNewsCategoriesPage";
 import AdminNewsTagsPage from "./pages/backend/AdminNewsTagsPage";
+import { PageTitleProvider } from "./context/PageTitleContext";
 
 const App = () => {
     const { authUser, isCheckingAuth, checkAuth } = useStore();
@@ -84,229 +83,252 @@ const App = () => {
         );
 
     return (
-        <div>
-            <LoadingBar color="#000" ref={loadingBarRef} />
-            <Routes>
-                {/* Auth */}
-                <Route
-                    path="/login"
-                    element={
-                        authUser ? (
-                            <Navigate to={location.state?.from || "/"} />
-                        ) : (
-                            <LoginPage />
-                        )
-                    }
-                />
-
-                <Route
-                    path="/forgot-password"
-                    element={
-                        !authUser ? <ForgotPasswordPage /> : <Navigate to="/" />
-                    }
-                />
-
-                <Route
-                    path="/reset-password"
-                    element={
-                        !authUser ? <ResetPasswordPage /> : <Navigate to="/" />
-                    }
-                />
-
-                {/* Frontend Routes with Header */}
-                <Route
-                    element={
-                        <UserRoute>
-                            <FrontendLayout />
-                        </UserRoute>
-                    }
-                >
+        <PageTitleProvider>
+            <div>
+                <LoadingBar color="#000" ref={loadingBarRef} />
+                <Routes>
+                    {/* Auth */}
                     <Route
-                        path="/"
+                        path="/login"
                         element={
                             authUser ? (
-                                <VarietyReportsPage />
+                                <Navigate to={location.state?.from || "/"} />
                             ) : (
+                                <LoginPage />
+                            )
+                        }
+                    />
+
+                    <Route
+                        path="/forgot-password"
+                        element={
+                            !authUser ? (
+                                <ForgotPasswordPage />
+                            ) : (
+                                <Navigate to="/" />
+                            )
+                        }
+                    />
+
+                    <Route
+                        path="/reset-password"
+                        element={
+                            !authUser ? (
+                                <ResetPasswordPage />
+                            ) : (
+                                <Navigate to="/" />
+                            )
+                        }
+                    />
+
+                    {/* Frontend Routes with Header */}
+                    <Route
+                        element={
+                            <UserRoute>
+                                <FrontendLayout />
+                            </UserRoute>
+                        }
+                    >
+                        <Route
+                            path="/"
+                            element={
+                                authUser ? (
+                                    <VarietyReportsPage />
+                                ) : (
+                                    <Navigate to="/login" />
+                                )
+                            }
+                        />
+                        <Route
+                            path="/variety-reports/:id"
+                            element={<VarietyReportShow />}
+                        />
+                        <Route
+                            path="variety-reports/:id/variety-sample/:sampleId"
+                            element={<VarietySampleShow />}
+                        />
+                        <Route
+                            path="variety-reports/:id/variety-sample/create"
+                            element={<VarietySampleCreatePage />}
+                        />
+
+                        <Route
+                            path="variety-reports/:id/variety-sample/:sampleId/edit"
+                            element={<VarietySampleUpdatePage />}
+                        />
+
+                        <Route
+                            path="sales-reports"
+                            element={
+                                authUser?.role == "admin" ? (
+                                    <Navigate to="/admin/sales-reports" />
+                                ) : (
+                                    <SalesReportsPage />
+                                )
+                            }
+                        />
+
+                        <Route
+                            path="sales-reports/create/:year/:quarter"
+                            element={<SalesReportSubmitPage />}
+                        />
+
+                        <Route
+                            path="production-reports"
+                            element={
+                                authUser?.role == "admin" ? (
+                                    <Navigate to="/admin/production-reports" />
+                                ) : (
+                                    <ProductionReportsPage />
+                                )
+                            }
+                        />
+
+                        <Route
+                            path="production-reports/create/:year/:quarter"
+                            element={<ProductionReportSubmitPage />}
+                        />
+                    </Route>
+
+                    {/* Backend (Admin) Routes without Header */}
+                    <Route
+                        path="/admin"
+                        element={
+                            !authUser ? (
                                 <Navigate to="/login" />
-                            )
-                        }
-                    />
-                    <Route
-                        path="/variety-reports/:id"
-                        element={<VarietyReportShow />}
-                    />
-                    <Route
-                        path="variety-reports/:id/variety-sample/:sampleId"
-                        element={<VarietySampleShow />}
-                    />
-                    <Route
-                        path="variety-reports/:id/variety-sample/create"
-                        element={<VarietySampleCreatePage />}
-                    />
-
-                    <Route
-                        path="variety-reports/:id/variety-sample/:sampleId/edit"
-                        element={<VarietySampleUpdatePage />}
-                    />
-
-                    <Route
-                        path="sales-reports"
-                        element={
-                            authUser?.role == "admin" ? (
-                                <Navigate to="/admin/sales-reports" />
                             ) : (
-                                <SalesReportsPage />
+                                <AdminRoute>
+                                    <BackendLayout />
+                                </AdminRoute>
                             )
                         }
-                    />
+                    >
+                        <Route
+                            path="dashboard"
+                            element={<AdminDashboardPage />}
+                        />
+                        <Route
+                            path="variety-reports"
+                            element={<AdminVarietyReportsPage />}
+                        />
+                        <Route
+                            path="variety-reports/create"
+                            element={<AdminVarietyReportCreatePage />}
+                        />
+                        <Route
+                            path="variety-reports/:id"
+                            element={<AdminVarietyReportViewPage />}
+                        />
+                        <Route
+                            path="variety-reports/:id/edit"
+                            element={<AdminVarietyReportUpdatePage />}
+                        />
+                        <Route
+                            path="variety-reports/:id/variety-sample/:sampleId"
+                            element={<AdminVarietySampleViewPage />}
+                        />
+                        <Route
+                            path="variety-reports/:id/variety-sample/create"
+                            element={<AdminVarietySampleCreatePage />}
+                        />
+                        <Route
+                            path="variety-reports/:id/variety-sample/:sampleId/edit"
+                            element={<AdminVarietySampleUpdatePage />}
+                        />
+                        <Route path="growers" element={<AdminGrowerPage />} />
+                        <Route
+                            path="growers/:id"
+                            element={<AdminGrowerViewPage />}
+                        />
+                        <Route
+                            path="growers/:id/edit"
+                            element={<AdminGrowerEditPage />}
+                        />
+                        <Route
+                            path="growers/create"
+                            element={<AdminGrowerCreatePage />}
+                        />
+                        <Route
+                            path="growers/:id/products"
+                            element={<AdminGrowerProductsPage />}
+                        />
+                        <Route path="breeders" element={<AdminBreederPage />} />
+                        <Route
+                            path="breeders/:id"
+                            element={<AdminBreederViewPage />}
+                        />
+                        <Route
+                            path="breeders/:id/edit"
+                            element={<AdminBreederEditPage />}
+                        />
+                        <Route
+                            path="breeders/create"
+                            element={<AdminBreederCreatePage />}
+                        />
+                        <Route
+                            path="breeders/:id/products"
+                            element={<AdminBreederProductsPage />}
+                        />
+                        <Route
+                            path="products"
+                            element={<AdminProductsPage />}
+                        />
+                        <Route
+                            path="products/:id"
+                            element={<AdminProductViewPage />}
+                        />
+                        <Route
+                            path="products/:id/edit"
+                            element={<AdminProductEditPage />}
+                        />
+                        <Route
+                            path="products/create"
+                            element={<AdminProductCreatePage />}
+                        />
+                        <Route
+                            path="sales-reports"
+                            element={<AdminSalesReportsPage />}
+                        />
+                        <Route
+                            path="sales-reports/:id"
+                            element={<AdminSalesReportViewPage />}
+                        />
+                        <Route
+                            path="production-reports"
+                            element={<AdminProductionReportsPage />}
+                        />
+                        <Route
+                            path="production-reports/:id"
+                            element={<AdminProductionReportViewPage />}
+                        />
+                        <Route path="news" element={<AdminNewsPage />} />
+                        <Route
+                            path="news/categories"
+                            element={<AdminNewsCategoriesPage />}
+                        />
+                        <Route
+                            path="news/tags"
+                            element={<AdminNewsTagsPage />}
+                        />
+                        <Route
+                            path="news/:id"
+                            element={<AdminNewsViewPage />}
+                        />
+                        <Route
+                            path="news/:id/edit"
+                            element={<AdminNewsUpdatePage />}
+                        />
+                        <Route
+                            path="news/create"
+                            element={<AdminNewsCreatePage />}
+                        />{" "}
+                        {/* Add the new route */}
+                    </Route>
+                </Routes>
 
-                    <Route
-                        path="sales-reports/create/:year/:quarter"
-                        element={<SalesReportSubmitPage />}
-                    />
-
-                    <Route
-                        path="production-reports"
-                        element={
-                            authUser?.role == "admin" ? (
-                                <Navigate to="/admin/production-reports" />
-                            ) : (
-                                <ProductionReportsPage />
-                            )
-                        }
-                    />
-
-                    <Route
-                        path="production-reports/create/:year/:quarter"
-                        element={<ProductionReportSubmitPage />}
-                    />
-                </Route>
-
-                {/* Backend (Admin) Routes without Header */}
-                <Route
-                    path="/admin"
-                    element={
-                        !authUser ? (
-                            <Navigate to="/login" />
-                        ) : (
-                            <AdminRoute>
-                                <BackendLayout />
-                            </AdminRoute>
-                        )
-                    }
-                >
-                    <Route path="dashboard" element={<AdminDashboardPage />} />
-                    <Route
-                        path="variety-reports"
-                        element={<AdminVarietyReportsPage />}
-                    />
-                    <Route
-                        path="variety-reports/create"
-                        element={<AdminVarietyReportCreatePage />}
-                    />
-                    <Route
-                        path="variety-reports/:id"
-                        element={<AdminVarietyReportViewPage />}
-                    />
-                    <Route
-                        path="variety-reports/:id/edit"
-                        element={<AdminVarietyReportUpdatePage />}
-                    />
-                    <Route
-                        path="variety-reports/:id/variety-sample/:sampleId"
-                        element={<AdminVarietySampleViewPage />}
-                    />
-                    <Route
-                        path="variety-reports/:id/variety-sample/create"
-                        element={<AdminVarietySampleCreatePage />}
-                    />
-                    <Route
-                        path="variety-reports/:id/variety-sample/:sampleId/edit"
-                        element={<AdminVarietySampleUpdatePage />}
-                    />
-                    <Route path="growers" element={<AdminGrowerPage />} />
-                    <Route
-                        path="growers/:id"
-                        element={<AdminGrowerViewPage />}
-                    />
-                    <Route
-                        path="growers/:id/edit"
-                        element={<AdminGrowerEditPage />}
-                    />
-                    <Route
-                        path="growers/create"
-                        element={<AdminGrowerCreatePage />}
-                    />
-                    <Route
-                        path="growers/:id/products"
-                        element={<AdminGrowerProductsPage />}
-                    />
-                    <Route path="breeders" element={<AdminBreederPage />} />
-                    <Route
-                        path="breeders/:id"
-                        element={<AdminBreederViewPage />}
-                    />
-                    <Route
-                        path="breeders/:id/edit"
-                        element={<AdminBreederEditPage />}
-                    />
-                    <Route
-                        path="breeders/create"
-                        element={<AdminBreederCreatePage />}
-                    />
-                    <Route
-                        path="breeders/:id/products"
-                        element={<AdminBreederProductsPage />}
-                    />
-                    <Route path="products" element={<AdminProductsPage />} />
-                    <Route
-                        path="products/:id"
-                        element={<AdminProductViewPage />}
-                    />
-                    <Route
-                        path="products/:id/edit"
-                        element={<AdminProductEditPage />}
-                    />
-                    <Route
-                        path="products/create"
-                        element={<AdminProductCreatePage />}
-                    />
-                    <Route
-                        path="sales-reports"
-                        element={<AdminSalesReportsPage />}
-                    />
-                    <Route
-                        path="sales-reports/:id"
-                        element={<AdminSalesReportViewPage />}
-                    />
-                    <Route
-                        path="production-reports"
-                        element={<AdminProductionReportsPage />}
-                    />
-                    <Route
-                        path="production-reports/:id"
-                        element={<AdminProductionReportViewPage />}
-                    />
-                    <Route path="news" element={<AdminNewsPage />} />
-                    <Route
-                        path="news/categories"
-                        element={<AdminNewsCategoriesPage />}
-                    />
-                    <Route path="news/tags" element={<AdminNewsTagsPage />} />
-                    <Route path="news/:id" element={<AdminNewsViewPage />} />
-                    <Route
-                        path="news/:id/edit"
-                        element={<AdminNewsUpdatePage />}
-                    />
-                    <Route
-                        path="news/create"
-                        element={<AdminNewsCreatePage />}
-                    />{" "}
-                    {/* Add the new route */}
-                </Route>
-            </Routes>
-            <Toaster />
-        </div>
+                <Toaster />
+            </div>
+        </PageTitleProvider>
     );
 };
 
