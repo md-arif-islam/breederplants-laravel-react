@@ -7,7 +7,7 @@ import LogoutImg from "../assets/images/Log_Out.svg";
 import { useStore } from "../store/useStore";
 import echo from "../lib/echo";
 import { useNotificationStore } from "../store/useNotificationStore";
-import { FileChartColumn } from "lucide-react";
+import { FileChartColumn, Home } from "lucide-react";
 
 const Notifications = () => {
     const { logout, authUser } = useStore();
@@ -126,6 +126,12 @@ const Notifications = () => {
                         src={AdminImg}
                         alt="Admin"
                     />
+                </Link>
+            )}
+
+            {authUser?.role != "admin" && (
+                <Link to="/" className="notification mx-1">
+                    <Home className="w-9 h-9 text-primary bg-white p-2 rounded-md hover:scale-110 transition-transform duration-300" />
                 </Link>
             )}
 
