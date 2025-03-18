@@ -18,6 +18,8 @@ export default function AdminNewsCreatePage() {
         getAllCategories,
         tags,
         getAllTags,
+        createCategory, // added for inline creation of category
+        createTag, // added for inline creation of tag
     } = usePostStore();
 
     const [formData, setFormData] = useState({
@@ -35,6 +37,8 @@ export default function AdminNewsCreatePage() {
         getAllCategories();
         getAllTags();
     }, [getAllCategories, getAllTags]);
+
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -55,8 +59,6 @@ export default function AdminNewsCreatePage() {
         }
     };
 
-    const [loading, setLoading] = useState(false);
-
     const handleThumbnailChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -76,6 +78,52 @@ export default function AdminNewsCreatePage() {
             ...formData,
             description: value,
         });
+    };
+
+    // Inline create handler for category
+    const handleCreateCategory = async (name) => {
+        try {
+            const res = await createCategory({ name });
+            console.log("createCategory response:", res);
+            // Adjust this line once you see where the id is returned;
+            // here we also check res.data.category.id as an example.
+            const newCategoryId =
+                res?.data?.id || res?.data?.data?.id || res?.data?.category?.id;
+            if (!newCategoryId) {
+                toast.error("Error: Created category has no id");
+                return;
+            }
+            await getAllCategories();
+            setFormData((prev) => ({
+                ...prev,
+                categories: [...prev.categories, newCategoryId.toString()],
+            }));
+            toast.success("Category created successfully!");
+        } catch (error) {
+            toast.error("Error creating category");
+        }
+    };
+
+    // Inline create handler for tag
+    const handleCreateTag = async (name) => {
+        try {
+            const res = await createTag({ name });
+            // Adjust based on your API response structure
+            const newTagId =
+                res?.data?.id || res?.data?.data?.id || res?.data?.tag?.id;
+            if (!newTagId) {
+                toast.error("Error: Created tag has no id");
+                return;
+            }
+            await getAllTags();
+            setFormData((prev) => ({
+                ...prev,
+                tags: [...prev.tags, newTagId.toString()],
+            }));
+            toast.success("Tag created successfully!");
+        } catch (error) {
+            toast.error("Error creating tag");
+        }
     };
 
     return (
@@ -178,6 +226,7 @@ export default function AdminNewsCreatePage() {
                                             })
                                         }
                                         placeholder="Select Categories"
+                                        onCreate={handleCreateCategory} // added inline creation
                                     />
                                 </div>
 
@@ -195,6 +244,7 @@ export default function AdminNewsCreatePage() {
                                             })
                                         }
                                         placeholder="Select Tags"
+                                        onCreate={handleCreateTag} // added inline creation
                                     />
                                 </div>
                             </div>

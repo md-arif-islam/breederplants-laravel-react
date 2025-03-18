@@ -109,13 +109,14 @@ export function MultiSelect({
     value = [],
     onChange,
     placeholder = "Select options",
+    onCreate, // new prop for inline creation
 }) {
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const dropdownRef = useRef(null);
 
     const selectedOptions = options.filter((option) =>
-        value.includes(option.id.toString())
+        value.includes(option.id?.toString() ?? "")
     );
 
     const filteredOptions = options.filter((option) =>
@@ -138,7 +139,7 @@ export function MultiSelect({
     }, []);
 
     const toggleOption = (optionId) => {
-        const optionIdStr = optionId.toString();
+        const optionIdStr = optionId?.toString() ?? "";
         if (value.includes(optionIdStr)) {
             onChange(value.filter((id) => id !== optionIdStr));
         } else {
@@ -148,7 +149,7 @@ export function MultiSelect({
 
     const removeOption = (e, optionId) => {
         e.stopPropagation();
-        onChange(value.filter((id) => id !== optionId.toString()));
+        onChange(value.filter((id) => id !== optionId?.toString() ?? ""));
     };
 
     return (
@@ -192,31 +193,54 @@ export function MultiSelect({
                         />
                     </div>
 
-                    {filteredOptions.length > 0 ? (
-                        filteredOptions.map((option) => (
+                    {filteredOptions.map((option) => (
+                        <div
+                            key={option.id}
+                            className={`px-3 py-2 cursor-pointer hover:bg-gray-100 flex items-center justify-between ${
+                                value.includes(option.id?.toString() ?? "")
+                                    ? "bg-green-50"
+                                    : ""
+                            }`}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                toggleOption(option.id);
+                            }}
+                        >
+                            <span>{option.name}</span>
+                            {value.includes(option.id?.toString() ?? "") && (
+                                <Check className="h-4 w-4 text-green-500" />
+                            )}
+                        </div>
+                    ))}
+
+                    {/* New option to create a tag/category */}
+                    {onCreate &&
+                        searchTerm.trim() !== "" &&
+                        !options.some(
+                            (option) =>
+                                option.name.toLowerCase() ===
+                                searchTerm.toLowerCase()
+                        ) && (
                             <div
-                                key={option.id}
-                                className={`px-3 py-2 cursor-pointer hover:bg-gray-100 flex items-center justify-between ${
-                                    value.includes(option.id.toString())
-                                        ? "bg-green-50"
-                                        : ""
-                                }`}
+                                className="px-3 py-2 cursor-pointer hover:bg-gray-100 text-green-600"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    toggleOption(option.id);
+                                    onCreate(searchTerm);
+                                    setSearchTerm("");
+                                    setIsOpen(false);
                                 }}
                             >
-                                <span>{option.name}</span>
-                                {value.includes(option.id.toString()) && (
-                                    <Check className="h-4 w-4 text-green-500" />
-                                )}
+                                Create "{searchTerm}"
                             </div>
-                        ))
-                    ) : (
-                        <div className="px-3 py-2 text-gray-500">
-                            No options found
-                        </div>
-                    )}
+                        )}
+
+                    {/* Fallback when no options found */}
+                    {!filteredOptions.length &&
+                        (!onCreate || searchTerm.trim() === "") && (
+                            <div className="px-3 py-2 text-gray-500">
+                                No options found
+                            </div>
+                        )}
                 </div>
             )}
         </div>

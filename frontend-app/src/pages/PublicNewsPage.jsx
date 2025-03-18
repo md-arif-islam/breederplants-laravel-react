@@ -56,7 +56,7 @@ const PublicNewsPage = () => {
                             </div>
                         </div>
 
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-1 lg:gap-4">
+                        <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-1 lg:gap-4">
                             {posts?.map((post) => (
                                 <PostCard key={post.id} post={post} />
                             ))}
