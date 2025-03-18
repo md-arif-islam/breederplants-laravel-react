@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useProductStore } from "../store/useProductStore";
 import ProductCard from "../components/ProductCard";
+import { PageTitleContext } from "../context/PageTitleContext";
 
 const PublicProductsPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
+    const { setTitle } = useContext(PageTitleContext);
 
     const { isLoading, products, currentPage, totalPages, getAllProducts } =
         useProductStore();
@@ -14,7 +16,8 @@ const PublicProductsPage = () => {
 
     useEffect(() => {
         document.title = "Products - Breederplants";
-    }, []);
+        setTitle("Products");
+    }, [setTitle]);
 
     const handlePageChange = (page) => {
         getAllProducts(page, searchQuery);

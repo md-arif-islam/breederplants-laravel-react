@@ -1,7 +1,8 @@
 import { Leaf, PenBox } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useProductStore } from "../store/useProductStore";
+import { PageTitleContext } from "../context/PageTitleContext";
 
 export default function VarietySampleShow() {
     const [currImg, setCurrImg] = useState(0);
@@ -12,6 +13,7 @@ export default function VarietySampleShow() {
     const { isLoading, getProduct, currentProduct } = useProductStore();
     const { id } = useParams();
     const navigate = useNavigate();
+    const { setTitle } = useContext(PageTitleContext);
 
     useEffect(() => {
         getProduct(id);
@@ -26,8 +28,10 @@ export default function VarietySampleShow() {
                 " " +
                 currentProduct?.species +
                 " - Breederplants";
+
+            setTitle(currentProduct?.genus + " " + currentProduct?.species);
         }
-    }, [currentProduct]);
+    }, [currentProduct, setTitle]);
 
     if (isLoading || !currentProduct) {
         return <div></div>;
@@ -84,7 +88,7 @@ export default function VarietySampleShow() {
                                             onLoad={() =>
                                                 handleImgLoad(currImg)
                                             }
-                                            className={`block w-full max-w-full rounded-xl cursor-pointer transition-opacity duration-300 ${
+                                            className={`block object-cover h-full md:h-[60vh] w-full max-w-full rounded-xl cursor-pointer transition-opacity duration-300 ${
                                                 loadedImages[currImg]
                                                     ? "opacity-100"
                                                     : "opacity-0"
