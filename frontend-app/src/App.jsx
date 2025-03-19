@@ -15,6 +15,7 @@ import PublicCategoriesPage from "./pages/PublicCategoriesPage";
 import PublicTagsPage from "./pages/PublicTagsPage";
 import PublicAboutPage from "./pages/PublicAboutPage";
 import { PageTitleProvider } from "./context/PageTitleContext";
+import "photoswipe/dist/photoswipe.css";
 
 const App = () => {
     const loadingBarRef = useRef(null);
