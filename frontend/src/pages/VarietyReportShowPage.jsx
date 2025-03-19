@@ -5,6 +5,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { useVarietyReportStore } from "../store/useVarietyReportStore";
 import { PageTitleContext } from "../context/PageTitleContext";
+import { Gallery, Item } from "react-photoswipe-gallery";
 
 export default function VarietyReportShow() {
     const {
@@ -14,6 +15,8 @@ export default function VarietyReportShow() {
     } = useVarietyReportStore();
 
     const [imgLoaded, setImgLoaded] = useState(false);
+
+    const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
     // Fetch id from URL
     const { id } = useParams();
@@ -42,6 +45,19 @@ export default function VarietyReportShow() {
             ? `${import.meta.env.VITE_API_URL}/${report.thumbnail}`
             : report?.thumbnail || "/placeholder.svg";
 
+    useEffect(() => {
+        if (!thumbnailUrl || thumbnailUrl === "/placeholder.svg") return;
+
+        const img = new Image();
+        img.src = thumbnailUrl;
+        img.onload = () => {
+            setDimensions({
+                width: img.naturalWidth,
+                height: img.naturalHeight,
+            });
+        };
+    }, [thumbnailUrl]);
+
     return (
         <div className="bg-gray-50 -mt-12">
             <div className="container mx-auto">
@@ -54,7 +70,36 @@ export default function VarietyReportShow() {
                                         <Leaf className="w-8 h-8 text-gray-400 animate-pulse" />
                                     </div>
                                 )}
-                                <img
+
+                                <Gallery withDownloadButton>
+                                    <Item
+                                        original={thumbnailUrl}
+                                        thumbnail={thumbnailUrl}
+                                        width={dimensions.width}
+                                        height={dimensions.height}
+                                        alt={report?.variety_name}
+                                    >
+                                        {({ ref, open }) => (
+                                            <img
+                                                ref={ref}
+                                                onClick={open}
+                                                src={thumbnailUrl}
+                                                alt={report?.variety_name}
+                                                loading="lazy"
+                                                onLoad={() =>
+                                                    setImgLoaded(true)
+                                                }
+                                                className={`w-full h-56 md:h-[60vh] object-cover rounded-t-3xl md:rounded-2xl transition-opacity duration-300 ${
+                                                    imgLoaded
+                                                        ? "opacity-100"
+                                                        : "opacity-0"
+                                                }`}
+                                            />
+                                        )}
+                                    </Item>
+                                </Gallery>
+
+                                {/* <img
                                     src={thumbnailUrl}
                                     alt={report?.variety_name}
                                     loading="lazy"
@@ -62,7 +107,7 @@ export default function VarietyReportShow() {
                                     className={`w-full h-56 md:h-[60vh] object-cover rounded-t-3xl md:rounded-2xl transition-opacity duration-300 ${
                                         imgLoaded ? "opacity-100" : "opacity-0"
                                     }`}
-                                />
+                                /> */}
                             </div>
 
                             <div className="bg-white rounded-t-3xl p-4 md:p-0 z-30 relative -mt-12 md:mt-0">

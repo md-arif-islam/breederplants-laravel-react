@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Leaf, Pencil, Trash2 } from "lucide-react";
 import { usePostStore } from "../../store/usePostStore";
 import { useNavigate, useParams } from "react-router-dom";
-// ...existing imports...
+import { Gallery, Item } from "react-photoswipe-gallery";
 
 export default function AdminNewsViewPage() {
     const { currentPost, isLoading, getPost, deletePost } = usePostStore();
     const [showPopup, setShowPopup] = useState(false);
     const [imgLoaded, setImgLoaded] = useState(false);
+    const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -40,6 +42,19 @@ export default function AdminNewsViewPage() {
         ? `${import.meta.env.VITE_API_URL}/${currentPost.thumbnail}`
         : "/placeholder.svg";
 
+    useEffect(() => {
+        if (!thumbnailUrl || thumbnailUrl === "/placeholder.svg") return;
+
+        const img = new Image();
+        img.src = thumbnailUrl;
+        img.onload = () => {
+            setDimensions({
+                width: img.naturalWidth,
+                height: img.naturalHeight,
+            });
+        };
+    }, [thumbnailUrl]);
+
     if (isLoading || !currentPost) {
         return (
             <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">
@@ -61,15 +76,32 @@ export default function AdminNewsViewPage() {
                                 <Leaf className="w-8 h-8 text-gray-400 animate-pulse" />
                             </div>
                         )}
-                        <img
-                            src={thumbnailUrl}
-                            alt={currentPost.title}
-                            loading="lazy"
-                            onLoad={() => setImgLoaded(true)}
-                            className={`w-full h-full object-cover rounded-lg mt-3 transition-opacity duration-300 ${
-                                imgLoaded ? "opacity-100" : "opacity-0"
-                            }`}
-                        />
+
+                        <Gallery withDownloadButton>
+                            <Item
+                                original={thumbnailUrl}
+                                thumbnail={thumbnailUrl}
+                                width={dimensions.width}
+                                height={dimensions.height}
+                                alt={currentPost?.variety_name}
+                            >
+                                {({ ref, open }) => (
+                                    <img
+                                        ref={ref}
+                                        onClick={open}
+                                        src={thumbnailUrl}
+                                        alt={currentPost?.variety_name}
+                                        loading="lazy"
+                                        onLoad={() => setImgLoaded(true)}
+                                        className={`cursor-pointer w-full h-auto object-cover rounded-lg mt-3 transition-opacity duration-300 ${
+                                            imgLoaded
+                                                ? "opacity-100"
+                                                : "opacity-0"
+                                        }`}
+                                    />
+                                )}
+                            </Item>
+                        </Gallery>
                     </div>
                     <div className="bg-white rounded-lg shadow">
                         <div className="p-6">

@@ -1,20 +1,26 @@
 import { Leaf, PenBox } from "lucide-react";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useVarietySampleStore } from "../store/useVarietySampleStore";
-import prevIcon from "../assets/images/icon-previous.svg";
-import nextIcon from "../assets/images/icon-next.svg";
 import { PageTitleContext } from "../context/PageTitleContext";
+import { Gallery, Item } from "react-photoswipe-gallery";
+import "photoswipe/dist/photoswipe.css"; // Ensure you import PhotoSwipe styles
 
 export default function VarietySampleShow() {
     const [currImg, setCurrImg] = useState(0);
-    // Replace global imgLoaded with an object to track each image's load status
     const [loadedImages, setLoadedImages] = useState({});
     const { isLoading, getUserVarietySample, varietySample } =
         useVarietySampleStore();
     const { id, sampleId } = useParams();
     const navigate = useNavigate();
     const { setTitle } = useContext(PageTitleContext);
+    const [imgDimensions, setImgDimensions] = useState({});
+
+    const sampleImages = useMemo(() => {
+        return varietySample && varietySample.images
+            ? JSON.parse(varietySample.images)
+            : [];
+    }, [varietySample]);
 
     useEffect(() => {
         getUserVarietySample(id, sampleId);
@@ -25,25 +31,17 @@ export default function VarietySampleShow() {
             document.title =
                 varietySample?.variety_report?.variety_name +
                 " - Breederplants";
-
             setTitle(varietySample?.variety_report?.variety_name + " Sample");
         }
-    }, [varietySample]);
+    }, [varietySample, isLoading, setTitle]);
 
     useEffect(() => {
         document.title = "Variety Sample Details - Breederplants";
     }, []);
 
-    if (isLoading || !varietySample) {
-        return <div></div>;
-    }
-
-    const sampleImages = varietySample.images
-        ? JSON.parse(varietySample.images)
-        : [];
     const placeholder =
         "https://portal.breederplants.nl/assets/backend/imgs/products/blank_product.gif";
-    // Map each image so that if it isn't a base64 string, we prepend the API URL.
+
     const images = sampleImages.length
         ? sampleImages.map((img) =>
               img.startsWith("data:")
@@ -52,13 +50,26 @@ export default function VarietySampleShow() {
           )
         : [placeholder];
 
-    const prevImg = () => {
-        setCurrImg(currImg === 0 ? images.length - 1 : currImg - 1);
-    };
+    useEffect(() => {
+        sampleImages.forEach((imageUrl, index) => {
+            const fullImageUrl = `${import.meta.env.VITE_API_URL}/${imageUrl}`;
+            const img = new Image();
+            img.src = fullImageUrl;
+            img.onload = () => {
+                setImgDimensions((prev) => ({
+                    ...prev,
+                    [index]: {
+                        width: img.naturalWidth,
+                        height: img.naturalHeight,
+                    },
+                }));
+            };
+        });
+    }, [sampleImages]);
 
-    const nextImg = () => {
-        setCurrImg(currImg >= images.length - 1 ? 0 : currImg + 1);
-    };
+    if (isLoading || !varietySample) {
+        return <div></div>;
+    }
 
     const handleImgLoad = (index) => {
         setLoadedImages((prev) => ({ ...prev, [index]: true }));
@@ -70,34 +81,66 @@ export default function VarietySampleShow() {
                 <div className="-mt-12 z-10 relative">
                     <div className="bg-white rounded-t-3xl p-4 lg:p-6">
                         <div className="grid grid-cols-1 lg:grid-cols-5 gap-0 lg:gap-10">
-                            {/* Image Slider */}
+                            {/* Image Gallery with Popup */}
                             <div className="relative col-span-2 flex justify-center align-middle flex-col">
-                                <div className="relative">
-                                    {!loadedImages[currImg] && (
-                                        <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-gray-200">
-                                            <Leaf className="w-6 h-6 text-gray-400 animate-pulse" />
-                                        </div>
-                                    )}
-                                    <a
-                                        className="popup-link"
-                                        href={images[currImg]}
-                                    >
-                                        <img
-                                            src={images[currImg]}
-                                            alt="sample"
-                                            loading="lazy"
-                                            onLoad={() =>
-                                                handleImgLoad(currImg)
+                                <Gallery withDownloadButton>
+                                    {/* Main Image */}
+                                    {images.map((image, index) => (
+                                        <Item
+                                            key={index}
+                                            original={image}
+                                            thumbnail={image}
+                                            width={
+                                                imgDimensions[index]?.width ||
+                                                800
                                             }
-                                            className={`block object-cover w-full h-full md:h-[60vh] max-w-full rounded-xl cursor-pointer transition-opacity duration-300 ${
-                                                loadedImages[currImg]
-                                                    ? "opacity-100"
-                                                    : "opacity-0"
-                                            }`}
-                                        />
-                                    </a>
-                                </div>
+                                            height={
+                                                imgDimensions[index]?.height ||
+                                                600
+                                            }
+                                            alt={`Sample image ${index + 1}`}
+                                        >
+                                            {({ ref, open }) => (
+                                                <div ref={ref} onClick={open}>
+                                                    {index === currImg && (
+                                                        <div className="relative">
+                                                            {!loadedImages[
+                                                                currImg
+                                                            ] && (
+                                                                <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-gray-200">
+                                                                    <Leaf className="w-6 h-6 text-gray-400 animate-pulse" />
+                                                                </div>
+                                                            )}
+                                                            <img
+                                                                src={
+                                                                    images[
+                                                                        currImg
+                                                                    ]
+                                                                }
+                                                                alt="sample"
+                                                                loading="lazy"
+                                                                onLoad={() =>
+                                                                    handleImgLoad(
+                                                                        currImg
+                                                                    )
+                                                                }
+                                                                className={`block object-cover w-full h-full md:h-[60vh] max-w-full rounded-xl cursor-pointer transition-opacity duration-300 ${
+                                                                    loadedImages[
+                                                                        currImg
+                                                                    ]
+                                                                        ? "opacity-100"
+                                                                        : "opacity-0"
+                                                                }`}
+                                                            />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </Item>
+                                    ))}
+                                </Gallery>
 
+                                {/* Thumbnail Selector */}
                                 <div className="grid grid-cols-3 gap-2 lg:grid-cols-4 mt-5">
                                     {images.map((image, index) => (
                                         <div
@@ -234,6 +277,7 @@ export default function VarietySampleShow() {
                                 </div>
                             </div>
                         </div>
+
                         <div className="border rounded-full p-1 mt-4">
                             <Link
                                 to={`/variety-reports/${id}/variety-sample/${sampleId}/edit`}
