@@ -6,7 +6,11 @@ export default function BottomNavigation() {
         { name: "Catalog", to: "/", icon: Home },
         { name: "News", to: "/news", icon: Newspaper },
         { name: "About", to: "/about", icon: Info },
-        { name: "Portal", to: "/portal", icon: User },
+        {
+            name: "Portal",
+            to: "https://breederplants.onlinewithyou.nl",
+            icon: User,
+        },
     ];
 
     return (
