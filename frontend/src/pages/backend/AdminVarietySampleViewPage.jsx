@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Pencil, Trash2, Download, Leaf } from "lucide-react";
 import { useVarietySampleStore } from "../../store/useVarietySampleStore";
 import { useNavigate, useParams } from "react-router-dom";
@@ -46,10 +46,11 @@ export default function AdminVarietySampleViewPage() {
     }, [getVarietySample, id, sampleId]);
 
     // Compute sample images regardless of varietySample status.
-    const sampleImages =
-        varietySample && varietySample.images
+    const sampleImages = useMemo(() => {
+        return varietySample && varietySample.images
             ? JSON.parse(varietySample.images)
             : [];
+    }, [varietySample]);
 
     // State to store dimensions for each image keyed by index
     const [imgDimensions, setImgDimensions] = useState({});

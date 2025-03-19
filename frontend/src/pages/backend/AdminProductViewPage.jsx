@@ -1,6 +1,4 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
     Pencil,
     Trash2,
@@ -20,6 +18,7 @@ import {
 } from "lucide-react";
 import { useProductStore } from "../../store/useProductStore";
 import { useNavigate, useParams } from "react-router-dom";
+import { Gallery, Item } from "react-photoswipe-gallery";
 
 // Helper component for lazy loading images with a skeleton placeholder
 function LazyImage({ src, alt }) {
@@ -50,6 +49,7 @@ export default function AdminProductViewPage() {
     const { currentProduct, isLoading, getProduct, deleteProduct } =
         useProductStore();
     const [showPopup, setShowPopup] = useState(false);
+    const [imgDimensions, setImgDimensions] = useState({});
 
     // Fetch id from URL
     const { id } = useParams();
@@ -80,6 +80,34 @@ export default function AdminProductViewPage() {
         setShowPopup(false);
     };
 
+    const productImages = useMemo(() => {
+        return currentProduct && currentProduct.images
+            ? JSON.parse(currentProduct.images)
+            : [];
+    }, [currentProduct]);
+
+    // Always call this hook so that the number of hooks stays the same.
+    useEffect(() => {
+        if (!isLoading && currentProduct) {
+            productImages.forEach((imageUrl, index) => {
+                const fullImageUrl = `${
+                    import.meta.env.VITE_API_URL
+                }/${imageUrl}`;
+                const img = new Image();
+                img.src = fullImageUrl;
+                img.onload = () => {
+                    setImgDimensions((prev) => ({
+                        ...prev,
+                        [index]: {
+                            width: img.naturalWidth,
+                            height: img.naturalHeight,
+                        },
+                    }));
+                };
+            });
+        }
+    }, [isLoading, currentProduct, productImages]);
+
     if (isLoading || !currentProduct) {
         return (
             <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">
@@ -87,10 +115,6 @@ export default function AdminProductViewPage() {
             </main>
         );
     }
-
-    const productImages = currentProduct.images
-        ? JSON.parse(currentProduct.images)
-        : [];
 
     return (
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gradient-to-b from-gray-50 to-white">
@@ -100,29 +124,51 @@ export default function AdminProductViewPage() {
 
                     <div className="p-6 ">
                         <div className="bg-gray-50 rounded-lg p-5 md:col-span-2 mb-4">
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                                {productImages.map((imageUrl, index) => {
-                                    const fullImageUrl = `${
-                                        import.meta.env.VITE_API_URL
-                                    }/${imageUrl}`;
-                                    return (
-                                        <div
-                                            key={index}
-                                            className="aspect-square rounded-lg overflow-hidden"
-                                        >
-                                            <LazyImage
-                                                src={
-                                                    fullImageUrl ||
-                                                    "/placeholder.svg"
-                                                }
+                            <Gallery withDownloadButton>
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                                    {productImages.map((imageUrl, index) => {
+                                        const fullImageUrl = `${
+                                            import.meta.env.VITE_API_URL
+                                        }/${imageUrl}`;
+                                        const dimensions = imgDimensions[
+                                            index
+                                        ] || {
+                                            width: 800,
+                                            height: 600,
+                                        };
+                                        return (
+                                            <Item
+                                                key={index}
+                                                original={fullImageUrl}
+                                                thumbnail={fullImageUrl}
+                                                width={dimensions.width}
+                                                height={dimensions.height}
                                                 alt={`Sample image ${
                                                     index + 1
                                                 }`}
-                                            />
-                                        </div>
-                                    );
-                                })}
-                            </div>
+                                            >
+                                                {({ ref, open }) => (
+                                                    <div
+                                                        ref={ref}
+                                                        onClick={open}
+                                                        className="aspect-square rounded-lg overflow-hidden cursor-pointer"
+                                                    >
+                                                        <LazyImage
+                                                            src={
+                                                                fullImageUrl ||
+                                                                "/placeholder.svg"
+                                                            }
+                                                            alt={`Sample image ${
+                                                                index + 1
+                                                            }`}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </Item>
+                                        );
+                                    })}
+                                </div>
+                            </Gallery>
 
                             <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
                                 <span className="text-2xl mr-2">
