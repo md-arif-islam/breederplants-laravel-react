@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Pencil, Trash2, Download, Leaf } from "lucide-react";
 import { useVarietySampleStore } from "../../store/useVarietySampleStore";
 import { useNavigate, useParams } from "react-router-dom";
+import { Gallery, Item } from "react-photoswipe-gallery";
 
 // Helper component for lazy loading images with a skeleton placeholder
 function LazyImage({ src, alt }) {
@@ -32,15 +33,44 @@ export default function AdminVarietySampleViewPage() {
     useEffect(() => {
         document.title = "Variety Sample - Breederplants";
     }, []);
+
     const [showPopup, setShowPopup] = useState(false);
     const { isLoading, getVarietySample, varietySample, deleteVarietySample } =
         useVarietySampleStore();
     const { id, sampleId } = useParams();
     const navigate = useNavigate();
 
+    // Always call getVarietySample hook in the same order
     useEffect(() => {
         getVarietySample(id, sampleId);
     }, [getVarietySample, id, sampleId]);
+
+    // Compute sample images regardless of varietySample status.
+    const sampleImages =
+        varietySample && varietySample.images
+            ? JSON.parse(varietySample.images)
+            : [];
+
+    // State to store dimensions for each image keyed by index
+    const [imgDimensions, setImgDimensions] = useState({});
+
+    // Always call this hook so that the number of hooks stays the same.
+    useEffect(() => {
+        sampleImages.forEach((imageUrl, index) => {
+            const fullImageUrl = `${import.meta.env.VITE_API_URL}/${imageUrl}`;
+            const img = new Image();
+            img.src = fullImageUrl;
+            img.onload = () => {
+                setImgDimensions((prev) => ({
+                    ...prev,
+                    [index]: {
+                        width: img.naturalWidth,
+                        height: img.naturalHeight,
+                    },
+                }));
+            };
+        });
+    }, [sampleImages]);
 
     const handleDelete = (e) => {
         e.preventDefault();
@@ -59,6 +89,7 @@ export default function AdminVarietySampleViewPage() {
         setShowPopup(false);
     };
 
+    // Early return for loading state
     if (isLoading || !varietySample) {
         return (
             <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">
@@ -67,32 +98,51 @@ export default function AdminVarietySampleViewPage() {
         );
     }
 
-    const sampleImages = varietySample.images
-        ? JSON.parse(varietySample.images)
-        : [];
-
     return (
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">
             <div className="container mx-auto px-4 py-8">
-                {/* Image Gallery */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                    {sampleImages.map((imageUrl, index) => {
-                        const fullImageUrl = `${
-                            import.meta.env.VITE_API_URL
-                        }/${imageUrl}`;
-                        return (
-                            <div
-                                key={index}
-                                className="aspect-square rounded-lg overflow-hidden"
-                            >
-                                <LazyImage
-                                    src={fullImageUrl || "/placeholder.svg"}
+                {/* Image Gallery with popup */}
+                <Gallery withDownloadButton>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                        {sampleImages.map((imageUrl, index) => {
+                            const fullImageUrl = `${
+                                import.meta.env.VITE_API_URL
+                            }/${imageUrl}`;
+                            const dimensions = imgDimensions[index] || {
+                                width: 800,
+                                height: 600,
+                            };
+                            return (
+                                <Item
+                                    key={index}
+                                    original={fullImageUrl}
+                                    thumbnail={fullImageUrl}
+                                    width={dimensions.width}
+                                    height={dimensions.height}
                                     alt={`Sample image ${index + 1}`}
-                                />
-                            </div>
-                        );
-                    })}
-                </div>
+                                >
+                                    {({ ref, open }) => (
+                                        <div
+                                            ref={ref}
+                                            onClick={open}
+                                            className="aspect-square rounded-lg overflow-hidden cursor-pointer"
+                                        >
+                                            <LazyImage
+                                                src={
+                                                    fullImageUrl ||
+                                                    "/placeholder.svg"
+                                                }
+                                                alt={`Sample image ${
+                                                    index + 1
+                                                }`}
+                                            />
+                                        </div>
+                                    )}
+                                </Item>
+                            );
+                        })}
+                    </div>
+                </Gallery>
 
                 {/* Sample Details */}
                 <div className="bg-white rounded-lg shadow">
