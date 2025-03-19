@@ -1,8 +1,9 @@
 import { Leaf, PenBox } from "lucide-react";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useProductStore } from "../store/useProductStore";
 import { PageTitleContext } from "../context/PageTitleContext";
+import { Gallery, Item } from "react-photoswipe-gallery";
 
 export default function VarietySampleShow() {
     const [currImg, setCurrImg] = useState(0);
@@ -14,12 +15,17 @@ export default function VarietySampleShow() {
     const { id } = useParams();
     const navigate = useNavigate();
     const { setTitle } = useContext(PageTitleContext);
+    const [imgDimensions, setImgDimensions] = useState({});
+
+    const productImages = useMemo(() => {
+        return currentProduct && currentProduct.images
+            ? JSON.parse(currentProduct.images)
+            : [];
+    }, [currentProduct]);
 
     useEffect(() => {
         getProduct(id);
     }, [id, getProduct]);
-
-    console.log(currentProduct);
 
     useEffect(() => {
         if (currentProduct?.genus) {
@@ -33,13 +39,6 @@ export default function VarietySampleShow() {
         }
     }, [currentProduct, setTitle]);
 
-    if (isLoading || !currentProduct) {
-        return <div></div>;
-    }
-
-    const productImages = currentProduct.images
-        ? JSON.parse(currentProduct.images)
-        : [];
     const placeholder =
         "https://portal.breederplants.nl/assets/backend/imgs/products/blank_product.gif";
     // Map each image so that if it isn't a base64 string, we prepend the API URL.
@@ -51,13 +50,26 @@ export default function VarietySampleShow() {
           )
         : [placeholder];
 
-    const prevImg = () => {
-        setCurrImg(currImg === 0 ? images.length - 1 : currImg - 1);
-    };
+    useEffect(() => {
+        productImages.forEach((imageUrl, index) => {
+            const fullImageUrl = `${import.meta.env.VITE_API_URL}/${imageUrl}`;
+            const img = new Image();
+            img.src = fullImageUrl;
+            img.onload = () => {
+                setImgDimensions((prev) => ({
+                    ...prev,
+                    [index]: {
+                        width: img.naturalWidth,
+                        height: img.naturalHeight,
+                    },
+                }));
+            };
+        });
+    }, [productImages]);
 
-    const nextImg = () => {
-        setCurrImg(currImg >= images.length - 1 ? 0 : currImg + 1);
-    };
+    if (isLoading || !currentProduct) {
+        return <div></div>;
+    }
 
     const handleImgLoad = (index) => {
         setLoadedImages((prev) => ({ ...prev, [index]: true }));
@@ -69,34 +81,65 @@ export default function VarietySampleShow() {
                 <div className="-mt-12 z-10 relative">
                     <div className="bg-white rounded-t-3xl p-4 lg:p-6">
                         <div className="grid grid-cols-1 lg:grid-cols-5 gap-0 lg:gap-10">
-                            {/* Image Slider */}
                             <div className="relative col-span-2 flex justify-start align-middle flex-col">
-                                <div className="relative">
-                                    {!loadedImages[currImg] && (
-                                        <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-gray-200">
-                                            <Leaf className="w-6 h-6 text-gray-400 animate-pulse" />
-                                        </div>
-                                    )}
-                                    <a
-                                        className="popup-link"
-                                        href={images[currImg]}
-                                    >
-                                        <img
-                                            src={images[currImg]}
-                                            alt="product"
-                                            loading="lazy"
-                                            onLoad={() =>
-                                                handleImgLoad(currImg)
+                                <Gallery withDownloadButton>
+                                    {/* Main Image */}
+                                    {images.map((image, index) => (
+                                        <Item
+                                            key={index}
+                                            original={image}
+                                            thumbnail={image}
+                                            width={
+                                                imgDimensions[index]?.width ||
+                                                800
                                             }
-                                            className={`block object-cover h-full max-h-[50vh] md:h-[60vh] w-full max-w-full rounded-xl cursor-pointer transition-opacity duration-300 ${
-                                                loadedImages[currImg]
-                                                    ? "opacity-100"
-                                                    : "opacity-0"
-                                            }`}
-                                        />
-                                    </a>
-                                </div>
+                                            height={
+                                                imgDimensions[index]?.height ||
+                                                600
+                                            }
+                                            alt={`Sample image ${index + 1}`}
+                                        >
+                                            {({ ref, open }) => (
+                                                <div ref={ref} onClick={open}>
+                                                    {index === currImg && (
+                                                        <div className="relative">
+                                                            {!loadedImages[
+                                                                currImg
+                                                            ] && (
+                                                                <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-gray-200">
+                                                                    <Leaf className="w-6 h-6 text-gray-400 animate-pulse" />
+                                                                </div>
+                                                            )}
+                                                            <img
+                                                                src={
+                                                                    images[
+                                                                        currImg
+                                                                    ]
+                                                                }
+                                                                alt="sample"
+                                                                loading="lazy"
+                                                                onLoad={() =>
+                                                                    handleImgLoad(
+                                                                        currImg
+                                                                    )
+                                                                }
+                                                                className={`block object-cover w-full h-full md:h-[60vh] max-w-full rounded-xl cursor-pointer transition-opacity duration-300 ${
+                                                                    loadedImages[
+                                                                        currImg
+                                                                    ]
+                                                                        ? "opacity-100"
+                                                                        : "opacity-0"
+                                                                }`}
+                                                            />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </Item>
+                                    ))}
+                                </Gallery>
 
+                                {/* Thumbnail Selector */}
                                 <div className="grid grid-cols-3 gap-2 lg:grid-cols-4 mt-5">
                                     {images.map((image, index) => (
                                         <div
@@ -113,7 +156,7 @@ export default function VarietySampleShow() {
                                             )}
                                             <img
                                                 src={image}
-                                                alt="product thumbnail"
+                                                alt="sample thumbnail"
                                                 loading="lazy"
                                                 onLoad={() =>
                                                     handleImgLoad(index)

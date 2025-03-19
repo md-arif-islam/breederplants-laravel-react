@@ -4,7 +4,6 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useVarietySampleStore } from "../store/useVarietySampleStore";
 import { PageTitleContext } from "../context/PageTitleContext";
 import { Gallery, Item } from "react-photoswipe-gallery";
-import "photoswipe/dist/photoswipe.css"; // Ensure you import PhotoSwipe styles
 
 export default function VarietySampleShow() {
     const [currImg, setCurrImg] = useState(0);
