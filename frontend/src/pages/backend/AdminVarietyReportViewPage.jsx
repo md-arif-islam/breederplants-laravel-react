@@ -4,6 +4,7 @@ import { VarietySampleCard } from "../../components/backend/VarietySampleCard";
 import hydrangeaImg from "../../assets/images/hydrangea-paniculata.jpg";
 import { useVarietyReportStore } from "../../store/useVarietyReportStore";
 import { useNavigate, useParams } from "react-router-dom";
+import { Gallery, Item } from "react-photoswipe-gallery";
 
 export default function AdminVarietyReportViewPage() {
     const {
@@ -16,7 +17,8 @@ export default function AdminVarietyReportViewPage() {
     } = useVarietyReportStore();
 
     const [showPopup, setShowPopup] = useState(false);
-    const [imgLoaded, setImgLoaded] = useState(false); // state to track image load
+    const [imgLoaded, setImgLoaded] = useState(false);
+    const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
     // Fetch id from URL
     const { id } = useParams();
@@ -59,6 +61,20 @@ export default function AdminVarietyReportViewPage() {
         ? `${import.meta.env.VITE_API_URL}/${report.thumbnail}`
         : null;
 
+    // Dynamically measure the image's natural width and height
+    useEffect(() => {
+        if (!thumbnailUrl || thumbnailUrl === "/placeholder.svg") return;
+
+        const img = new Image();
+        img.src = thumbnailUrl;
+        img.onload = () => {
+            setDimensions({
+                width: img.naturalWidth,
+                height: img.naturalHeight,
+            });
+        };
+    }, [thumbnailUrl]);
+
     return (
         // TODO: Next Sample Date show today's date
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">
@@ -72,15 +88,31 @@ export default function AdminVarietyReportViewPage() {
                                 <Leaf className="w-8 h-8 text-gray-400 animate-pulse" />
                             </div>
                         )}
-                        <img
-                            src={thumbnailUrl || "/placeholder.svg"}
-                            alt={report?.variety_name}
-                            loading="lazy"
-                            onLoad={() => setImgLoaded(true)}
-                            className={`w-full h-full object-cover rounded-lg mt-3 transition-opacity duration-300 ${
-                                imgLoaded ? "opacity-100" : "opacity-0"
-                            }`}
-                        />
+                        <Gallery withDownloadButton>
+                            <Item
+                                original={thumbnailUrl}
+                                thumbnail={thumbnailUrl}
+                                width={dimensions.width}
+                                height={dimensions.height}
+                                alt={report?.variety_name}
+                            >
+                                {({ ref, open }) => (
+                                    <img
+                                        ref={ref}
+                                        onClick={open}
+                                        src={thumbnailUrl}
+                                        alt={report?.variety_name}
+                                        loading="lazy"
+                                        onLoad={() => setImgLoaded(true)}
+                                        className={`cursor-pointer w-full h-auto object-cover rounded-lg mt-3 transition-opacity duration-300 ${
+                                            imgLoaded
+                                                ? "opacity-100"
+                                                : "opacity-0"
+                                        }`}
+                                    />
+                                )}
+                            </Item>
+                        </Gallery>
                     </div>
 
                     <div className="bg-white rounded-lg shadow">

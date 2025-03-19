@@ -54,6 +54,7 @@ import AdminNewsCreatePage from "./pages/backend/AdminNewsCreatePage"; // Import
 import AdminNewsCategoriesPage from "./pages/backend/AdminNewsCategoriesPage";
 import AdminNewsTagsPage from "./pages/backend/AdminNewsTagsPage";
 import { PageTitleProvider } from "./context/PageTitleContext";
+import "photoswipe/dist/photoswipe.css";
 
 const App = () => {
     const { authUser, isCheckingAuth, checkAuth } = useStore();
