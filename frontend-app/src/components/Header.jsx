@@ -33,7 +33,7 @@ export default function Header() {
 
                 {/* MIDDLE COLUMN: Only show the page title if NOT on the index page */}
                 <div className="text-center">
-                    <h2 className="text-base md:text-xl font-semibold">
+                    <h2 className="text-xl md:text-2xl font-semibold">
                         {title}
                     </h2>
                 </div>
