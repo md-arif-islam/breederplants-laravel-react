@@ -1,10 +1,25 @@
 import React, { useContext, useEffect } from "react";
 import { Leaf } from "lucide-react";
-
 import VarietyReportCard from "../components/VarietyReportCard";
 import PlantImg from "../assets/images/big.png";
 import { useVarietyReportStore } from "../store/useVarietyReportStore";
 import { useStore } from "../store/useStore";
+
+// Skeleton component for variety report card
+function VarietyReportCardSkeleton() {
+    return (
+        <div className="bg-white rounded-2xl p-2 flex items-center gap-4 mb-4 drop-shadow-md animate-pulse">
+            <div className="w-20 h-20 md:w-28 md:h-28 lg:w-36 lg:h-36 flex-shrink-0 bg-gray-300 rounded-xl"></div>
+            <div className="flex-1 min-w-0 space-y-2">
+                <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                <div className="h-3 bg-gray-300 rounded w-1/2"></div>
+                <div className="h-3 bg-gray-300 rounded w-2/3"></div>
+            </div>
+            <div className="w-6 h-6 bg-gray-300 rounded"></div>
+        </div>
+    );
+}
+
 const VarietyReportsPage = () => {
     const {
         isLoading,
@@ -38,12 +53,16 @@ const VarietyReportsPage = () => {
                             Varieties on trial
                         </h2>
                         <div className="grid lg:grid-cols-2 gap-1 lg:gap-4">
-                            {varietyReports?.map((report) => (
-                                <VarietyReportCard
-                                    key={report.id}
-                                    report={report}
-                                />
-                            ))}
+                            {isLoading
+                                ? Array.from({ length: 2 }).map((_, idx) => (
+                                      <VarietyReportCardSkeleton key={idx} />
+                                  ))
+                                : varietyReports?.map((report) => (
+                                      <VarietyReportCard
+                                          key={report.id}
+                                          report={report}
+                                      />
+                                  ))}
                         </div>
                         {varietyReports?.length > 0 && (
                             <div className="flex justify-center mt-6">
