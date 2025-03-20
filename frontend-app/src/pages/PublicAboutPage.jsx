@@ -5,6 +5,30 @@ import AboutIMG from "../assets/images/about.png";
 import { PageTitleContext } from "../context/PageTitleContext";
 import { useNavigate } from "react-router-dom";
 
+// LazyImage component: wraps an image with lazy loading and a placeholder skeleton.
+function LazyImage({ src, alt, className = "", containerClassName = "" }) {
+    const [loaded, setLoaded] = useState(false);
+    return (
+        <div className={`relative ${containerClassName}`}>
+            {/* Placeholder shown until image loads */}
+            {!loaded && (
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+                    {/* You can add an icon or spinner here if needed */}
+                </div>
+            )}
+            <img
+                src={src}
+                alt={alt}
+                loading="lazy"
+                onLoad={() => setLoaded(true)}
+                className={`${className} transition-opacity duration-300 ${
+                    loaded ? "opacity-100" : "opacity-0"
+                }`}
+            />
+        </div>
+    );
+}
+
 export default function AboutPage() {
     const { setTitle } = useContext(PageTitleContext);
 
@@ -16,7 +40,7 @@ export default function AboutPage() {
     const navigate = useNavigate();
 
     return (
-        <div className="bg-gray-50 -mt-12 ">
+        <div className="bg-gray-50 -mt-12">
             <div className="container mx-auto">
                 <div className="-mt-12 z-10 relative">
                     <div className="bg-white rounded-2xl shadow-sm overflow-hidden p-4 lg:p-6">
@@ -53,7 +77,7 @@ export default function AboutPage() {
                         </div>
 
                         {/* Team Section */}
-                        <div className="">
+                        <div>
                             <div className="flex items-center mb-8">
                                 <div className="h-px bg-gray-200 flex-grow"></div>
                                 <h2 className="text-lg md:text-2xl font-bold text-gray-900 px-4">
@@ -65,13 +89,12 @@ export default function AboutPage() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 {/* Founder */}
                                 <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm h-full">
-                                    <div className="relative">
-                                        <img
-                                            src={FounderIMG}
-                                            alt="John Doe"
-                                            className="w-full h-full object-cover"
-                                        />
-                                    </div>
+                                    <LazyImage
+                                        src={FounderIMG}
+                                        alt="John Doe"
+                                        containerClassName="relative"
+                                        className="w-full h-full object-cover"
+                                    />
                                     <div className="p-6">
                                         <h3 className="text-base md:text-xl font-bold text-gray-900">
                                             John Doe
@@ -90,13 +113,12 @@ export default function AboutPage() {
 
                                 {/* Co-Founder */}
                                 <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm h-full">
-                                    <div className="relative ">
-                                        <img
-                                            src={CoFounderIMG}
-                                            alt="Jane Smith"
-                                            className="w-full h-full object-cover"
-                                        />
-                                    </div>
+                                    <LazyImage
+                                        src={CoFounderIMG}
+                                        alt="Jane Smith"
+                                        containerClassName="relative"
+                                        className="w-full h-full object-cover"
+                                    />
                                     <div className="p-6">
                                         <h3 className="text-base md:text-xl font-bold text-gray-900">
                                             Jane Smith
@@ -158,9 +180,10 @@ export default function AboutPage() {
                                     </div>
                                 </div>
                                 <div className="relative rounded-xl overflow-hidden h-[500px]">
-                                    <img
+                                    <LazyImage
                                         src={AboutIMG}
                                         alt="Green plants in pot"
+                                        containerClassName=""
                                         className="w-full h-full object-cover"
                                     />
                                 </div>
@@ -253,7 +276,6 @@ export default function AboutPage() {
                                         >
                                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                                             <path d="M14 2v6h6" />
-                                            <path d="m9 15 2 2 4-4" />
                                         </svg>
                                     </div>
                                     <h3 className="text-base md:text-xl font-bold text-gray-900 mb-2">
