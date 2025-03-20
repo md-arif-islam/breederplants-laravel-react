@@ -2,6 +2,31 @@ import { useEffect, useState } from "react";
 import { usePostStore } from "../../store/usePostStore";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
+import { Leaf } from "lucide-react";
+
+// LazyImage component for lazy loading images with a skeleton placeholder
+function LazyImage({ src, alt, className }) {
+    const [imgLoaded, setImgLoaded] = useState(false);
+    return (
+        <div className="relative w-20 h-20 rounded-md overflow-hidden">
+            {/* Display a placeholder while the image is loading */}
+            {!imgLoaded && (
+                <div className="absolute rounded inset-0 flex items-center justify-center bg-gray-200">
+                    <Leaf className="w-8 h-8 text-gray-500 animate-pulse" />
+                </div>
+            )}
+            <img
+                src={src}
+                alt={alt}
+                loading="lazy"
+                onLoad={() => setImgLoaded(true)}
+                className={`object-cover w-20 h-20  transition-opacity duration-300  ${
+                    imgLoaded ? "opacity-100" : "opacity-0"
+                }`}
+            />
+        </div>
+    );
+}
 
 export default function AdminNewsPage() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -17,19 +42,18 @@ export default function AdminNewsPage() {
         totalPages,
         categories,
         getAllCategories,
-        getAllTags, // added
-        tags, // added
+        getAllTags,
+        tags,
     } = usePostStore();
     const navigate = useNavigate();
 
     useEffect(() => {
         document.title = "Admin News - Breederplants";
-        getAllCategories(); // added: fetch categories
-        getAllTags(); // added: fetch tags
+        getAllCategories();
+        getAllTags();
     }, [getAllCategories, getAllTags]);
 
     useEffect(() => {
-        // Pass additional parameters for category, tag and sort
         getAllPosts(
             currentPage,
             searchQuery,
@@ -136,7 +160,7 @@ export default function AdminNewsPage() {
                         <table className="w-full table-auto shadow rounded overflow-hidden">
                             <thead>
                                 <tr className="bg-green-600 h-16 rounded-md shadow">
-                                    <th className="px-4 py-2 border-b text-left text-white font-semibold">
+                                    <th className="px-4 py-5 border-b text-left text-white font-semibold">
                                         Thumbnail
                                     </th>
                                     <th className="px-4 py-2 border-b text-left text-white font-semibold">
@@ -182,15 +206,15 @@ export default function AdminNewsPage() {
                                             posts?.map((post) => (
                                                 <tr
                                                     key={post.id}
-                                                    className="hover:bg-gray-100 transition-colors duration-200 cursor-pointer"
-                                                    onClick={() => {
+                                                    className="hover:bg-gray-50 cursor-pointer"
+                                                    onClick={() =>
                                                         navigate(
                                                             `/admin/news/${post.id}`
-                                                        );
-                                                    }}
+                                                        )
+                                                    }
                                                 >
-                                                    <td className="px-4 py-2 border-b text-left">
-                                                        <img
+                                                    <td className="px-4 py-2 text-primary font-semibold border-b">
+                                                        <LazyImage
                                                             src={`${
                                                                 import.meta.env
                                                                     .VITE_API_URL
@@ -198,39 +222,65 @@ export default function AdminNewsPage() {
                                                                 post.thumbnail
                                                             }`}
                                                             alt={post.title}
-                                                            className="w-16 h-16 object-cover rounded"
+                                                            className="w-20 h-20 object-cover rounded"
                                                         />
                                                     </td>
                                                     <td className="px-4 py-2 border-b text-left">
                                                         {post.title}
                                                     </td>
                                                     <td className="px-4 py-2 border-b text-left">
-                                                        {post.categories?.map(
-                                                            (category) => (
-                                                                <span
-                                                                    key={
-                                                                        category.id
-                                                                    }
-                                                                    className="bg-orange-600 text-white px-2 py-1 rounded-md mr-1"
-                                                                >
-                                                                    {
-                                                                        category.name
-                                                                    }
-                                                                </span>
+                                                        {post.categories
+                                                            ?.map(
+                                                                (category) => (
+                                                                    <span
+                                                                        key={
+                                                                            category.id
+                                                                        }
+                                                                        className=" text-orange-600 px-2 py-1 rounded-md mr-1"
+                                                                    >
+                                                                        {
+                                                                            category.name
+                                                                        }
+                                                                    </span>
+                                                                )
                                                             )
-                                                        )}
+                                                            .reduce(
+                                                                (
+                                                                    prev,
+                                                                    curr
+                                                                ) => [
+                                                                    prev,
+                                                                    ", ",
+                                                                    curr,
+                                                                ]
+                                                            )}
                                                     </td>
                                                     <td className="px-4 py-2 border-b text-left">
-                                                        {post.tags?.map(
-                                                            (tag) => (
-                                                                <span
-                                                                    key={tag.id}
-                                                                    className="bg-blue-600 text-white px-2 py-1 rounded-md mr-1"
-                                                                >
-                                                                    {tag.name}
-                                                                </span>
+                                                        {post.tags
+                                                            ?.map(
+                                                                (category) => (
+                                                                    <span
+                                                                        key={
+                                                                            category.id
+                                                                        }
+                                                                        className=" text-blue-600 px-2 py-1 rounded-md "
+                                                                    >
+                                                                        {
+                                                                            category.name
+                                                                        }
+                                                                    </span>
+                                                                )
                                                             )
-                                                        )}
+                                                            .reduce(
+                                                                (
+                                                                    prev,
+                                                                    curr
+                                                                ) => [
+                                                                    prev,
+                                                                    "",
+                                                                    curr,
+                                                                ]
+                                                            )}
                                                     </td>
                                                     <td className="px-4 py-2 border-b text-left">
                                                         {format(

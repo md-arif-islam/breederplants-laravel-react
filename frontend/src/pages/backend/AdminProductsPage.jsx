@@ -1,7 +1,31 @@
 import { useEffect, useState } from "react";
-import { useStore } from "../../store/useStore";
 import { useNavigate } from "react-router-dom";
 import { useProductStore } from "../../store/useProductStore";
+import { Leaf } from "lucide-react";
+
+// LazyImage component for lazy loading with a skeleton placeholder
+function LazyImage({ src, alt, className }) {
+    const [imgLoaded, setImgLoaded] = useState(false);
+    return (
+        <div className="relative w-20 h-20">
+            {/* Placeholder skeleton while image is loading */}
+            {!imgLoaded && (
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+                    <Leaf className="w-8 h-8 text-gray-500 animate-pulse" />
+                </div>
+            )}
+            <img
+                src={src}
+                alt={alt}
+                loading="lazy"
+                onLoad={() => setImgLoaded(true)}
+                className={`${className} transition-opacity duration-300 ${
+                    imgLoaded ? "opacity-100" : "opacity-0"
+                }`}
+            />
+        </div>
+    );
+}
 
 export default function AdminProductsPage() {
     // Track local input state
@@ -59,7 +83,7 @@ export default function AdminProductsPage() {
                                 <tr className="bg-green-600 h-16 rounded-md shadow">
                                     <th className="px-4 py-5 border-b text-left text-white font-semibold">
                                         Thumbnail
-                                    </th>{" "}
+                                    </th>
                                     <th className="px-4 py-5 border-b text-left text-white font-semibold">
                                         Plant ID
                                     </th>
@@ -100,56 +124,52 @@ export default function AdminProductsPage() {
                                                     </td>
                                                 </tr>
                                             )}
-                                        {products?.map((product) => (
-                                            <tr
-                                                key={product.id}
-                                                className="hover:bg-gray-50 cursor-pointer"
-                                                onClick={() =>
-                                                    navigate(
-                                                        `/admin/products/${product.id}`
-                                                    )
-                                                }
-                                            >
-                                                <td className="px-4 py-2 text-primary font-semibold border-b">
-                                                    {/* add image[0] */}
-                                                    {product.images &&
-                                                    JSON.parse(
-                                                        product.images
-                                                    )[0] ? (
-                                                        <img
-                                                            src={`${
-                                                                import.meta.env
-                                                                    .VITE_API_URL
-                                                            }/${
-                                                                JSON.parse(
-                                                                    product.images
-                                                                )[0]
-                                                            }`}
+                                        {products?.map((product) => {
+                                            // Determine product image source
+                                            const productImage =
+                                                product.images &&
+                                                JSON.parse(product.images)[0]
+                                                    ? `${
+                                                          import.meta.env
+                                                              .VITE_API_URL
+                                                      }/${
+                                                          JSON.parse(
+                                                              product.images
+                                                          )[0]
+                                                      }`
+                                                    : "/placeholder.svg";
+                                            return (
+                                                <tr
+                                                    key={product.id}
+                                                    className="hover:bg-gray-50 cursor-pointer"
+                                                    onClick={() =>
+                                                        navigate(
+                                                            `/admin/products/${product.id}`
+                                                        )
+                                                    }
+                                                >
+                                                    <td className="px-4 py-2 text-primary font-semibold border-b">
+                                                        <LazyImage
+                                                            src={productImage}
                                                             alt={product.name}
                                                             className="w-20 h-20 object-cover rounded"
                                                         />
-                                                    ) : (
-                                                        <img
-                                                            src="/placeholder.svg"
-                                                            alt="Placeholder"
-                                                            className="w-20 h-20 object-cover rounded"
-                                                        />
-                                                    )}
-                                                </td>
-                                                <td className="px-4 py-5 text-primary font-semibold border-b">
-                                                    {product.plant_id}
-                                                </td>
-                                                <td className="px-4 py-5 text-[#353535] border-b">
-                                                    {product.genus}
-                                                </td>
-                                                <td className="px-4 py-5 text-[#353535] border-b">
-                                                    {product.species}
-                                                </td>
-                                                <td className="px-4 py-5 text-[#353535] border-b">
-                                                    {product.cultivar}
-                                                </td>
-                                            </tr>
-                                        ))}
+                                                    </td>
+                                                    <td className="px-4 py-5 text-primary font-semibold border-b">
+                                                        {product.plant_id}
+                                                    </td>
+                                                    <td className="px-4 py-5 text-[#353535] border-b">
+                                                        {product.genus}
+                                                    </td>
+                                                    <td className="px-4 py-5 text-[#353535] border-b">
+                                                        {product.species}
+                                                    </td>
+                                                    <td className="px-4 py-5 text-[#353535] border-b">
+                                                        {product.cultivar}
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
                                     </>
                                 )}
                             </tbody>
