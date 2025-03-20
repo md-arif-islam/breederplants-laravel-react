@@ -6,6 +6,29 @@ import { PageTitleContext } from "../context/PageTitleContext";
 import ContactGIF from "../assets/images/contact.gif";
 import AboutIMG from "../assets/images/about.png";
 
+// LazyImage component: wraps an image with lazy loading and a placeholder skeleton.
+function LazyImage({ src, alt, className = "", containerClassName = "" }) {
+    const [loaded, setLoaded] = useState(false);
+    return (
+        <div className={`relative ${containerClassName}`}>
+            {!loaded && (
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+                    {/* You can add an icon or spinner here if needed */}
+                </div>
+            )}
+            <img
+                src={src}
+                alt={alt}
+                loading="lazy"
+                onLoad={() => setLoaded(true)}
+                className={`${className} transition-opacity duration-300 ${
+                    loaded ? "opacity-100" : "opacity-0"
+                }`}
+            />
+        </div>
+    );
+}
+
 export default function PublicContactPage() {
     const [formData, setFormData] = useState({
         company_name: "",
@@ -153,9 +176,10 @@ export default function PublicContactPage() {
                                     </div>
                                 </div>
                                 <div className="relative rounded-xl overflow-hidden h-[500px]">
-                                    <img
+                                    <LazyImage
                                         src={AboutIMG}
                                         alt="Green plants in pot"
+                                        containerClassName=""
                                         className="w-full h-full object-cover"
                                     />
                                 </div>
