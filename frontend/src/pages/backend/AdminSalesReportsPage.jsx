@@ -159,7 +159,7 @@ export default function AdminSalesReportsPage() {
                         <table className="w-full table-auto shadow rounded overflow-hidden">
                             <thead>
                                 <tr className="bg-green-600 h-16 rounded-md shadow">
-                                    <th className="px-4 py-2 border-b text-left text-white font-semibold">
+                                    <th className="px-4 py-5 border-b text-left text-white font-semibold">
                                         Grower Name
                                     </th>
                                     <th className="px-4 py-2 border-b text-left text-white font-semibold">
