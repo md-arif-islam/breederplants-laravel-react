@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
-import { BadgeEuro, FileChartColumn, TreePalm } from "lucide-react";
+import { BadgeEuro, FileChartColumn, Newspaper, TreePalm } from "lucide-react";
 
 const Navbar = ({ sidebarOpen, toggleSidebar }) => {
     return (
@@ -248,30 +248,7 @@ const Navbar = ({ sidebarOpen, toggleSidebar }) => {
                         }
                     >
                         <span className="bg-[#F3F3F3] rounded p-1 group-hover:bg-primary transition duration-300">
-                            <svg
-                                version="1.0"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="64.000000pt"
-                                height="64.000000pt"
-                                className="w-6 h-6 group-hover:fill-[#fff] text-[#686868] group-hover:text-white stroke-current transition duration-300 product"
-                                viewBox="0 0 64.000000 64.000000"
-                                preserveAspectRatio="xMidYMid meet"
-                            >
-                                {" "}
-                                <g
-                                    transform="translate(0.000000,64.000000) scale(0.100000,-0.100000)"
-                                    stroke="none"
-                                >
-                                    {" "}
-                                    <path d="M235 567 c-48 -18 -104 -57 -116 -78 -10 -19 -7 -20 41 -17 50 3 51 4 80 56 17 28 29 52 28 51 -2 0 -17 -6 -33 -12z" />{" "}
-                                    <path d="M400 527 c29 -51 31 -52 80 -55 42 -3 49 -1 44 13 -8 20 -79 68 -121 83 l-33 11 30 -52z" />{" "}
-                                    <path d="M279 523 l-30 -48 36 -3 c19 -2 51 -2 70 0 l36 3 -30 48 c-17 26 -35 47 -41 47 -6 0 -24 -21 -41 -47z" />{" "}
-                                    <path d="M0 320 l0 -110 320 0 320 0 0 110 0 110 -320 0 -320 0 0 -110z m143 33 l22 -38 3 38 c2 24 8 37 18 37 11 0 14 -15 14 -65 0 -55 -3 -65 -17 -65 -10 0 -28 17 -40 38 l-22 37 -1 -43 c0 -30 -4 -42 -12 -40 -8 3 -14 29 -16 71 -2 56 0 67 13 67 9 0 26 -17 38 -37z m145 25 c-3 -7 -14 -14 -26 -16 -28 -4 -29 -22 -2 -22 11 0 20 -7 20 -15 0 -9 -9 -15 -21 -15 -27 0 -19 -24 9 -28 38 -6 24 -22 -18 -22 l-40 0 0 65 0 65 41 0 c28 0 39 -4 37 -12z m42 -7 c0 -30 17 -34 24 -6 9 35 34 31 44 -7 l9 -33 7 33 c5 19 14 32 23 32 11 0 14 -7 10 -22 -4 -13 -9 -42 -13 -65 -8 -54 -38 -60 -49 -10 l-7 32 -14 -32 c-21 -50 -40 -41 -53 24 -14 72 -14 73 4 73 8 0 15 -9 15 -19z m203 4 c-1 -5 -12 -13 -25 -16 -23 -6 -23 -6 4 -19 54 -26 43 -84 -15 -78 -17 2 -33 9 -35 17 -3 10 2 12 21 7 38 -9 43 11 7 29 -29 15 -41 51 -23 69 11 10 68 3 66 -9z" />{" "}
-                                    <path d="M116 155 c8 -20 79 -68 121 -83 l33 -11 -30 52 c-29 51 -31 52 -80 55 -42 3 -49 1 -44 -13z" />{" "}
-                                    <path d="M272 129 c41 -74 55 -74 96 0 l23 41 -71 0 -71 0 23 -41z" />{" "}
-                                    <path d="M414 138 c-9 -18 -24 -43 -32 -55 -14 -23 -14 -23 19 -11 44 14 115 63 122 83 5 12 -3 15 -43 15 -46 0 -51 -2 -66 -32z" />{" "}
-                                </g>{" "}
-                            </svg>
+                            <Newspaper className="w-6 h-6 text-[#686868] group-hover:text-white transition duration-300" />
                         </span>
                         <span className="mx-3 text-[16px] font-medium color-[#4F4E53]">
                             News
