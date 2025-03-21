@@ -75,7 +75,7 @@ export const usePostStore = create((set) => ({
                 currentPage: res.data.current_page,
                 totalPages: res.data.last_page,
             }); // Assuming posts are in res.data.data
-            return res.data.data;
+            return res.data; // Return the full response including categoryName
         } catch (error) {
             toast.error("Failed to fetch posts by category");
             return [];
@@ -93,7 +93,7 @@ export const usePostStore = create((set) => ({
                 currentPage: res.data.current_page,
                 totalPages: res.data.last_page,
             }); // Assuming posts are in res.data.data
-            return res.data.data;
+            return res.data;
         } catch (error) {
             toast.error("Failed to fetch posts by tag");
             return [];
