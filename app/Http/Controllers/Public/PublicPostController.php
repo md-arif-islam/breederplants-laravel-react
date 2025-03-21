@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag; // Added to fetch category name
 use Illuminate\Http\Request;
 
 class PublicPostController extends Controller {
@@ -16,23 +18,19 @@ class PublicPostController extends Controller {
         }
 
         // Category filter functionality
-        if ( $category = $request->input( 'category' ) ) {
-            $query->whereHas( 'categories', function ( $q ) use ( $category ) {
-                $q->where( 'slug', $category );
+        $categorySlug = $request->input( 'category' );
+        if ( $categorySlug ) {
+            $query->whereHas( 'categories', function ( $q ) use ( $categorySlug ) {
+                $q->where( 'slug', $categorySlug );
             } );
         }
 
-        // Tag filter functionality: support numeric tag id or slug.
-        if ( $tags = $request->input( 'tags' ) ) {
-            if ( is_numeric( $tags ) ) {
-                $query->whereHas( 'tags', function ( $q ) use ( $tags ) {
-                    $q->where( 'id', $tags );
-                } );
-            } else {
-                $query->whereHas( 'tags', function ( $q ) use ( $tags ) {
-                    $q->where( 'slug', $tags );
-                } );
-            }
+        // add for tags
+        $tagSlug = $request->input( 'tag' );
+        if ( $tagSlug ) {
+            $query->whereHas( 'tags', function ( $q ) use ( $tagSlug ) {
+                $q->where( 'slug', $tagSlug );
+            } );
         }
 
         // Sorting functionality
@@ -51,12 +49,22 @@ class PublicPostController extends Controller {
         }
 
         $posts = $query->paginate( 10 );
+        $data = $posts->toArray();
 
-        return response()->json( $posts );
+        // Append category name if a filter was applied
+        if ( $categorySlug ) {
+            $data['categoryName'] = Category::where( 'slug', $categorySlug )->value( 'name' );
+        }
+
+        //  tag
+        if ( $tagSlug ) {
+            $data['tagName'] = Tag::where( 'slug', $tagSlug )->value( 'name' );
+        }
+
+        return response()->json( $data );
     }
 
     public function show( Post $post ) {
-        // This controller already supports loading a post with its category and tag relationships.
         return response()->json( $post->load( ['user', 'categories', 'tags'] ) ); // Load relationships
     }
 }
