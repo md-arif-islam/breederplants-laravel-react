@@ -131,7 +131,7 @@ export default function AdminNewsCreatePage() {
             <div className="container mx-auto px-4 py-8">
                 <div className="bg-white rounded-lg shadow p-6">
                     <form onSubmit={handleSubmit}>
-                        <div className="grid gap-6 md:grid-cols-1">
+                        <div className="grid gap-6 md:grid-cols-2">
                             {/* Left Column */}
                             <div className="space-y-6">
                                 <div>
@@ -207,6 +207,45 @@ export default function AdminNewsCreatePage() {
                                             )}
                                         </span>
                                     </div>
+                                </div>
+                            </div>
+
+                            {/* Right Column */}
+                            <div className="space-y-6">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">
+                                        Categories
+                                    </label>
+                                    <MultiSelect
+                                        options={categories || []}
+                                        value={formData.categories}
+                                        onChange={(selectedCategories) =>
+                                            setFormData({
+                                                ...formData,
+                                                categories: selectedCategories,
+                                            })
+                                        }
+                                        placeholder="Select Categories"
+                                        onCreate={handleCreateCategory} // added inline creation
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">
+                                        Tags
+                                    </label>
+                                    <MultiSelect
+                                        options={tags || []}
+                                        value={formData.tags}
+                                        onChange={(selectedTags) =>
+                                            setFormData({
+                                                ...formData,
+                                                tags: selectedTags,
+                                            })
+                                        }
+                                        placeholder="Select Tags"
+                                        onCreate={handleCreateTag} // added inline creation
+                                    />
                                 </div>
                             </div>
                         </div>
