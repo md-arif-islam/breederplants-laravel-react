@@ -1,22 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { usePostStore } from "../store/usePostStore";
 import PostCard from "../components/PostCard";
+import { PageTitleContext } from "../context/PageTitleContext";
 
 const PublicTagsPage = () => {
     const { slug } = useParams();
+
     const { isLoading, posts, currentPage, totalPages, getPostsByTag } =
         usePostStore();
     const [tagName, setTagName] = useState("");
+    const { setTitle } = useContext(PageTitleContext);
 
     useEffect(() => {
-        getPostsByTag(slug, currentPage);
-        setTagName(slug);
+        getPostsByTag(slug, currentPage).then((data) => {
+            // Use the retrieved tagName if available
+            if (data?.tagName) {
+                setTagName(data.tagName);
+            }
+            console.log(data);
+        });
     }, [slug, currentPage, getPostsByTag]);
 
     useEffect(() => {
         document.title = `Tag: ${tagName} - Breederplants`;
-    }, [tagName]);
+        setTitle(`Tag: ${tagName}`);
+    }, [tagName, setTitle]);
 
     const handlePageChange = (page) => {
         getPostsByTag(slug, page);
@@ -28,12 +37,6 @@ const PublicTagsPage = () => {
             <div className="container mx-auto">
                 <div className="-mt-12 z-10 relative">
                     <div className="min-h-screen bg-white rounded-t-3xl p-4 lg:p-6">
-                        <div className="mb-6">
-                            <h1 className="text-2xl font-bold mb-4">
-                                Tag: {tagName}
-                            </h1>
-                        </div>
-
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-1 lg:gap-4">
                             {posts?.map((post) => (
                                 <PostCard key={post.id} post={post} />

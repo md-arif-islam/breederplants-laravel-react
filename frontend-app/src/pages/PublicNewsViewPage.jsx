@@ -85,23 +85,25 @@ const PublicNewsViewPage = () => {
 
     if (isLoading || !currentPost) {
         return (
-            <div className="bg-gray-50 min-h-screen pt-16">
-                <div className="container mx-auto px-4 max-w-4xl">
-                    <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-                        {/* Skeleton loading state */}
-                        <div className="w-full h-[400px] bg-gray-200 animate-pulse"></div>
-                        <div className="p-6 space-y-4">
-                            <div className="h-10 w-3/4 bg-gray-200 animate-pulse rounded"></div>
-                            <div className="flex items-center space-x-2">
-                                <div className="h-10 w-10 bg-gray-200 animate-pulse rounded-full"></div>
-                                <div className="h-4 w-40 bg-gray-200 animate-pulse rounded"></div>
-                            </div>
-                            <div className="h-4 w-full bg-gray-200 animate-pulse rounded"></div>
-                            <div className="h-4 w-full bg-gray-200 animate-pulse rounded"></div>
-                            <div className="h-4 w-2/3 bg-gray-200 animate-pulse rounded"></div>
-                            <div className="flex space-x-2 pt-4">
-                                <div className="h-6 w-20 bg-gray-200 animate-pulse rounded-full"></div>
-                                <div className="h-6 w-20 bg-gray-200 animate-pulse rounded-full"></div>
+            <div className="bg-gray-50 -mt-12 ">
+                <div className="container mx-auto">
+                    <div className="-mt-12 z-10 relative">
+                        <div className="bg-white rounded-xl shadow-md overflow-hidden">
+                            {/* Skeleton loading state */}
+                            <div className="w-full h-[400px] bg-gray-200 animate-pulse"></div>
+                            <div className="p-6 space-y-4">
+                                <div className="h-10 w-3/4 bg-gray-200 animate-pulse rounded"></div>
+                                <div className="flex items-center space-x-2">
+                                    <div className="h-10 w-10 bg-gray-200 animate-pulse rounded-full"></div>
+                                    <div className="h-4 w-40 bg-gray-200 animate-pulse rounded"></div>
+                                </div>
+                                <div className="h-4 w-full bg-gray-200 animate-pulse rounded"></div>
+                                <div className="h-4 w-full bg-gray-200 animate-pulse rounded"></div>
+                                <div className="h-4 w-2/3 bg-gray-200 animate-pulse rounded"></div>
+                                <div className="flex space-x-2 pt-4">
+                                    <div className="h-6 w-20 bg-gray-200 animate-pulse rounded-full"></div>
+                                    <div className="h-6 w-20 bg-gray-200 animate-pulse rounded-full"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -137,7 +139,7 @@ const PublicNewsViewPage = () => {
                         <div className="p-6">
                             <div className="space-y-4">
                                 {/* Categories */}
-                                <div className="flex flex-wrap gap-2">
+                                {/* <div className="flex flex-wrap gap-2">
                                     {currentPost.categories &&
                                     currentPost.categories.length > 0
                                         ? currentPost.categories.map((cat) => (
@@ -151,7 +153,7 @@ const PublicNewsViewPage = () => {
                                               </Link>
                                           ))
                                         : null}
-                                </div>
+                                </div> */}
 
                                 {/* Title */}
                                 <h1 className="text-lg md:text-2xl font-bold text-gray-800 leading-tight ">
@@ -203,7 +205,7 @@ const PublicNewsViewPage = () => {
                             </div>
 
                             {/* Tags */}
-                            {currentPost.tags &&
+                            {/* {currentPost.tags &&
                                 currentPost.tags.length > 0 && (
                                     <div className="mt-8 pt-6 border-t border-gray-100">
                                         <h3 className="text-sm font-medium text-gray-500 mb-2">
@@ -222,7 +224,7 @@ const PublicNewsViewPage = () => {
                                             ))}
                                         </div>
                                     </div>
-                                )}
+                                )} */}
                         </div>
                     </div>
                 </div>

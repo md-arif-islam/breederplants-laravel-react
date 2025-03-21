@@ -1,21 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { usePostStore } from "../store/usePostStore";
 import PostCard from "../components/PostCard";
+import { PageTitleContext } from "../context/PageTitleContext";
 
 const PublicCategoriesPage = () => {
     const { slug } = useParams();
+
     const { isLoading, posts, currentPage, totalPages, getPostsByCategory } =
         usePostStore();
-    const [categoryName, setCategoryName] = useState(slug);
+    const [categoryName, setCategoryName] = useState("");
+    const { setTitle } = useContext(PageTitleContext);
 
     useEffect(() => {
-        getPostsByCategory(slug, currentPage);
+        getPostsByCategory(slug, currentPage).then((data) => {
+            // Use the retrieved categoryName if available
+            if (data?.categoryName) {
+                setCategoryName(data.categoryName);
+            }
+        });
     }, [slug, currentPage, getPostsByCategory]);
 
     useEffect(() => {
         document.title = `Category: ${categoryName} - Breederplants`;
-    }, [categoryName]);
+        setTitle(`Category: ${categoryName}`);
+    }, [categoryName, setTitle]);
 
     const handlePageChange = (page) => {
         getPostsByCategory(slug, page);
@@ -27,12 +36,6 @@ const PublicCategoriesPage = () => {
             <div className="container mx-auto">
                 <div className="-mt-12 z-10 relative">
                     <div className="min-h-screen bg-white rounded-t-3xl p-4 lg:p-6">
-                        <div className="mb-6">
-                            <h1 className="text-2xl font-bold mb-4">
-                                Category: {categoryName}
-                            </h1>
-                        </div>
-
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-1 lg:gap-4">
                             {posts?.map((post) => (
                                 <PostCard key={post.id} post={post} />

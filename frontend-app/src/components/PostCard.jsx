@@ -46,7 +46,7 @@ export default function PostCard({ post }) {
                 )}
             </p>
             {/* Categories and Tags */}
-            <div className="mt-2 flex flex-wrap gap-2">
+            {/* <div className="mt-2 flex flex-wrap gap-2">
                 {post.categories &&
                     post.categories.map((cat) => (
                         <Link
@@ -67,7 +67,7 @@ export default function PostCard({ post }) {
                             {tag.name}
                         </Link>
                     ))}
-            </div>
+            </div> */}
         </Link>
     );
 }
