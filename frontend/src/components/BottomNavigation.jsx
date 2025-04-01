@@ -11,7 +11,7 @@ export default function BottomNavigation() {
         },
         {
             name: "About",
-            to: "/https://app-breederplants.onlinewithyou.nl/about",
+            to: "https://app-breederplants.onlinewithyou.nl/about",
             icon: Info,
         },
         {
