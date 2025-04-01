@@ -19,6 +19,7 @@ import {
 import { useProductStore } from "../../store/useProductStore";
 import { useNavigate, useParams } from "react-router-dom";
 import { Gallery, Item } from "react-photoswipe-gallery";
+import { formatDate } from "../../utils/formatDate.js";
 
 // Helper component for lazy loading images with a skeleton placeholder
 function LazyImage({ src, alt }) {
@@ -86,6 +87,15 @@ export default function AdminProductViewPage() {
             : [];
     }, [currentProduct]);
 
+    const getFormattedDate = (dateString) => {
+        try {
+            return formatDate(dateString);
+        } catch (error) {
+            console.error("Error formatting date:", error);
+            return "Invalid Date";
+        }
+    };
+
     // Always call this hook so that the number of hooks stays the same.
     useEffect(() => {
         if (!isLoading && currentProduct) {
@@ -123,7 +133,7 @@ export default function AdminProductViewPage() {
                     {/* Content */}
 
                     <div className="p-6 ">
-                        <div className="bg-gray-50 rounded-lg p-5 md:col-span-2 mb-4">
+                        <div className="bg-gray-50 rounded p-5 md:col-span-2 mb-4">
                             <Gallery withDownloadButton>
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                                     {productImages.map((imageUrl, index) => {
@@ -250,9 +260,9 @@ export default function AdminProductViewPage() {
                                         </span>
                                         <span className="font-medium text-gray-900 flex items-center">
                                             <Calendar className="h-4 w-4 mr-1 text-emerald-600" />
-                                            {
+                                            {getFormattedDate(
                                                 currentProduct?.cpvo_expiration_date
-                                            }
+                                            )}
                                         </span>
                                     </div>
                                     <div className="flex justify-between items-center">

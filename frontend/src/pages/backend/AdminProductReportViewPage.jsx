@@ -3,6 +3,7 @@ import { Pencil, Trash2, Download, DownloadIcon, Loader2 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useProductionReportStore } from "../../store/useProductionReportStore";
 import { format } from "date-fns";
+import { formatDate } from "../../utils/formatDate.js";
 
 export default function AdminProductionReportViewPage() {
     const {
@@ -56,6 +57,15 @@ export default function AdminProductionReportViewPage() {
         }
     };
 
+    const getFormattedDate = (dateString) => {
+        try {
+            return formatDate(dateString);
+        } catch (error) {
+            console.error("Error formatting date:", error);
+            return "Invalid Date";
+        }
+    };
+
     if (isLoading || !currentProductionReport) {
         return (
             <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">
@@ -104,11 +114,8 @@ export default function AdminProductionReportViewPage() {
                                 </p>
                                 <p className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md">
                                     {currentProductionReport.submission_date
-                                        ? format(
-                                              new Date(
-                                                  currentProductionReport.submission_date
-                                              ),
-                                              "yyyy-MM-dd HH:mm:ss"
+                                        ? getFormattedDate(
+                                              currentProductionReport.submission_date
                                           )
                                         : "Not Submitted"}
                                 </p>
