@@ -63,7 +63,7 @@ export default function PublicContactPage() {
             {/* Content */}
             <div className="container mx-auto">
                 <div className="-mt-12 z-10 relative">
-                    <div className="min-h-screen bg-white rounded-t-3xl p-4 lg:p-6">
+                    <div className=" bg-white rounded-t-3xl p-4 lg:p-6">
                         <div className="">
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                                 <div>
@@ -175,7 +175,7 @@ export default function PublicContactPage() {
                                         </form>
                                     </div>
                                 </div>
-                                <div className="relative rounded-xl overflow-hidden h-[500px]">
+                                <div className="hidden lg:block relative rounded-xl overflow-hidden h-[500px]">
                                     <LazyImage
                                         src={AboutIMG}
                                         alt="Green plants in pot"
