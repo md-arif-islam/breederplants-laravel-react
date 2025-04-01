@@ -3,6 +3,7 @@ import { Pencil, Trash2, Download, Leaf } from "lucide-react";
 import { useVarietySampleStore } from "../../store/useVarietySampleStore";
 import { useNavigate, useParams } from "react-router-dom";
 import { Gallery, Item } from "react-photoswipe-gallery";
+import { formatDate } from "../../utils/formatDate.js";
 
 // Helper component for lazy loading images with a skeleton placeholder
 function LazyImage({ src, alt }) {
@@ -90,6 +91,15 @@ export default function AdminVarietySampleViewPage() {
         setShowPopup(false);
     };
 
+    const getFormattedDate = (dateString) => {
+        try {
+            return formatDate(dateString);
+        } catch (error) {
+            console.error("Error formatting date:", error);
+            return "Invalid Date";
+        }
+    };
+
     // Early return for loading state
     if (isLoading || !varietySample) {
         return (
@@ -154,7 +164,9 @@ export default function AdminVarietySampleViewPage() {
                                     Sample Date
                                 </h3>
                                 <p className="mt-1 uppercase">
-                                    {varietySample.sample_date}
+                                    {getFormattedDate(
+                                        varietySample.sample_date
+                                    )}
                                 </p>
                             </div>
                             <div>

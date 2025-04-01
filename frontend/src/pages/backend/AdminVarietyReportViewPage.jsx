@@ -5,6 +5,7 @@ import hydrangeaImg from "../../assets/images/hydrangea-paniculata.jpg";
 import { useVarietyReportStore } from "../../store/useVarietyReportStore";
 import { useNavigate, useParams } from "react-router-dom";
 import { Gallery, Item } from "react-photoswipe-gallery";
+import { formatDate } from "../../utils/formatDate.js";
 
 export default function AdminVarietyReportViewPage() {
     const {
@@ -75,6 +76,15 @@ export default function AdminVarietyReportViewPage() {
         };
     }, [thumbnailUrl]);
 
+    const getFormattedDate = (dateString) => {
+        try {
+            return formatDate(dateString);
+        } catch (error) {
+            console.error("Error formatting date:", error);
+            return "Invalid Date";
+        }
+    };
+
     return (
         // TODO: Next Sample Date show today's date
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">
@@ -131,10 +141,12 @@ export default function AdminVarietyReportViewPage() {
                                         Next Sample Date
                                     </h3>
                                     <p className="mt-1">
-                                        {report &&
-                                            JSON.parse(
-                                                report.samples_schedule
-                                            )[0]}
+                                        {report?.samples_schedule &&
+                                            getFormattedDate(
+                                                JSON.parse(
+                                                    report.samples_schedule
+                                                )[0]
+                                            )}
                                     </p>
                                 </div>
                                 <div>
@@ -187,13 +199,21 @@ export default function AdminVarietyReportViewPage() {
                                     <h3 className="text-sm font-medium text-gray-500">
                                         Start Date
                                     </h3>
-                                    <p className="mt-1">{report?.start_date}</p>
+                                    <p className="mt-1">
+                                        {report?.start_date &&
+                                            getFormattedDate(
+                                                report?.start_date
+                                            )}
+                                    </p>
                                 </div>
                                 <div>
                                     <h3 className="text-sm font-medium text-gray-500">
                                         End Date
                                     </h3>
-                                    <p className="mt-1">{report?.end_date}</p>
+                                    <p className="mt-1">
+                                        {report?.end_date &&
+                                            getFormattedDate(report?.end_date)}
+                                    </p>
                                 </div>
                             </div>
 
