@@ -162,7 +162,7 @@ const PublicNewsViewPage = () => {
 
                                 {/* Author and Date */}
                                 <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 pt-2">
-                                    <div className="flex items-center gap-2">
+                                    {/* <div className="flex items-center gap-2">
                                         <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
                                             <img
                                                 src={`https://api.dicebear.com/7.x/initials/svg?seed=${
@@ -178,7 +178,7 @@ const PublicNewsViewPage = () => {
                                                 "@"
                                             )[0] || "Breederplants Team"}
                                         </span>
-                                    </div>
+                                    </div> */}
                                     <div className="flex items-center gap-2">
                                         <Calendar className="h-4 w-4" />
                                         <span
