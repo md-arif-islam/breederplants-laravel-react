@@ -6,7 +6,13 @@
  * @returns {string} Formatted date string in 'dd-mm-yyyy' format.
  */
 export function formatDate(dateInput) {
+    if (!dateInput) {
+        return "";
+    }
     const date = new Date(dateInput);
+    if (isNaN(date.getTime())) {
+        return "";
+    }
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
     const year = date.getFullYear();
