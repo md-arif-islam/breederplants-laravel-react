@@ -128,14 +128,6 @@ export default function AdminProductEditPage() {
         }
     };
 
-    if (!currentProduct || isLoading) {
-        return (
-            <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">
-                <div className="container mx-auto px-4 py-8">Loading...</div>
-            </main>
-        );
-    }
-
     return (
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">
             <div className="container mx-auto px-4 py-8">
@@ -402,7 +394,13 @@ export default function AdminProductEditPage() {
                             type="submit"
                             className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
                         >
-                            Update Product
+                            {isLoading ? (
+                                <>
+                                    <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                                </>
+                            ) : (
+                                " Update Product"
+                            )}
                         </button>
                     </form>
                 </div>

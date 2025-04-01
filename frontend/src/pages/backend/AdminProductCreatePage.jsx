@@ -360,7 +360,7 @@ export default function AdminProductCreatePage() {
                                     <Loader2 className="h-5 w-5 animate-spin mr-2" />
                                 </>
                             ) : (
-                                "Create Variety Report"
+                                "Create Product"
                             )}
                         </button>
                     </form>
