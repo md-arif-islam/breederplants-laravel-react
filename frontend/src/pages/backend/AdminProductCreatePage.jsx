@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Leaf, X } from "lucide-react";
+import { Leaf, Loader2, X } from "lucide-react";
 import { useProductStore } from "../../store/useProductStore";
 
 export default function AdminProductCreatePage() {
@@ -89,14 +89,6 @@ export default function AdminProductCreatePage() {
             navigate(`/admin/products/`);
         }
     };
-
-    if (isLoading) {
-        return (
-            <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">
-                <div className="container mx-auto px-4 py-8">Loading...</div>
-            </main>
-        );
-    }
 
     return (
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">
@@ -363,7 +355,13 @@ export default function AdminProductCreatePage() {
                             type="submit"
                             className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
                         >
-                            Create Product
+                            {isLoading ? (
+                                <>
+                                    <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                                </>
+                            ) : (
+                                "Create Variety Report"
+                            )}
                         </button>
                     </form>
                 </div>

@@ -198,13 +198,14 @@ export default function AdminProductionReportViewPage() {
                                     </>
                                 )}
                             </button>
-                            <button
+                            {/* HIDE: Button */}
+                            {/* <button
                                 className="inline-flex items-center px-3 py-2 text-sm font-medium border rounded-md hover:bg-gray-50"
                                 onClick={handleDelete}
                             >
                                 <Trash2 className="mr-2 h-4 w-4" />
                                 Delete
-                            </button>
+                            </button> */}
                         </div>
                     </div>
                 </div>
