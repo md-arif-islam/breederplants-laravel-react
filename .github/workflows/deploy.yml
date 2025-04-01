@@ -72,3 +72,70 @@ jobs:
             **/.git*/**
             **/node_modules/**
             fileToExclude.txt
+
+  ftp-deploy-breederplants:
+    environment: "plesk-breederplants"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+
+      - name: Install Composer Dependencies
+        run: composer install
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      # 🚀 Build the Portal Frontend (for breederplants.onlinewithyou.nl)
+      - name: Build Portal Frontend
+        run: |
+          cd frontend
+          npm install
+          npm run build -- --mode production
+          cd ..
+
+      # 🚀 Build the Public App Frontend (for app-breederplants.onlinewithyou.nl)
+      - name: Build Public Frontend
+        run: |
+          cd frontend-app
+          npm install
+          npm run build -- --mode production
+          cd ..
+
+      # 🚀 Deploy Portal Frontend (breederplants.onlinewithyou.nl)
+      - name: FTP Deploy Portal to breederplants.onlinewithyou.nl
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.1
+        with:
+          server: ${{ secrets.SERVER }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          local-dir: ./
+          server-dir: /
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            fileToExclude.txt
+
+      # 🚀 Deploy Public App to app-breederplants.onlinewithyou.nl
+      - name: FTP Deploy Public App to app-breederplants.onlinewithyou.nl
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.1
+        with:
+          server: ${{ secrets.SERVER_APP }}
+          username: ${{ secrets.USERNAME_APP }}
+          password: ${{ secrets.PASSWORD_APP }}
+          local-dir: frontend-app/dist/
+          server-dir: /
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            fileToExclude.txt
