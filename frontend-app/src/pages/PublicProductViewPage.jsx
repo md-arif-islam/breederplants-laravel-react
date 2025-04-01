@@ -39,8 +39,6 @@ export default function VarietySampleShow() {
         }
     }, [currentProduct, setTitle]);
 
-    const placeholder =
-        "https://portal.breederplants.nl/assets/backend/imgs/products/blank_product.gif";
     // Map each image so that if it isn't a base64 string, we prepend the API URL.
     const images = productImages.length
         ? productImages.map((img) =>
@@ -48,7 +46,7 @@ export default function VarietySampleShow() {
                   ? img
                   : `${import.meta.env.VITE_API_URL}/${img}`
           )
-        : [placeholder];
+        : [];
 
     useEffect(() => {
         productImages.forEach((imageUrl, index) => {
