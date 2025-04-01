@@ -3,12 +3,20 @@ import { Home, Newspaper, Info, User } from "lucide-react";
 
 export default function BottomNavigation() {
     const navItems = [
-        { name: "Catalog", to: "/", icon: Home },
-        { name: "News", to: "/news", icon: Newspaper },
-        { name: "About", to: "/about", icon: Info },
+        { name: "Home", to: "/", icon: Home },
         {
-            name: "Portal",
-            to: "https://breederplants.onlinewithyou.nl",
+            name: "News",
+            to: "https://app-breederplants.onlinewithyou.nl/news",
+            icon: Newspaper,
+        },
+        {
+            name: "About",
+            to: "/https://app-breederplants.onlinewithyou.nl/about",
+            icon: Info,
+        },
+        {
+            name: "Public Area",
+            to: "https://app-breederplants.onlinewithyou.nl",
             icon: User,
         },
     ];
