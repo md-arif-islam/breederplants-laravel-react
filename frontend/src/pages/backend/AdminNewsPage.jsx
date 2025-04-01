@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { usePostStore } from "../../store/usePostStore";
 import { useNavigate } from "react-router-dom";
-import { format } from "date-fns";
 import { Leaf } from "lucide-react";
+import { formatDate } from "../../utils/formatDate.js";
 
 // LazyImage component for lazy loading images with a skeleton placeholder
 function LazyImage({ src, alt, className }) {
@@ -72,6 +72,15 @@ export default function AdminNewsPage() {
 
     const handlePageChange = (page) => {
         getAllPosts(page, searchQuery, selectedCategory, selectedTag, sort);
+    };
+
+    const getFormattedDate = (dateString) => {
+        try {
+            return formatDate(dateString);
+        } catch (error) {
+            console.error("Error formatting date:", error);
+            return "Invalid Date";
+        }
     };
 
     return (
@@ -184,11 +193,8 @@ export default function AdminNewsPage() {
                                                     </td>
 
                                                     <td className="px-4 py-2 border-b text-left">
-                                                        {format(
-                                                            new Date(
-                                                                post.created_at
-                                                            ),
-                                                            "dd - MM - yyyy"
+                                                        {getFormattedDate(
+                                                            post.created_at
                                                         )}
                                                     </td>
                                                 </tr>
