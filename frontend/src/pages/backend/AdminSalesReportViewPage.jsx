@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Pencil, Trash2, Download, DownloadIcon, Loader2 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSalesReportStore } from "../../store/useSalesReportStore";
-import { format } from "date-fns";
+import { formatDate } from "../../utils/formatDate";
 
 export default function AdminSalesReportViewPage() {
     const {
@@ -56,6 +56,15 @@ export default function AdminSalesReportViewPage() {
         }
     };
 
+    const getFormattedDate = (dateString) => {
+        try {
+            return formatDate(dateString);
+        } catch (error) {
+            console.error("Error formatting date:", error);
+            return "Invalid Date";
+        }
+    };
+
     if (isLoading || !currentSalesReport) {
         return (
             <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">
@@ -98,11 +107,8 @@ export default function AdminSalesReportViewPage() {
                                 </p>
                                 <p className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md">
                                     {currentSalesReport.submission_date
-                                        ? format(
-                                              new Date(
-                                                  currentSalesReport.submission_date
-                                              ),
-                                              "yyyy-MM-dd HH:mm:ss"
+                                        ? getFormattedDate(
+                                              currentSalesReport.submission_date
                                           )
                                         : "Not Submitted"}
                                 </p>
