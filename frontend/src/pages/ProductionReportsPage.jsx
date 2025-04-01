@@ -3,6 +3,7 @@ import { useProductionReportStore } from "../store/useProductionReportStore";
 import { Link, useNavigate } from "react-router-dom";
 import { useStore } from "../store/useStore";
 import { PageTitleContext } from "../context/PageTitleContext";
+import { formatDate } from "../utils/formatDate.js";
 
 export default function ProductionReportsPage() {
     const {
@@ -29,6 +30,15 @@ export default function ProductionReportsPage() {
 
     const handlePageChange = (newPage) => {
         getAllProductionReports(newPage);
+    };
+
+    const getFormattedDate = (dateString) => {
+        try {
+            return formatDate(dateString);
+        } catch (error) {
+            console.error("Error formatting date:", error);
+            return "Invalid Date";
+        }
     };
 
     return (
@@ -193,14 +203,7 @@ export default function ProductionReportsPage() {
                                                                 )?.start;
 
                                                             return dateOpen
-                                                                ? new Intl.DateTimeFormat(
-                                                                      "en-GB",
-                                                                      {
-                                                                          day: "2-digit",
-                                                                          month: "short",
-                                                                          year: "numeric",
-                                                                      }
-                                                                  ).format(
+                                                                ? getFormattedDate(
                                                                       dateOpen
                                                                   )
                                                                 : "N/A";
@@ -235,14 +238,7 @@ export default function ProductionReportsPage() {
                                                         </strong>{" "}
                                                         {report.submission_date ? (
                                                             <>
-                                                                {new Intl.DateTimeFormat(
-                                                                    "en-GB",
-                                                                    {
-                                                                        day: "2-digit",
-                                                                        month: "short",
-                                                                        year: "numeric",
-                                                                    }
-                                                                ).format(
+                                                                {getFormattedDate(
                                                                     new Date(
                                                                         report.submission_date
                                                                     )

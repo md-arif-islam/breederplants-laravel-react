@@ -3,6 +3,7 @@ import { useStore } from "../../store/useStore";
 import { useNavigate } from "react-router-dom";
 import { useProductionReportStore } from "../../store/useProductionReportStore";
 import { format } from "date-fns";
+import { formatDate } from "../../utils/formatDate"; // Import formatDate
 
 const quarterOptions = [
     { value: "q1", label: "Q1" },
@@ -90,6 +91,15 @@ export default function AdminProductionReportsPage() {
                 };
             default:
                 return null;
+        }
+    };
+
+    const formatDateWrapper = (dateString) => {
+        try {
+            return formatDate(dateString);
+        } catch (error) {
+            console.error("Error formatting date:", error);
+            return "Invalid Date";
         }
     };
 
@@ -252,15 +262,15 @@ export default function AdminProductionReportsPage() {
                                                         </td>
                                                         <td className="px-4 py-2 border-b text-left">
                                                             {dateOpen
-                                                                ? format(
-                                                                      dateOpen,
-                                                                      "dd M, yyyy"
+                                                                ? formatDateWrapper(
+                                                                      dateOpen
                                                                   )
                                                                 : "N/A"}
                                                         </td>
                                                         <td className="px-4 py-2 border-b text-left">
-                                                            {report.submission_date ||
-                                                                "N/A"}
+                                                            {formatDateWrapper(
+                                                                report.submission_date
+                                                            ) || "N/A"}
                                                         </td>
                                                         <td className="px-4 py-2 border-b text-left">
                                                             {report.submission_date ? (
