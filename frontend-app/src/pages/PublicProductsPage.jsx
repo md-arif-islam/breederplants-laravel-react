@@ -3,7 +3,7 @@ import { useProductStore } from "../store/useProductStore";
 import ProductCard from "../components/ProductCard";
 import { PageTitleContext } from "../context/PageTitleContext";
 
-function VarietyReportCardSkeleton() {
+function ProductCardSkeleton() {
     return (
         <div className="bg-white rounded-2xl p-2 flex items-center gap-4 mb-4 drop-shadow-md animate-pulse">
             <div className="w-20 h-20 md:w-28 md:h-28 lg:w-36 lg:h-36 flex-shrink-0 bg-gray-300 rounded-xl"></div>
@@ -76,7 +76,7 @@ const PublicProductsPage = () => {
                         <div className="grid lg:grid-cols-2 gap-1 lg:gap-4">
                             {isLoading
                                 ? Array.from({ length: 2 }).map((_, idx) => (
-                                      <VarietyReportCardSkeleton key={idx} />
+                                      <ProductCardSkeleton key={idx} />
                                   ))
                                 : products?.map((product) => (
                                       <ProductCard

@@ -67,10 +67,6 @@ export default function VarietySampleShow() {
         });
     }, [productImages]);
 
-    if (isLoading || !currentProduct) {
-        return <div></div>;
-    }
-
     const handleImgLoad = (index) => {
         setLoadedImages((prev) => ({ ...prev, [index]: true }));
     };
@@ -150,7 +146,7 @@ export default function VarietySampleShow() {
                                             }`}
                                         >
                                             {!loadedImages[index] && (
-                                                <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+                                                <div className="absolute inset-0 flex items-center justify-center bg-gray-200 rounded-md">
                                                     <Leaf className="w-6 h-6 text-gray-400 animate-pulse" />
                                                 </div>
                                             )}
