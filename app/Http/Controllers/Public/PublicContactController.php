@@ -15,7 +15,7 @@ class PublicContactController extends Controller {
             'company_address' => 'required|string',
         ] );
 
-        Notification::route( 'mail', 'arifislamdev@gmail.com' )
+        Notification::route( 'mail', 'info@onlinewithyou.nl' )
             ->notify( new ContactSubmittedNotification( $data ) );
 
         return response()->json( [
