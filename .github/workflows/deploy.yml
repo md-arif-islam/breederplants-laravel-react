@@ -1,4 +1,4 @@
-name: FTP Deploy
+name: FTP Deployment for Breederplants Project
 
 on:
   push:
@@ -6,15 +6,15 @@ on:
       - main
 
 jobs:
-  ftp-deploy:
+  ftp-deploy-onlinewithyou:
     environment: "plesk-onlinewithyou"
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout Repository Code
         uses: actions/checkout@v3
 
-      - name: Setup PHP
+      - name: Setup PHP 8.2 Environment
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
@@ -22,29 +22,29 @@ jobs:
       - name: Install Composer Dependencies
         run: composer install
 
-      - name: Setup Node.js
+      - name: Setup Node.js 20 Environment
         uses: actions/setup-node@v3
         with:
           node-version: "20"
 
-      # 🚀 Build the Portal Frontend (for breederplants.onlinewithyou.nl)
-      - name: Build Portal Frontend
+      # 🚀 Build the Portal Frontend for breederplants.onlinewithyou.nl
+      - name: Build Portal Frontend for Breederplants
         run: |
           cd frontend
           npm install
           npm run build -- --mode production
           cd ..
 
-      # 🚀 Build the Public App Frontend (for app-breederplants.onlinewithyou.nl)
-      - name: Build Public Frontend
+      # 🚀 Build the Public App Frontend for app-breederplants.onlinewithyou.nl
+      - name: Build Public App Frontend for Breederplants App
         run: |
           cd frontend-app
           npm install
           npm run build -- --mode production
           cd ..
 
-      # 🚀 Deploy Portal Frontend (breederplants.onlinewithyou.nl)
-      - name: FTP Deploy Portal to breederplants.onlinewithyou.nl
+      # 🚀 Deploy the built Portal Frontend to breederplants.onlinewithyou.nl via FTP
+      - name: FTP Deploy Portal Frontend to breederplants.onlinewithyou.nl
         uses: SamKirkland/FTP-Deploy-Action@v4.3.1
         with:
           server: ${{ secrets.SERVER }}
@@ -58,8 +58,8 @@ jobs:
             **/node_modules/**
             fileToExclude.txt
 
-      # 🚀 Deploy Public App to app-breederplants.onlinewithyou.nl
-      - name: FTP Deploy Public App to app-breederplants.onlinewithyou.nl
+      # 🚀 Deploy the built Public App Frontend to app-breederplants.onlinewithyou.nl via FTP
+      - name: FTP Deploy Public App Frontend to app-breederplants.onlinewithyou.nl
         uses: SamKirkland/FTP-Deploy-Action@v4.3.1
         with:
           server: ${{ secrets.SERVER_APP }}
@@ -78,10 +78,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout Repository Code
         uses: actions/checkout@v3
 
-      - name: Setup PHP
+      - name: Setup PHP 8.2 Environment
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
@@ -89,29 +89,29 @@ jobs:
       - name: Install Composer Dependencies
         run: composer install
 
-      - name: Setup Node.js
+      - name: Setup Node.js 20 Environment
         uses: actions/setup-node@v3
         with:
           node-version: "20"
 
-      # 🚀 Build the Portal Frontend (for breederplants.onlinewithyou.nl)
-      - name: Build Portal Frontend
+      # 🚀 Build the Portal Frontend for portal.breederplants.nl
+      - name: Build Portal Frontend for Breederplants
         run: |
           cd frontend
           npm install
           npm run build -- --mode production
           cd ..
 
-      # 🚀 Build the Public App Frontend (for app-breederplants.onlinewithyou.nl)
-      - name: Build Public Frontend
+      # 🚀 Build the Public App Frontend for app.breederplants.nl
+      - name: Build Public App Frontend for Breederplants App
         run: |
           cd frontend-app
           npm install
           npm run build -- --mode production
           cd ..
 
-      # 🚀 Deploy Portal Frontend (breederplants.onlinewithyou.nl)
-      - name: FTP Deploy Portal to breederplants.onlinewithyou.nl
+      # 🚀 Deploy the built Portal Frontend to portal.breederplants.nl via FTP
+      - name: FTP Deploy Portal Frontend to portal.breederplants.nl
         uses: SamKirkland/FTP-Deploy-Action@v4.3.1
         with:
           server: ${{ secrets.SERVER }}
@@ -125,8 +125,8 @@ jobs:
             **/node_modules/**
             fileToExclude.txt
 
-      # 🚀 Deploy Public App to app-breederplants.onlinewithyou.nl
-      - name: FTP Deploy Public App to app-breederplants.onlinewithyou.nl
+      # 🚀 Deploy the built Public App Frontend to app.breederplants.nl via FTP
+      - name: FTP Deploy Public App Frontend to app.breederplants.nl
         uses: SamKirkland/FTP-Deploy-Action@v4.3.1
         with:
           server: ${{ secrets.SERVER_APP }}
