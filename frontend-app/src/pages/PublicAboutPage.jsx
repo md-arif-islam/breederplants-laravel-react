@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
-import FounderIMG from "../assets/images/founder.jpeg";
-import CoFounderIMG from "../assets/images/cofounder.jpeg";
+import FounderIMG from "../assets/images/Optimized-contact-person.jpg";
+import CoFounderIMG from "../assets/images/contact-marte-img.jpg";
 import AboutIMG from "../assets/images/about.png";
 import { PageTitleContext } from "../context/PageTitleContext";
 import { useNavigate } from "react-router-dom";
@@ -91,22 +91,25 @@ export default function AboutPage() {
                                 <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm h-full">
                                     <LazyImage
                                         src={FounderIMG}
-                                        alt="John Doe"
+                                        alt="Ronald Laman"
                                         containerClassName="relative"
                                         className="w-full h-full object-cover"
                                     />
                                     <div className="p-6">
                                         <h3 className="text-base md:text-xl font-bold text-gray-900">
-                                            John Doe
+                                            Ronald Laman
                                         </h3>
                                         <p className="text-sm md:text-base text-primary font-medium mb-4">
-                                            Founder
+                                            partner & royalty management
                                         </p>
-                                        <p className="text-sm md:text-base text-gray-600">
-                                            With over 15 years of experience in
-                                            horticulture, John leads our mission
-                                            to protect and promote innovative
-                                            plant varieties.
+                                        <p className="text-sm md:text-base text-gray-600 mb-3">
+                                            Ronald begon op jonge leeftijd in de
+                                            kwekerij en ontwikkelde een diepe
+                                            passie en expertise in planten en
+                                            kwekersrecht. In 2010 richtte hij
+                                            Breederplants op, dat inmiddels
+                                            wereldwijd bekend staat om royalty
+                                            management en sterke klantrelaties.
                                         </p>
                                     </div>
                                 </div>
@@ -115,22 +118,27 @@ export default function AboutPage() {
                                 <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm h-full">
                                     <LazyImage
                                         src={CoFounderIMG}
-                                        alt="Jane Smith"
+                                        alt="Myrte"
                                         containerClassName="relative"
                                         className="w-full h-full object-cover"
                                     />
                                     <div className="p-6">
                                         <h3 className="text-base md:text-xl font-bold text-gray-900">
-                                            Jane Smith
+                                            Myrte
                                         </h3>
                                         <p className="text-sm md:text-base text-primary font-medium mb-4">
-                                            Co-Founder
+                                            marketing, communicatie en
+                                            administratie
                                         </p>
-                                        <p className="text-sm md:text-base text-gray-600">
-                                            Jane brings expertise in plant
-                                            genetics and international plant
-                                            variety rights, ensuring our clients
-                                            receive the best guidance.
+                                        <p className="text-sm md:text-base text-gray-600 mb-3">
+                                            Myrte beheert marketing,
+                                            communicatie en administratie, met
+                                            een bachelor in
+                                            marketingcommunicatie en brede
+                                            ervaring. Haar enthousiasme,
+                                            werklust en sociale inzicht zorgen
+                                            ervoor dat ze snel nieuwe
+                                            vaardigheden oppakt.
                                         </p>
                                     </div>
                                 </div>
@@ -227,7 +235,7 @@ export default function AboutPage() {
                                     <h3 className="text-base md:text-xl font-bold text-gray-900 mb-2">
                                         Commercial Market Assessment
                                     </h3>
-                                    <p className="text-sm md:text-base text-gray-600">
+                                    <p className="text-sm md:text-base text-gray-600 mb-3">
                                         We evaluate the market potential of new
                                         plant varieties, helping breeders make
                                         informed decisions about
@@ -254,7 +262,7 @@ export default function AboutPage() {
                                     <h3 className="text-base md:text-xl font-bold text-gray-900 mb-2">
                                         Plant Variety Rights Applications
                                     </h3>
-                                    <p className="text-sm md:text-base text-gray-600">
+                                    <p className="text-sm md:text-base text-gray-600 mb-3">
                                         We manage the entire application process
                                         for Community Plant Variety Rights,
                                         ensuring proper legal protection.
@@ -281,7 +289,7 @@ export default function AboutPage() {
                                     <h3 className="text-base md:text-xl font-bold text-gray-900 mb-2">
                                         Test Agreements and Propagation
                                     </h3>
-                                    <p className="text-sm md:text-base text-gray-600">
+                                    <p className="text-sm md:text-base text-gray-600 mb-3">
                                         We oversee test agreements and
                                         propagation contracts, ensuring
                                         compliance with regulations and
@@ -309,7 +317,7 @@ export default function AboutPage() {
                                     <h3 className="text-base md:text-xl font-bold text-gray-900 mb-2">
                                         Prevention of Illegal Propagation
                                     </h3>
-                                    <p className="text-sm md:text-base text-gray-600">
+                                    <p className="text-sm md:text-base text-gray-600 mb-3">
                                         We implement strategies to prevent
                                         unauthorized propagation, protecting the
                                         intellectual property of plant breeders.
