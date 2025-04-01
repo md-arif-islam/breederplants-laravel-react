@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Eye, Pencil, Trash2, Download, Leaf } from "lucide-react";
 import { useVarietySampleStore } from "../../store/useVarietySampleStore";
+import { formatDate } from "../../utils/formatDate"; // Import formatDate
 
 export function VarietySampleCard({ sample, varietyReportId, onDelete }) {
     const [imgLoaded, setImgLoaded] = useState(false);
@@ -36,6 +37,15 @@ export function VarietySampleCard({ sample, varietyReportId, onDelete }) {
 
     const cancelDelete = () => {
         setShowPopup(false);
+    };
+
+    const getFormattedDate = (dateString) => {
+        try {
+            return formatDate(dateString);
+        } catch (error) {
+            console.error("Error formatting date:", error);
+            return "Invalid Date";
+        }
     };
 
     return (
@@ -86,7 +96,7 @@ export function VarietySampleCard({ sample, varietyReportId, onDelete }) {
                 <div className="grid grid-cols-2">
                     <span className="text-gray-600">Sample Date</span>
                     <span className="justify-self-end uppercase">
-                        {sample.sample_date}
+                        {getFormattedDate(sample.sample_date)}
                     </span>
                 </div>
                 <div className="grid grid-cols-2">
