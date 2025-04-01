@@ -164,19 +164,19 @@ export default function AdminProductionReportsPage() {
                                     <th className="px-4 py-5 border-b text-left text-white font-semibold">
                                         Grower Name
                                     </th>
-                                    <th className="px-4 py-2 border-b text-left text-white font-semibold">
+                                    <th className="px-4 py-4 border-b text-left text-white font-semibold">
                                         Quarter
                                     </th>
-                                    <th className="px-4 py-2 border-b text-left text-white font-semibold">
+                                    <th className="px-4 py-4 border-b text-left text-white font-semibold">
                                         About Quarter(s)
                                     </th>
-                                    <th className="px-4 py-2 border-b text-left text-white font-semibold">
+                                    <th className="px-4 py-4 border-b text-left text-white font-semibold">
                                         Date Opened
                                     </th>
-                                    <th className="px-4 py-2 border-b text-left text-white font-semibold">
+                                    <th className="px-4 py-4 border-b text-left text-white font-semibold">
                                         Date Submitted
                                     </th>
-                                    <th className="px-4 py-2 border-b text-left text-white font-semibold">
+                                    <th className="px-4 py-4 border-b text-left text-white font-semibold">
                                         Status
                                     </th>
                                 </tr>
@@ -233,17 +233,17 @@ export default function AdminProductionReportsPage() {
                                                             }
                                                         }}
                                                     >
-                                                        <td className="px-4 py-2 border-b text-left">
+                                                        <td className="px-4 py-4 border-b text-left">
                                                             {
                                                                 report.grower
                                                                     .company_name
                                                             }
                                                         </td>
-                                                        <td className="px-4 py-2 border-b text-left">
+                                                        <td className="px-4 py-4 border-b text-left">
                                                             {report.quarter.toUpperCase()}{" "}
                                                             - {report.year}
                                                         </td>
-                                                        <td className="px-4 py-2 border-b text-left">
+                                                        <td className="px-4 py-4 border-b text-left">
                                                             {report.quarters_array
                                                                 ? JSON.parse(
                                                                       report.quarters_array
@@ -260,19 +260,19 @@ export default function AdminProductionReportsPage() {
                                                                       )
                                                                 : "N/A"}
                                                         </td>
-                                                        <td className="px-4 py-2 border-b text-left">
+                                                        <td className="px-4 py-4 border-b text-left">
                                                             {dateOpen
                                                                 ? formatDateWrapper(
                                                                       dateOpen
                                                                   )
                                                                 : "N/A"}
                                                         </td>
-                                                        <td className="px-4 py-2 border-b text-left">
+                                                        <td className="px-4 py-4 border-b text-left">
                                                             {formatDateWrapper(
                                                                 report.submission_date
                                                             ) || "N/A"}
                                                         </td>
-                                                        <td className="px-4 py-2 border-b text-left">
+                                                        <td className="px-4 py-4 border-b text-left">
                                                             {report.submission_date ? (
                                                                 <span className="bg-green-500 text-white px-2 py-1 rounded-full text-sm">
                                                                     Submitted
