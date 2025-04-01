@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useVarietySampleStore } from "../store/useVarietySampleStore";
 import { PageTitleContext } from "../context/PageTitleContext";
 import { Gallery, Item } from "react-photoswipe-gallery";
+import { formatDate } from "../utils/formatDate.js";
 
 export default function VarietySampleShow() {
     const [currImg, setCurrImg] = useState(0);
@@ -38,16 +39,13 @@ export default function VarietySampleShow() {
         document.title = "Variety Sample Details - Breederplants";
     }, []);
 
-    const placeholder =
-        "https://portal.breederplants.nl/assets/backend/imgs/products/blank_product.gif";
-
     const images = sampleImages.length
         ? sampleImages.map((img) =>
               img.startsWith("data:")
                   ? img
                   : `${import.meta.env.VITE_API_URL}/${img}`
           )
-        : [placeholder];
+        : [];
 
     useEffect(() => {
         sampleImages.forEach((imageUrl, index) => {
@@ -66,12 +64,17 @@ export default function VarietySampleShow() {
         });
     }, [sampleImages]);
 
-    if (isLoading || !varietySample) {
-        return <div></div>;
-    }
-
     const handleImgLoad = (index) => {
         setLoadedImages((prev) => ({ ...prev, [index]: true }));
+    };
+
+    const getFormattedDate = (dateString) => {
+        try {
+            return formatDate(dateString);
+        } catch (error) {
+            console.error("Error formatting date:", error);
+            return "Invalid Date";
+        }
     };
 
     return (
@@ -180,7 +183,10 @@ export default function VarietySampleShow() {
                             {/* Details */}
                             <div className="relative col-span-3">
                                 <h2 className="text-xl font-bold mb-4 mt-6 lg:mt-0">
-                                    Sample Date : {varietySample?.sample_date}
+                                    Sample Date :{" "}
+                                    {getFormattedDate(
+                                        varietySample?.sample_date
+                                    )}
                                 </h2>
                                 <div className="grid grid-cols-2 gap-y-1 p-2">
                                     <span className="text-gray-600 font-medium text-sm md:text-sm">

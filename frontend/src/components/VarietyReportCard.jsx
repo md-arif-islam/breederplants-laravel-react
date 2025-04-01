@@ -2,6 +2,7 @@ import { ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Leaf } from "lucide-react";
+import { formatDate } from "../utils/formatDate.js";
 
 export default function VarietyReportCard({ report }) {
     const [imgLoaded, setImgLoaded] = useState(false); // state to track image load
@@ -10,6 +11,15 @@ export default function VarietyReportCard({ report }) {
         report.thumbnail && !report.thumbnail.startsWith("data:")
             ? `${import.meta.env.VITE_API_URL}/${report.thumbnail}`
             : report.thumbnail || "/placeholder.svg";
+
+    const getFormattedDate = (dateString) => {
+        try {
+            return formatDate(dateString);
+        } catch (error) {
+            console.error("Error formatting date:", error);
+            return "Invalid Date";
+        }
+    };
 
     return (
         <Link
@@ -38,18 +48,20 @@ export default function VarietyReportCard({ report }) {
                 </h3>
                 {report.start_date && (
                     <p className="text-gray-600 text-xs md:text-sm">
-                        Start Date: {report.start_date}
+                        Start Date: {getFormattedDate(report.start_date)}
                     </p>
                 )}
                 {report.end_date && (
                     <p className="text-gray-600 text-xs md:text-sm">
-                        End Date: {report.end_date}
+                        End Date: {getFormattedDate(report.end_date)}
                     </p>
                 )}
                 {report.samples_schedule && (
                     <p className="text-gray-600 text-xs md:text-sm">
                         Next Sample Date:{" "}
-                        {JSON.parse(report.samples_schedule)[0]}
+                        {getFormattedDate(
+                            JSON.parse(report.samples_schedule)[0]
+                        )}
                     </p>
                 )}
             </div>

@@ -2,6 +2,7 @@ import { ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Leaf } from "lucide-react";
+import { formatDate } from "../utils/formatDate.js";
 
 export default function VarietySampleCard({ sample, varietyReportId }) {
     const [imgLoaded, setImgLoaded] = useState(false); // state to track image load
@@ -12,6 +13,15 @@ export default function VarietySampleCard({ sample, varietyReportId }) {
         rawImage && !rawImage.startsWith("data:")
             ? `${import.meta.env.VITE_API_URL}/${rawImage}`
             : rawImage;
+
+    const getFormattedDate = (dateString) => {
+        try {
+            return formatDate(dateString);
+        } catch (error) {
+            console.error("Error formatting date:", error);
+            return "Invalid Date";
+        }
+    };
 
     return (
         <Link
@@ -36,7 +46,7 @@ export default function VarietySampleCard({ sample, varietyReportId }) {
             </div>
             <div className="flex-1 min-w-0">
                 <h3 className="text-md md:text-xl font-medium text-gray-900 mb-1">
-                    Sample Date: {sample.sample_date}
+                    Sample Date: {getFormattedDate(sample.sample_date)}
                 </h3>
                 <p className="text-gray-600 text-xs md:text-sm">
                     <strong>Leaf Color:</strong>{" "}

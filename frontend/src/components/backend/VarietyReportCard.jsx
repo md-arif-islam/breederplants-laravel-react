@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Eye, Pencil, Trash2, Download, Leaf, Loader2 } from "lucide-react";
 import { useVarietyReportStore } from "../../store/useVarietyReportStore";
-// import hydrangeaImg from "../../assets/images/hydrangea-paniculata.jpg"; // if needed
+import { formatDate } from "../../utils/formatDate.js";
 
 export function VarietyReportCard({ report, onDelete }) {
     const [showPopup, setShowPopup] = useState(false);
-    const [imgLoaded, setImgLoaded] = useState(false); // state to track image load
+    const [imgLoaded, setImgLoaded] = useState(false);
     const { deleteVarietyReport, exportVarietyReport } =
         useVarietyReportStore();
     const [exportLoading, setExportLoading] = useState(false);
@@ -31,10 +31,18 @@ export function VarietyReportCard({ report, onDelete }) {
         ? `${import.meta.env.VITE_API_URL}/${report.thumbnail}`
         : null;
 
+    const getFormattedDate = (dateString) => {
+        try {
+            return formatDate(dateString);
+        } catch (error) {
+            console.error("Error formatting date:", error);
+            return "Invalid Date";
+        }
+    };
+
     return (
         <div className="bg-white rounded-xl shadow overflow-hidden group relative px-3">
             <div className="relative h-96 w-full">
-                {/* Placeholder Skeleton */}
                 {!imgLoaded && (
                     <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
                         <Leaf className="w-8 h-8 text-gray-500 animate-pulse" />
@@ -49,7 +57,6 @@ export function VarietyReportCard({ report, onDelete }) {
                         imgLoaded ? "opacity-100" : "opacity-0"
                     }`}
                 />
-                {/* Hover Action Icons */}
                 <div className="absolute left-1/2 -translate-x-1/2 bottom-5 flex gap-2 p-2 border border-white rounded-lg backdrop-blur-md bg-white/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <a
                         href={`/admin/variety-reports/${report.id}`}
@@ -107,13 +114,13 @@ export function VarietyReportCard({ report, onDelete }) {
                 <div className="grid grid-cols-2">
                     <span className="text-gray-600">Date of propagation</span>
                     <span className="justify-self-end">
-                        {report.date_of_propagation}
+                        {getFormattedDate(report.date_of_propagation)}
                     </span>
                 </div>
                 <div className="grid grid-cols-2">
                     <span className="text-gray-600">Date of potting</span>
                     <span className="justify-self-end">
-                        {report.date_of_potting}
+                        {getFormattedDate(report.date_of_potting)}
                     </span>
                 </div>
                 <div className="grid grid-cols-2">
@@ -129,18 +136,22 @@ export function VarietyReportCard({ report, onDelete }) {
                 <div className="grid grid-cols-2">
                     <span className="text-gray-600">Next Sample Date</span>
                     <span className="justify-self-end">
-                        {JSON.parse(report.samples_schedule)[0]}
+                        {getFormattedDate(
+                            JSON.parse(report.samples_schedule)[0]
+                        )}
                     </span>
                 </div>
                 <div className="grid grid-cols-2">
                     <span className="text-gray-600">Start Date</span>
                     <span className="justify-self-end">
-                        {report.start_date}
+                        {getFormattedDate(report.start_date)}
                     </span>
                 </div>
                 <div className="grid grid-cols-2">
                     <span className="text-gray-600">End Date</span>
-                    <span className="justify-self-end">{report.end_date}</span>
+                    <span className="justify-self-end">
+                        {getFormattedDate(report.end_date)}
+                    </span>
                 </div>
             </div>
 

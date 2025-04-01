@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import { useVarietyReportStore } from "../store/useVarietyReportStore";
 import { PageTitleContext } from "../context/PageTitleContext";
 import { Gallery, Item } from "react-photoswipe-gallery";
+import { formatDate } from "../utils/formatDate.js";
 
 // Skeleton component for variety report card
 function VarietyReportCardSkeleton() {
@@ -37,6 +38,15 @@ export default function VarietyReportShow() {
     const { id } = useParams();
     const navigate = useNavigate();
     const { setTitle } = useContext(PageTitleContext);
+
+    const getFormattedDate = (dateString) => {
+        try {
+            return formatDate(dateString);
+        } catch (error) {
+            console.error("Error formatting date:", error);
+            return "Invalid Date";
+        }
+    };
 
     useEffect(() => {
         getUserVarietyReportById(id);
@@ -148,14 +158,18 @@ export default function VarietyReportShow() {
                                         Date of Propagation
                                     </span>
                                     <span className="text-gray-900 font-semibold text-right text-sm md:text-sm">
-                                        {report?.date_of_propagation}
+                                        {getFormattedDate(
+                                            report?.date_of_propagation
+                                        )}
                                     </span>
 
                                     <span className="text-gray-600 font-medium text-sm md:text-sm">
                                         Date of Potting
                                     </span>
                                     <span className="text-gray-900 font-semibold text-right text-sm md:text-sm">
-                                        {report?.date_of_potting}
+                                        {getFormattedDate(
+                                            report?.date_of_potting
+                                        )}
                                     </span>
 
                                     <span className="text-gray-600 font-medium text-sm md:text-sm">
@@ -177,23 +191,26 @@ export default function VarietyReportShow() {
                                     </span>
                                     <span className="text-gray-900 font-semibold text-right text-sm md:text-sm">
                                         {report &&
-                                            JSON.parse(
-                                                report.samples_schedule
-                                            )[0]}
+                                            getFormattedDate(
+                                                JSON.parse(
+                                                    report.samples_schedule
+                                                )[0]
+                                            )}
                                     </span>
 
                                     <span className="text-gray-600 font-medium text-sm md:text-sm">
                                         Start Date
                                     </span>
                                     <span className="text-gray-900 font-semibold text-right text-sm md:text-sm">
-                                        {report?.start_date}
+                                        {getFormattedDate(report?.start_date)}
                                     </span>
 
                                     <span className="text-gray-600 font-medium text-sm md:text-sm">
                                         End Date
                                     </span>
                                     <span className="text-gray-900 font-semibold text-right text-sm md:text-sm">
-                                        {report?.end_date || "N/A"}
+                                        {getFormattedDate(report?.end_date) ||
+                                            "N/A"}
                                     </span>
 
                                     <span className="text-gray-600 font-medium text-sm md:text-sm">
