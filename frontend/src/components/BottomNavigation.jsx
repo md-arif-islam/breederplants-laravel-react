@@ -1,22 +1,22 @@
+import { Home, Info, Newspaper, User } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import { Home, Newspaper, Info, User } from "lucide-react";
 
 export default function BottomNavigation() {
     const navItems = [
         { name: "Home", to: "/", icon: Home },
         {
             name: "News",
-            to: "https://app-breederplants.onlinewithyou.nl/news",
+            to: "https://app.breederplants.nl/news",
             icon: Newspaper,
         },
         {
             name: "About",
-            to: "https://app-breederplants.onlinewithyou.nl/about",
+            to: "https://app.breederplants.nl/about",
             icon: Info,
         },
         {
             name: "Public Area",
-            to: "https://app-breederplants.onlinewithyou.nl",
+            to: "https://app.breederplants.nl",
             icon: User,
         },
     ];
