@@ -40,19 +40,22 @@ class BreedersImport implements ToCollection {
             $phone = $row[8] ?? '';
             $website = $row[9] ?? '';
 
-            // Basic validation
             if ( empty( $username ) || empty( $email ) ) {
                 $this->addFailure( $rowNumber, 'Missing username or email' );
                 continue;
             }
 
-            if ( User::where( 'email', $email )->exists() ) {
-                $this->addFailure( $rowNumber, 'Duplicate email: ' . $email );
+            // Check soft-deleted user
+            $user = User::withTrashed()->where( 'email', $email )->first();
+            if ( $user && !$user->trashed() ) {
+                $this->addFailure( $rowNumber, "Duplicate email: $email" );
                 continue;
             }
 
-            if ( Breeder::where( 'username', $username )->exists() ) {
-                $this->addFailure( $rowNumber, 'Duplicate username: ' . $username );
+            // Check soft-deleted breeder
+            $breeder = Breeder::withTrashed()->where( 'username', $username )->first();
+            if ( $breeder && !$breeder->trashed() ) {
+                $this->addFailure( $rowNumber, "Duplicate username: $username" );
                 continue;
             }
 
@@ -61,26 +64,52 @@ class BreedersImport implements ToCollection {
 
                 $password = 'Breederplants@Strong!';
 
-                $user = User::create( [
-                    'email' => $email,
-                    'password' => Hash::make( $password ),
-                    'role' => 'breeder',
-                    'status' => 'active',
-                ] );
+                if ( $user && $user->trashed() ) {
+                    $user->restore();
+                    $user->update( [
+                        'password' => Hash::make( $password ),
+                        'role' => 'breeder',
+                        'status' => 'active',
+                    ] );
+                } elseif ( !$user ) {
+                    $user = User::create( [
+                        'email' => $email,
+                        'password' => Hash::make( $password ),
+                        'role' => 'breeder',
+                        'status' => 'active',
+                    ] );
+                }
 
-                Breeder::create( [
-                    'user_id' => $user->id,
-                    'username' => $username,
-                    'contact_person' => $contactPerson,
-                    'company_name' => $companyName,
-                    'company_email' => $email,
-                    'street' => $street,
-                    'city' => $city,
-                    'postal_code' => $postalCode,
-                    'country' => $country,
-                    'phone' => $phone,
-                    'website' => $website,
-                ] );
+                if ( $breeder && $breeder->trashed() ) {
+                    $breeder->restore();
+                    $breeder->update( [
+                        'user_id' => $user->id,
+                        'username' => $username,
+                        'contact_person' => $contactPerson,
+                        'company_name' => $companyName,
+                        'company_email' => $email,
+                        'street' => $street,
+                        'city' => $city,
+                        'postal_code' => $postalCode,
+                        'country' => $country,
+                        'phone' => $phone,
+                        'website' => $website,
+                    ] );
+                } elseif ( !$breeder ) {
+                    Breeder::create( [
+                        'user_id' => $user->id,
+                        'username' => $username,
+                        'contact_person' => $contactPerson,
+                        'company_name' => $companyName,
+                        'company_email' => $email,
+                        'street' => $street,
+                        'city' => $city,
+                        'postal_code' => $postalCode,
+                        'country' => $country,
+                        'phone' => $phone,
+                        'website' => $website,
+                    ] );
+                }
 
                 DB::commit();
                 $this->successCount++;
