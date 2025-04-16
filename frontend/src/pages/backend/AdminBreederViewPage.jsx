@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { PageTitleContext } from "../../context/PageTitleContext";
 import { useStore } from "../../store/useStore";
 
 export default function AdminBreederViewPage() {
     const { currentBreeder, isLoading, getBreeder, deleteBreeder } = useStore();
     const [showPopup, setShowPopup] = useState(false);
+    const { setTitle } = useContext(PageTitleContext);
 
     // Fetch id from URL
     const { id } = useParams();
@@ -20,7 +22,13 @@ export default function AdminBreederViewPage() {
         document.title = currentBreeder?.company_name
             ? `Breeder - ${currentBreeder.company_name} - Breederplants`
             : "Breeder - Breederplants";
-    }, [currentBreeder?.company_name]);
+
+        setTitle(
+            currentBreeder?.company_name
+                ? "Breeder - " + currentBreeder?.company_name
+                : "Breeder Details"
+        );
+    }, [currentBreeder?.company_name, setTitle]);
 
     const handleDelete = async (e) => {
         e.preventDefault();

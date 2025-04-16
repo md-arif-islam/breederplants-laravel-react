@@ -1,6 +1,7 @@
 import { Loader2 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { PageTitleContext } from "../../context/PageTitleContext";
 import { useStore } from "../../store/useStore";
 
 export default function AdminBreederEditPage() {
@@ -14,6 +15,7 @@ export default function AdminBreederEditPage() {
     const { id } = useParams();
     const [isUpdating, setIsUpdating] = useState(false);
     const [isPasswordUpdating, setIsPasswordUpdating] = useState(false);
+    const { setTitle } = useContext(PageTitleContext);
 
     const [formData, setFormData] = useState({
         username: "",
@@ -38,8 +40,16 @@ export default function AdminBreederEditPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        document.title = `Edit Breeder- Breederplants`;
-    }, []);
+        document.title = currentBreeder?.company_name
+            ? `Edit - ${currentBreeder.company_name} - Breederplants`
+            : "Breeder Edit - Breederplants";
+
+        setTitle(
+            currentBreeder?.company_name
+                ? `Edit - ${currentBreeder.company_name}`
+                : "Breeder Edit"
+        );
+    }, [currentBreeder?.company_name, setTitle]);
 
     useEffect(() => {
         getBreeder(id);

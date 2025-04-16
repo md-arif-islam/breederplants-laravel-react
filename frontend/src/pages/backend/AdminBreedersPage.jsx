@@ -1,7 +1,8 @@
 import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ImportBreederModal } from "../../components/backend/ImportBreederModal";
+import { PageTitleContext } from "../../context/PageTitleContext";
 import { useStore } from "../../store/useStore";
 
 export default function AdminBreederPage() {
@@ -10,6 +11,7 @@ export default function AdminBreederPage() {
     const [isImportModalOpen, setIsImportModalOpen] = useState(false);
     const [importResult, setImportResult] = useState(null);
     const [isExporting, setIsExporting] = useState(false);
+    const { setTitle } = useContext(PageTitleContext);
 
     const {
         getAllBreeders,
@@ -25,7 +27,8 @@ export default function AdminBreederPage() {
 
     useEffect(() => {
         document.title = "Breeders - Breederplants";
-    }, []);
+        setTitle("Breeders");
+    }, [setTitle]);
 
     // Fetch all breeders on mount (or whenever currentPage changes).
     useEffect(() => {
