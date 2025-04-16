@@ -38,8 +38,6 @@ class BreederController extends Controller {
                 'required', 'string', 'email', 'max:255',
                 Rule::unique( 'users', 'email' )->whereNull( 'deleted_at' ),
             ],
-            'password' => 'required|string|min:4|confirmed',
-            'is_active' => 'required|boolean',
             'company_name' => 'required|string|max:255',
             'contact_person' => 'required|string|max:255',
             'street' => 'required|string|max:255',
@@ -49,6 +47,7 @@ class BreederController extends Controller {
             'phone' => 'nullable|string|max:255',
             'website' => 'nullable|string|max:255',
         ] );
+        $password = 'Breederplants@Strong!';
 
         DB::beginTransaction();
 
@@ -61,16 +60,16 @@ class BreederController extends Controller {
             if ( $user && $user->trashed() ) {
                 $user->restore();
                 $user->update( [
-                    'password' => $request->password,
+                    'password' => $password,
                     'role' => 'breeder',
-                    'is_active' => $request->is_active,
+
                 ] );
             } elseif ( !$user ) {
                 $user = User::create( [
                     'email' => $email,
-                    'password' => $request->password,
+                    'password' => $password,
                     'role' => 'breeder',
-                    'is_active' => $request->is_active,
+
                 ] );
             }
 

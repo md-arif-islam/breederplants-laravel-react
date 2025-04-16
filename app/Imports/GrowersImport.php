@@ -98,7 +98,7 @@ class GrowersImport implements ToCollection {
                         'phone' => $phone,
                         'website' => $website,
                         'agreement_number' => $agreementNumber,
-                        'sales_reporting_quarter' => json_encode( $salesReportingQuarter ),
+                        'sales_reporting_quarter' => json_encode( array_map( 'strtolower', $salesReportingQuarter ) ),
                         'production_reporting_quarter' => null,
                         'production_reporting_values' => null,
                     ] );
@@ -116,7 +116,7 @@ class GrowersImport implements ToCollection {
                         'phone' => $phone,
                         'website' => $website,
                         'agreement_number' => $agreementNumber,
-                        'sales_reporting_quarter' => json_encode( $salesReportingQuarter ),
+                        'sales_reporting_quarter' => json_encode( array_map( 'strtolower', $salesReportingQuarter ) ),
                         'production_reporting_quarter' => null,
                         'production_reporting_values' => null,
                     ] );

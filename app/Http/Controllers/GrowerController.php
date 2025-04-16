@@ -237,6 +237,16 @@ class GrowerController extends Controller {
             Grower::with( 'user' )
                 ->chunk( 100, function ( $growers ) use ( $handle ) {
                     foreach ( $growers as $grower ) {
+                        // Format the reporting fields from JSON to dot-separated strings
+                        $salesReporting = json_decode( $grower->sales_reporting_quarter );
+                        $salesReportingString = is_array( $salesReporting ) ? implode( '.', $salesReporting ) : '';
+
+                        $productionReporting = json_decode( $grower->production_reporting_quarter );
+                        $productionReportingString = is_array( $productionReporting ) ? implode( '.', $productionReporting ) : '';
+
+                        $productionValues = json_decode( $grower->production_reporting_values );
+                        $productionValuesString = is_array( $productionValues ) ? implode( '.', $productionValues ) : '';
+
                         fputcsv( $handle, [
                             $grower->username,
                             $grower->contact_person,
@@ -249,9 +259,9 @@ class GrowerController extends Controller {
                             $grower->phone,
                             $grower->website,
                             $grower->agreement_number,
-                            $grower->sales_reporting_quarter,
-                            $grower->production_reporting_quarter,
-                            $grower->production_reporting_values,
+                            $salesReportingString,
+                            $productionReportingString,
+                            $productionValuesString,
                         ] );
                     }
                 } );

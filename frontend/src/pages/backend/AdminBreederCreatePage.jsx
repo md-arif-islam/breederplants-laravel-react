@@ -293,66 +293,7 @@ export default function AdminBreederCreatePage() {
                                 />
                             </div>
                         </div>
-                        <div className="grid gap-6 md:grid-cols-2">
-                            <div>
-                                <label className="block text-sm font-medium mb-1">
-                                    Password{" "}
-                                    <span className="text-red-500">*</span>
-                                </label>
-                                <div className="flex gap-2">
-                                    <input
-                                        type={
-                                            showPassword ? "text" : "password"
-                                        }
-                                        value={formData.password}
-                                        required
-                                        onChange={(e) =>
-                                            setFormData({
-                                                ...formData,
-                                                password: e.target.value,
-                                            })
-                                        }
-                                        className="flex-1 px-3 py-2 bg-white border border-gray-300 rounded-md"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={generatePassword}
-                                        className="px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-                                    >
-                                        Generate
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            setShowPassword(!showPassword)
-                                        }
-                                        className="px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-                                    >
-                                        Show
-                                    </button>
-                                </div>
-                            </div>
 
-                            <div>
-                                <label className="block text-sm font-medium mb-1">
-                                    Confirm Password{" "}
-                                    <span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type={showPassword ? "text" : "password"}
-                                    required
-                                    value={formData.password_confirmation}
-                                    onChange={(e) =>
-                                        setFormData({
-                                            ...formData,
-                                            password_confirmation:
-                                                e.target.value,
-                                        })
-                                    }
-                                    className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md"
-                                />
-                            </div>
-                        </div>
                         <button
                             type="submit"
                             disabled={isUpdating}

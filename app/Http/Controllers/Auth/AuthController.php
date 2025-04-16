@@ -45,6 +45,18 @@ class AuthController extends Controller {
 
         $user = User::where( 'email', $request->email )->with( 'grower', 'breeder' )->first();
 
+        if ( !$user ) {
+            return response()->json( [
+                'message' => 'User not found',
+            ], 404 );
+        }
+
+        if ( $user->role == 'breeder' ) {
+            return response()->json( [
+                'message' => 'Breeder can\'t login',
+            ], 403 );
+        }
+
         if ( !$user || !\Hash::check( $request->password, $user->password ) ) {
             return response()->json( [
                 'message' => 'Invalid credentials',
