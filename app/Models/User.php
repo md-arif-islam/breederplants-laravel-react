@@ -25,6 +25,7 @@ class User extends Authenticatable {
         'role',
         'is_active',
         'fcm_token',
+        'is_deleted',
     ];
 
     /**
@@ -49,6 +50,7 @@ class User extends Authenticatable {
             'password' => 'hashed',
             'is_active' => 'boolean',
             'fcm_token' => 'string',
+            'is_deleted' => 'boolean',
         ];
 
     }
