@@ -1,9 +1,9 @@
+import { ChevronLeft, Menu, X } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { PageTitleContext } from "../context/PageTitleContext";
 import { useStore } from "../store/useStore";
 import Notifications from "./Notifications";
-import { ChevronLeft, Menu, X } from "lucide-react";
-import { PageTitleContext } from "../context/PageTitleContext";
 
 // Helper to get initials from a name
 function getInitials(name) {

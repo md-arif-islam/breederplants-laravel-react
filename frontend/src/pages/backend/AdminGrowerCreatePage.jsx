@@ -1,12 +1,14 @@
 import { Loader2 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { PageTitleContext } from "../../context/PageTitleContext";
 import { useStore } from "../../store/useStore";
 
 export default function AdminGrowerCreatePage() {
     const { isLoading, createGrower } = useStore();
     const { id } = useParams();
     const [isUpdating, setIsUpdating] = useState(false);
+    const { setTitle } = useContext(PageTitleContext);
 
     const [formData, setFormData] = useState({
         username: "",
@@ -34,7 +36,8 @@ export default function AdminGrowerCreatePage() {
 
     useEffect(() => {
         document.title = `Create Grower - Breederplants`;
-    }, []);
+        setTitle("Create Grower");
+    }, [setTitle]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

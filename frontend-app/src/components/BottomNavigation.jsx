@@ -14,7 +14,7 @@ export default function BottomNavigation() {
     ];
 
     return (
-        <nav className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 shadow-md z-40">
+        <nav className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 shadow-md z-40 block lg:hidden">
             <ul className="flex justify-around p-2">
                 {navItems.map((item) => (
                     <li key={item.name}>

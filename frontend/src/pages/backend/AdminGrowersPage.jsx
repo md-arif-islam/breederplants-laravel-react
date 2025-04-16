@@ -1,7 +1,8 @@
 import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ImportGrowerModal } from "../../components/backend/ImportGrowerModal";
+import { PageTitleContext } from "../../context/PageTitleContext";
 import { useStore } from "../../store/useStore";
 
 export default function AdminGrowerPage() {
@@ -9,6 +10,7 @@ export default function AdminGrowerPage() {
     const [isImportModalOpen, setIsImportModalOpen] = useState(false);
     const [importResult, setImportResult] = useState(null);
     const [isExporting, setIsExporting] = useState(false);
+    const { setTitle } = useContext(PageTitleContext);
 
     const {
         getAllGrowers,
@@ -24,7 +26,8 @@ export default function AdminGrowerPage() {
 
     useEffect(() => {
         document.title = "Growers - Breederplants";
-    }, []);
+        setTitle("Growers");
+    }, [setTitle]);
 
     useEffect(() => {
         getAllGrowers(currentPage, searchQuery);
@@ -142,13 +145,14 @@ export default function AdminGrowerPage() {
                                         Username
                                     </th>
                                     <th className="px-4 py-2 border-b text-left text-white font-semibold">
-                                        Contact Person
+                                        Company Name
                                     </th>
+
                                     <th className="px-4 py-2 border-b text-left text-white font-semibold">
                                         Company Email
                                     </th>
                                     <th className="px-4 py-2 border-b text-left text-white font-semibold">
-                                        Company
+                                        Contact Person
                                     </th>
                                     <th className="px-4 py-2 border-b text-left text-white font-semibold">
                                         Phone
@@ -195,13 +199,13 @@ export default function AdminGrowerPage() {
                                                 {grower.username}
                                             </td>
                                             <td className="px-4 py-2 text-[#353535] border-b">
-                                                {grower.contact_person}
+                                                {grower.company_name}
                                             </td>
                                             <td className="px-4 py-2 text-[#353535] border-b">
                                                 {grower.company_email}
                                             </td>
                                             <td className="px-4 py-2 text-[#353535] border-b">
-                                                {grower.company_name}
+                                                {grower.contact_person}
                                             </td>
                                             <td className="px-4 py-2 text-[#353535] border-b">
                                                 {grower.phone}

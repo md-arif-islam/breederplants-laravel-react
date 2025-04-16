@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { useVarietyReportStore } from "../../store/useVarietyReportStore";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ImportReportModal } from "../../components/backend/ImportReportModal";
 import { VarietyReportCard } from "../../components/backend/VarietyReportCard";
+import { PageTitleContext } from "../../context/PageTitleContext";
+import { useVarietyReportStore } from "../../store/useVarietyReportStore";
 
 export default function VarietyReportPage() {
     const [isImportModalOpen, setIsImportModalOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [sort, setSort] = useState("");
     const [growerId, setGrowerId] = useState("");
+    const { setTitle } = useContext(PageTitleContext);
 
     const {
         isLoading,
@@ -24,7 +26,8 @@ export default function VarietyReportPage() {
 
     useEffect(() => {
         document.title = "Variety Reports - Breederplants";
-    }, []);
+        setTitle("Variety Reports");
+    }, [setTitle]);
 
     useEffect(() => {
         getAllVarietyReports(currentPage, searchQuery, sort, growerId);

@@ -1,6 +1,7 @@
 import { Loader2 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { PageTitleContext } from "../../context/PageTitleContext";
 import { useStore } from "../../store/useStore";
 
 export default function AdminGrowerEditPage() {
@@ -14,12 +15,19 @@ export default function AdminGrowerEditPage() {
     const { id } = useParams();
     const [isUpdating, setIsUpdating] = useState(false);
     const [isPasswordUpdating, setIsPasswordUpdating] = useState(false);
+    const { setTitle } = useContext(PageTitleContext);
 
     useEffect(() => {
         document.title = currentGrower?.company_name
             ? `Edit - ${currentGrower.company_name} - Breederplants`
             : "Grower Edit - Breederplants";
-    }, [currentGrower?.company_name]);
+
+        setTitle(
+            currentGrower?.company_name
+                ? `Edit - ${currentGrower.company_name}`
+                : "Grower Edit"
+        );
+    }, [currentGrower?.company_name, setTitle]);
 
     const [formData, setFormData] = useState({
         username: "",

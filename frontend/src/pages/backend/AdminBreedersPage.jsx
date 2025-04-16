@@ -148,13 +148,13 @@ export default function AdminBreederPage() {
                                         Username
                                     </th>
                                     <th className="px-4 py-2 border-b text-left text-white font-semibold">
-                                        Contact Person
+                                        Company Name
                                     </th>
                                     <th className="px-4 py-2 border-b text-left text-white font-semibold">
                                         Company Email
                                     </th>
                                     <th className="px-4 py-2 border-b text-left text-white font-semibold">
-                                        Company
+                                        Contact Person
                                     </th>
                                     <th className="px-4 py-2 border-b text-left text-white font-semibold">
                                         Phone
@@ -204,13 +204,13 @@ export default function AdminBreederPage() {
                                                     {breeder.username}
                                                 </td>
                                                 <td className="px-4 py-2 text-[#353535] border-b">
-                                                    {breeder.contact_person}
+                                                    {breeder.company_name}
                                                 </td>
                                                 <td className="px-4 py-2 text-[#353535] border-b">
                                                     {breeder.company_email}
                                                 </td>
                                                 <td className="px-4 py-2 text-[#353535] border-b">
-                                                    {breeder.company_name}
+                                                    {breeder.contact_person}
                                                 </td>
                                                 <td className="px-4 py-2 text-[#353535] border-b">
                                                     {breeder.phone}

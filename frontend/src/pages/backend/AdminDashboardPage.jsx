@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
 import { File, TreePalm, Users } from "lucide-react";
+import React, { useContext, useEffect } from "react";
+import { PageTitleContext } from "../../context/PageTitleContext";
 import { useDashboardStore } from "../../store/useDashboardStore";
 
 const AdminDashboardPage = () => {
     const { isLoading, dashboardStats, getDashboardStats } =
         useDashboardStore();
+    const { setTitle } = useContext(PageTitleContext);
 
     useEffect(() => {
         getDashboardStats();
@@ -12,7 +14,8 @@ const AdminDashboardPage = () => {
 
     useEffect(() => {
         document.title = "Dashboard - Breederplants";
-    }, []);
+        setTitle("Dashboard");
+    }, [setTitle]);
 
     const stats = dashboardStats || {};
 

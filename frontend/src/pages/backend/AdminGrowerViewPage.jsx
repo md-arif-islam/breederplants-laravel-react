@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { PageTitleContext } from "../../context/PageTitleContext";
 import { useStore } from "../../store/useStore";
 
 export default function AdminGrowerViewPage() {
     const { currentGrower, isLoading, getGrower, deleteGrower } = useStore();
     const [showPopup, setShowPopup] = useState(false);
+    const { setTitle } = useContext(PageTitleContext);
 
     // Fetch id from URL
     const { id } = useParams();
@@ -20,7 +22,13 @@ export default function AdminGrowerViewPage() {
         document.title = currentGrower?.company_name
             ? `Grower - ${currentGrower.company_name} - Breederplants`
             : "Grower - Breederplants";
-    }, [currentGrower?.company_name]);
+
+        setTitle(
+            currentGrower?.company_name
+                ? "Grower - " + currentGrower?.company_name
+                : "Grower Details"
+        );
+    }, [currentGrower?.company_name, setTitle]);
 
     const handleDelete = async (e) => {
         e.preventDefault();
@@ -166,10 +174,10 @@ export default function AdminGrowerViewPage() {
             <div className="container mx-auto px-4 py-8">
                 <div className="bg-white rounded-lg shadow">
                     <div className="p-6">
-                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-                            <h2 className="text-xl font-bold text-gray-800 mb-2 sm:mb-0">
-                                Grower Details
-                            </h2>
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                            <h3 className="text-lg font-semibold mb-4 text-gray-800">
+                                Grower Information
+                            </h3>
                         </div>
 
                         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
