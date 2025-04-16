@@ -5,70 +5,106 @@ namespace App\Imports;
 use App\Models\Breeder;
 use App\Models\User;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
 class BreedersImport implements ToCollection {
     private $firstRow = true;
-    public $failedImports = []; // Array to store failed imports
+    public $failedImports = [];
+    public $successCount = 0;
 
     public function collection( Collection $rows ) {
-        foreach ( $rows as $row ) {
+        foreach ( $rows as $index => $row ) {
+            $rowNumber = $index + 1;
+
             if ( $this->firstRow ) {
-                $this->firstRow = false; // Skip the first row (header)
+                $this->firstRow = false;
                 continue;
             }
 
-            // Check if the row is blank
             if ( $row->filter()->isEmpty() ) {
-                Log::warning( 'Blank row encountered in import.' );
+                $this->addFailure( $rowNumber, 'Blank row' );
                 continue;
             }
 
-            // Check if email or username already exists
-            $existingUser = User::where( 'email', $row[3] )->first();
-            $existingBreeder = Breeder::where( 'username', $row[0] )->first();
+            $username = trim( $row[0] ?? '' );
+            $contactPerson = $row[1] ?? '';
+            $companyName = $row[2] ?? '';
+            $email = trim( $row[3] ?? '' );
+            $street = $row[4] ?? '';
+            $city = $row[5] ?? '';
+            $postalCode = $row[6] ?? '';
+            $country = $row[7] ?? '';
+            $phone = $row[8] ?? '';
+            $website = $row[9] ?? '';
 
-            if ( $existingUser || $existingBreeder ) {
-                // Store failed import due to duplicate email or username
-                $this->failedImports[] = [
-                    'username' => $row[0],
-                    'email' => $row[3],
-                ];
-                Log::warning( 'Duplicate email or username found.', [
-                    'username' => $row[0],
-                    'email' => $row[3],
-                ] );
-                continue; // Skip to next row
+            // Basic validation
+            if ( empty( $username ) || empty( $email ) ) {
+                $this->addFailure( $rowNumber, 'Missing username or email' );
+                continue;
             }
 
-            // Generate dynamic password
-            $password = Str::lower( str_replace( ' ', '', $row[6] ) );
+            if ( User::where( 'email', $email )->exists() ) {
+                $this->addFailure( $rowNumber, 'Duplicate email: ' . $email );
+                continue;
+            }
 
-            // Create the User
-            $user = User::create( [
-                'email' => $row[3],
-                'password' => Hash::make( $password ),
-                'role' => 'breeder',
-                'status' => 'active',
-            ] );
+            if ( Breeder::where( 'username', $username )->exists() ) {
+                $this->addFailure( $rowNumber, 'Duplicate username: ' . $username );
+                continue;
+            }
 
-            // Create the Breeder
-            Breeder::create( [
-                'user_id' => $user->id,
-                'username' => $row[0] ?? '',
-                'contact_person' => $row[1] ?? '',
-                'company_name' => $row[2] ?? '',
-                'company_email' => $row[3] ?? '',
-                'street' => $row[4] ?? '',
-                'city' => $row[5] ?? '',
-                'postal_code' => $row[6] ?? '',
-                'country' => $row[7] ?? '',
-                'phone' => $row[8] ?? '',
-                'website' => $row[9] ?? '',
-            ] );
+            try {
+                DB::beginTransaction();
+
+                $password = 'Breederplants@Strong!';
+
+                $user = User::create( [
+                    'email' => $email,
+                    'password' => Hash::make( $password ),
+                    'role' => 'breeder',
+                    'status' => 'active',
+                ] );
+
+                Breeder::create( [
+                    'user_id' => $user->id,
+                    'username' => $username,
+                    'contact_person' => $contactPerson,
+                    'company_name' => $companyName,
+                    'company_email' => $email,
+                    'street' => $street,
+                    'city' => $city,
+                    'postal_code' => $postalCode,
+                    'country' => $country,
+                    'phone' => $phone,
+                    'website' => $website,
+                ] );
+
+                DB::commit();
+                $this->successCount++;
+            } catch ( \Exception $e ) {
+                DB::rollBack();
+                $this->addFailure( $rowNumber, 'Exception: ' . $e->getMessage() );
+            }
         }
+
+        Log::info( 'Breeder import finished', [
+            'success_count' => $this->successCount,
+            'failed_count' => count( $this->failedImports ),
+        ] );
+    }
+
+    private function addFailure( $rowNumber, $reason ) {
+        $this->failedImports[] = [
+            'row' => $rowNumber,
+            'reason' => $reason,
+        ];
+
+        Log::warning( 'Breeder import failed', [
+            'row' => $rowNumber,
+            'reason' => $reason,
+        ] );
     }
 }

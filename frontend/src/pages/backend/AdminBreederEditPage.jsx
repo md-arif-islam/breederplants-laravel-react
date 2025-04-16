@@ -1,3 +1,4 @@
+import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useStore } from "../../store/useStore";
@@ -11,6 +12,8 @@ export default function AdminBreederEditPage() {
         updateBreederPassword,
     } = useStore();
     const { id } = useParams();
+    const [isUpdating, setIsUpdating] = useState(false);
+    const [isPasswordUpdating, setIsPasswordUpdating] = useState(false);
 
     const [formData, setFormData] = useState({
         username: "",
@@ -23,7 +26,6 @@ export default function AdminBreederEditPage() {
         phone: "",
         website: "",
         company_email: "",
-
         is_active: false,
     });
 
@@ -55,9 +57,7 @@ export default function AdminBreederEditPage() {
                 country: currentBreeder.country || "",
                 phone: currentBreeder.phone || "",
                 website: currentBreeder.website || "",
-
                 company_email: currentBreeder.company_email || "",
-
                 is_active: currentBreeder.user?.is_active ? true : false,
             });
         }
@@ -65,17 +65,31 @@ export default function AdminBreederEditPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await updateBreeder(id, formData);
-        if (response.status === 200) {
-            navigate(`/admin/breeders/${id}`);
+        setIsUpdating(true);
+        try {
+            const response = await updateBreeder(id, formData);
+            if (response.status === 200) {
+                navigate(`/admin/breeders/${id}`);
+            }
+        } catch (error) {
+            console.error("Failed to update breeder:", error);
+        } finally {
+            setIsUpdating(false);
         }
     };
 
     const handlePasswordSubmit = async (e) => {
         e.preventDefault();
-        const response = updateBreederPassword(id, passwordData);
-        if (response.status === 200) {
-            navigate(`/admin/breeders/${id}`);
+        setIsPasswordUpdating(true);
+        try {
+            const response = await updateBreederPassword(id, passwordData);
+            if (response.status === 200) {
+                navigate(`/admin/breeders/${id}`);
+            }
+        } catch (error) {
+            console.error("Failed to update password:", error);
+        } finally {
+            setIsPasswordUpdating(false);
         }
     };
 
@@ -87,7 +101,41 @@ export default function AdminBreederEditPage() {
     if (isLoading) {
         return (
             <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">
-                <div className="container mx-auto px-4 py-8">Loading...</div>
+                <div className="container mx-auto px-4 py-8">
+                    <div className="bg-white rounded-lg shadow p-6 mb-6">
+                        <div className="space-y-4">
+                            <div className="grid gap-6 md:grid-cols-2">
+                                {[...Array(10)].map((_, index) => (
+                                    <div key={index}>
+                                        <div className="h-4 bg-gray-200 rounded w-1/3 mb-2 animate-pulse"></div>
+                                        <div className="h-10 bg-gray-200 rounded w-full animate-pulse"></div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="h-10 bg-gray-200 rounded w-full animate-pulse"></div>
+                        </div>
+                    </div>
+                    <div className="bg-white rounded-lg shadow p-6">
+                        <div className="h-6 bg-gray-200 rounded w-1/4 mb-4 animate-pulse"></div>
+                        <div className="space-y-4">
+                            <div className="grid gap-6 md:grid-cols-2">
+                                <div>
+                                    <div className="h-4 bg-gray-200 rounded w-1/4 mb-2 animate-pulse"></div>
+                                    <div className="flex gap-2">
+                                        <div className="h-10 bg-gray-200 rounded flex-1 animate-pulse"></div>
+                                        <div className="h-10 bg-gray-200 rounded w-24 animate-pulse"></div>
+                                        <div className="h-10 bg-gray-200 rounded w-16 animate-pulse"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className="h-4 bg-gray-200 rounded w-1/3 mb-2 animate-pulse"></div>
+                                    <div className="h-10 bg-gray-200 rounded w-full animate-pulse"></div>
+                                </div>
+                            </div>
+                            <div className="h-10 bg-gray-200 rounded w-full animate-pulse"></div>
+                        </div>
+                    </div>
+                </div>
             </main>
         );
     }
@@ -95,7 +143,6 @@ export default function AdminBreederEditPage() {
     return (
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">
             <div className="container mx-auto px-4 py-8">
-                {/* Main Form */}
                 <div className="bg-white rounded-lg shadow p-6 mb-6">
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="grid gap-6 md:grid-cols-2">
@@ -116,7 +163,6 @@ export default function AdminBreederEditPage() {
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md"
                                 />
                             </div>
-
                             <div>
                                 <label className="block text-sm font-medium mb-1">
                                     Company Name{" "}
@@ -134,7 +180,6 @@ export default function AdminBreederEditPage() {
                                     className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md"
                                 />
                             </div>
-
                             <div>
                                 <label className="block text-sm font-medium mb-1">
                                     Company Email{" "}
@@ -152,7 +197,6 @@ export default function AdminBreederEditPage() {
                                     className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md"
                                 />
                             </div>
-
                             <div>
                                 <label className="block text-sm font-medium mb-1">
                                     Contact Person{" "}
@@ -170,7 +214,6 @@ export default function AdminBreederEditPage() {
                                     className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md"
                                 />
                             </div>
-
                             <div>
                                 <label className="block text-sm font-medium mb-1">
                                     Street{" "}
@@ -188,7 +231,6 @@ export default function AdminBreederEditPage() {
                                     className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md"
                                 />
                             </div>
-
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-sm font-medium mb-1">
@@ -207,7 +249,6 @@ export default function AdminBreederEditPage() {
                                         className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md"
                                     />
                                 </div>
-
                                 <div>
                                     <label className="block text-sm font-medium mb-1">
                                         Postal Code{" "}
@@ -226,7 +267,6 @@ export default function AdminBreederEditPage() {
                                     />
                                 </div>
                             </div>
-
                             <div>
                                 <label className="block text-sm font-medium mb-1">
                                     Country{" "}
@@ -244,7 +284,6 @@ export default function AdminBreederEditPage() {
                                     className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md"
                                 />
                             </div>
-
                             <div>
                                 <label className="block text-sm font-medium mb-1">
                                     Phone
@@ -261,7 +300,6 @@ export default function AdminBreederEditPage() {
                                     className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md"
                                 />
                             </div>
-
                             <div>
                                 <label className="block text-sm font-medium mb-1">
                                     Website
@@ -282,14 +320,17 @@ export default function AdminBreederEditPage() {
                         </div>
                         <button
                             type="submit"
-                            className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                            disabled={isUpdating}
+                            className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center justify-center"
                         >
-                            Update Breeder
+                            {isUpdating ? (
+                                <Loader2 className="h-5 w-5 animate-spin" />
+                            ) : (
+                                "Update Breeder"
+                            )}
                         </button>
                     </form>
                 </div>
-
-                {/* Password Change Section */}
                 <div className="bg-white rounded-lg shadow p-6">
                     <h2 className="text-xl font-semibold mb-4">
                         Change Password
@@ -336,7 +377,6 @@ export default function AdminBreederEditPage() {
                                     </button>
                                 </div>
                             </div>
-
                             <div>
                                 <label className="block text-sm font-medium mb-1">
                                     Confirm Password{" "}
@@ -358,9 +398,14 @@ export default function AdminBreederEditPage() {
                         </div>
                         <button
                             type="submit"
-                            className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                            disabled={isPasswordUpdating}
+                            className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center justify-center"
                         >
-                            Update Password
+                            {isPasswordUpdating ? (
+                                <Loader2 className="h-5 w-5 animate-spin" />
+                            ) : (
+                                "Update Password"
+                            )}
                         </button>
                     </form>
                 </div>

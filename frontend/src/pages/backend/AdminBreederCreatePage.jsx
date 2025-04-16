@@ -1,3 +1,4 @@
+import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useStore } from "../../store/useStore";
@@ -5,6 +6,7 @@ import { useStore } from "../../store/useStore";
 export default function AdminBreederCreatePage() {
     const { isLoading, createBreeder } = useStore();
     const { id } = useParams();
+    const [isUpdating, setIsUpdating] = useState(false);
 
     const [formData, setFormData] = useState({
         username: "",
@@ -32,9 +34,16 @@ export default function AdminBreederCreatePage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await createBreeder(formData);
-        if (response.status === 200) {
-            navigate(`/admin/breeders`);
+        setIsUpdating(true);
+        try {
+            const response = await createBreeder(formData);
+            if (response.status === 200) {
+                navigate(`/admin/breeders`);
+            }
+        } catch (error) {
+            console.error("Failed to create breeder:", error);
+        } finally {
+            setIsUpdating(false);
         }
     };
 
@@ -50,7 +59,40 @@ export default function AdminBreederCreatePage() {
     if (isLoading) {
         return (
             <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">
-                <div className="container mx-auto px-4 py-8">Loading...</div>
+                <div className="container mx-auto px-4 py-8">
+                    <div className="bg-white rounded-lg shadow p-6 mb-6">
+                        <div className="space-y-4">
+                            <div className="grid gap-6 md:grid-cols-2">
+                                {/* Skeleton for form fields */}
+                                {[...Array(10)].map((_, index) => (
+                                    <div key={index}>
+                                        <div className="h-4 bg-gray-200 rounded w-1/3 mb-2 animate-pulse"></div>
+                                        <div className="h-10 bg-gray-200 rounded w-full animate-pulse"></div>
+                                    </div>
+                                ))}
+
+                                {/* Password skeleton */}
+                                <div>
+                                    <div className="h-4 bg-gray-200 rounded w-1/4 mb-2 animate-pulse"></div>
+                                    <div className="flex gap-2">
+                                        <div className="h-10 bg-gray-200 rounded flex-1 animate-pulse"></div>
+                                        <div className="h-10 bg-gray-200 rounded w-24 animate-pulse"></div>
+                                        <div className="h-10 bg-gray-200 rounded w-16 animate-pulse"></div>
+                                    </div>
+                                </div>
+
+                                {/* Confirm password skeleton */}
+                                <div>
+                                    <div className="h-4 bg-gray-200 rounded w-1/3 mb-2 animate-pulse"></div>
+                                    <div className="h-10 bg-gray-200 rounded w-full animate-pulse"></div>
+                                </div>
+                            </div>
+
+                            {/* Submit button skeleton */}
+                            <div className="h-10 bg-gray-200 rounded w-full animate-pulse"></div>
+                        </div>
+                    </div>
+                </div>
             </main>
         );
     }
@@ -313,9 +355,14 @@ export default function AdminBreederCreatePage() {
                         </div>
                         <button
                             type="submit"
-                            className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                            disabled={isUpdating}
+                            className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center justify-center"
                         >
-                            Update Breeder
+                            {isUpdating ? (
+                                <Loader2 className="h-5 w-5 animate-spin" />
+                            ) : (
+                                "Create new Breeder"
+                            )}
                         </button>
                     </form>
                 </div>

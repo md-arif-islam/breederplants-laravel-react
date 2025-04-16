@@ -231,7 +231,6 @@ export const useStore = create((set, get) => ({
     },
 
     updateBreeder: async (id, payload) => {
-        set({ isLoading: true });
         try {
             const res = await axiosInstance.put(
                 `/api/admin/breeders/${id}`,

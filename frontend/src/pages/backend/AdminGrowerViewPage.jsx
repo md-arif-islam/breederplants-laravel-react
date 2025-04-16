@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useStore } from "../../store/useStore";
 import { useNavigate, useParams } from "react-router-dom";
+import { useStore } from "../../store/useStore";
 
 export default function AdminGrowerViewPage() {
     const { currentGrower, isLoading, getGrower, deleteGrower } = useStore();
@@ -84,7 +84,68 @@ export default function AdminGrowerViewPage() {
     if (isLoading) {
         return (
             <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">
-                <div className="container mx-auto px-4 py-8"></div>
+                <div className="container mx-auto px-4 py-8">
+                    <div className="bg-white rounded-lg shadow">
+                        <div className="p-6">
+                            <div className="flex justify-between items-center mb-6">
+                                <div className="h-8 bg-gray-200 rounded w-1/4 animate-pulse"></div>
+                            </div>
+
+                            {/* Basic information skeleton */}
+                            <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
+                                {[...Array(6)].map((_, i) => (
+                                    <div key={i} className="space-y-2">
+                                        <div className="h-4 bg-gray-200 rounded w-1/3 animate-pulse"></div>
+                                        <div className="h-6 bg-gray-200 rounded w-2/3 animate-pulse"></div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="my-6 border-t border-gray-200"></div>
+
+                            {/* Address information skeleton */}
+                            <div className="h-6 bg-gray-200 rounded w-1/5 mb-4 animate-pulse"></div>
+                            <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
+                                {[...Array(4)].map((_, i) => (
+                                    <div key={i} className="space-y-2">
+                                        <div className="h-4 bg-gray-200 rounded w-1/3 animate-pulse"></div>
+                                        <div className="h-6 bg-gray-200 rounded w-2/3 animate-pulse"></div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="my-6 border-t border-gray-200"></div>
+
+                            {/* Reporting information skeleton */}
+                            <div className="h-6 bg-gray-200 rounded w-1/5 mb-4 animate-pulse"></div>
+                            <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
+                                {[...Array(4)].map((_, i) => (
+                                    <div key={i} className="space-y-2">
+                                        <div className="h-4 bg-gray-200 rounded w-1/3 mb-3 animate-pulse"></div>
+                                        <div className="flex gap-2">
+                                            {[...Array(3)].map((_, j) => (
+                                                <div
+                                                    key={j}
+                                                    className="h-6 bg-gray-200 rounded w-16 animate-pulse"
+                                                ></div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Action buttons skeleton */}
+                            <div className="flex flex-wrap gap-2 pt-8">
+                                {[...Array(3)].map((_, i) => (
+                                    <div
+                                        key={i}
+                                        className="h-10 bg-gray-200 rounded w-24 animate-pulse"
+                                    ></div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </main>
         );
     }

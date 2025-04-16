@@ -1,12 +1,15 @@
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useStore } from "../../store/useStore";
 import { useNavigate } from "react-router-dom";
 import { ImportBreederModal } from "../../components/backend/ImportBreederModal";
+import { useStore } from "../../store/useStore";
 
 export default function AdminBreederPage() {
     // Track local input state
     const [searchQuery, setSearchQuery] = useState("");
     const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+    const [importResult, setImportResult] = useState(null);
+    const [isExporting, setIsExporting] = useState(false);
 
     const {
         getAllBreeders,
@@ -15,7 +18,7 @@ export default function AdminBreederPage() {
         currentPage,
         totalPages,
         exportCSVBreeders,
-        importCSVBreeders, // Import the new function
+        importCSVBreeders,
     } = useStore();
 
     const navigate = useNavigate();
@@ -36,19 +39,38 @@ export default function AdminBreederPage() {
 
     const handleImport = async (file) => {
         try {
-            await importCSVBreeders(file);
+            const response = await importCSVBreeders(file);
+            setImportResult({
+                success: true,
+                message: `Imported ${response.data.success_count} successfully, ${response.data.failed_count} failed.`,
+                failedDetails: response.data.failed_details || [],
+            });
             setIsImportModalOpen(false);
             // Refresh breeders list
             getAllBreeders(currentPage, searchQuery);
         } catch (error) {
-            getAllBreeders(currentPage, searchQuery);
+            const failedDetails = error?.response?.data?.failed_details || [];
+
+            setImportResult({
+                success: false,
+                message: "Import failed.",
+                failedDetails,
+            });
+
             setIsImportModalOpen(false);
-            console.error("Import failed:", error);
+            getAllBreeders(currentPage, searchQuery);
         }
     };
 
     const handleExportCSV = async () => {
-        await exportCSVBreeders();
+        setIsExporting(true);
+        try {
+            await exportCSVBreeders();
+        } catch (error) {
+            console.error("Export failed:", error);
+        } finally {
+            setIsExporting(false);
+        }
     };
 
     return (
@@ -75,9 +97,14 @@ export default function AdminBreederPage() {
                         </button>
                         <button
                             onClick={handleExportCSV}
+                            disabled={isExporting}
                             className="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                         >
-                            Export CSV
+                            {isExporting ? (
+                                <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                            ) : (
+                                "Export CSV"
+                            )}
                         </button>
                         <button
                             className="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
@@ -87,6 +114,29 @@ export default function AdminBreederPage() {
                         </button>
                     </div>
                 </div>
+
+                {importResult && (
+                    <div
+                        className={`p-4 mb-4 rounded-md ${
+                            importResult.success
+                                ? "bg-green-100 text-green-800"
+                                : "bg-red-100 text-red-800"
+                        }`}
+                    >
+                        <p className="font-medium">{importResult.message}</p>
+                        {importResult.failedDetails.length > 0 && (
+                            <ul className="mt-2 list-disc list-inside text-sm">
+                                {importResult.failedDetails.map(
+                                    (fail, index) => (
+                                        <li key={index}>
+                                            Row {fail.row}: {fail.reason}
+                                        </li>
+                                    )
+                                )}
+                            </ul>
+                        )}
+                    </div>
+                )}
 
                 {/* TABLE */}
                 <div className="rounded-md border bg-white">
