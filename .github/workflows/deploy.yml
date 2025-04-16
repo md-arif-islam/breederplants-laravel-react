@@ -1,4 +1,4 @@
-name: FTP Deployment for Breederplants Project
+name: FTP Deployment for KolsterApp Project
 
 on:
   push:
@@ -6,8 +6,8 @@ on:
       - main
 
 jobs:
-  ftp-deploy-breederplants:
-    environment: "plesk-breederplants"
+  ftp-deploy-onlinewithyou:
+    environment: "plesk-onlinewithyou"
     runs-on: ubuntu-latest
 
     steps:
@@ -27,29 +27,21 @@ jobs:
         with:
           node-version: "20"
 
-      # 🚀 Build the Portal Frontend for portal.breederplants.nl
-      - name: Build Portal Frontend for Breederplants
+      # 🚀 Build the Portal Frontend for https://kolster-app.onlinewithyou.nl
+      - name: Build Portal Frontend for Kolster App
         run: |
           cd frontend
           npm install
           npm run build -- --mode production
           cd ..
 
-      # 🚀 Build the Public App Frontend for app.breederplants.nl
-      - name: Build Public App Frontend for Breederplants App
-        run: |
-          cd frontend-app
-          npm install
-          npm run build -- --mode production
-          cd ..
-
-      # 🚀 Deploy the built Portal Frontend to portal.breederplants.nl via FTP
-      - name: FTP Deploy Portal Frontend to portal.breederplants.nl
+      # 🚀 Deploy the built Portal Frontend to https://kolster-app.onlinewithyou.nl via FTP
+      - name: FTP Deploy Portal Frontend to https://kolster-app.onlinewithyou.nl
         uses: SamKirkland/FTP-Deploy-Action@v4.3.1
         with:
-          server: ${{ secrets.SERVER }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
+          server: onlinewithyou.nl
+          username: kolster-app-action
+          password: 7zm46d^K0
           local-dir: ./
           server-dir: /
           exclude: |
@@ -57,18 +49,4 @@ jobs:
             **/.git*/**
             **/node_modules/**
             fileToExclude.txt
-
-      # 🚀 Deploy the built Public App Frontend to app.breederplants.nl via FTP
-      - name: FTP Deploy Public App Frontend to app.breederplants.nl
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.1
-        with:
-          server: ${{ secrets.SERVER_APP }}
-          username: ${{ secrets.USERNAME_APP }}
-          password: ${{ secrets.PASSWORD_APP }}
-          local-dir: frontend-app/dist/
-          server-dir: /
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            fileToExclude.txt
+        continue-on-error: true
