@@ -49,7 +49,7 @@ class GrowerController extends Controller {
             'country' => 'required|string|max:255',
             'phone' => 'nullable|string|max:255',
             'website' => 'nullable|string|max:255',
-            'agreement_number' => 'required|numeric',
+            'agreement_number' => 'required|string',
             'sales_reporting_quarter' => 'nullable|array',
             'sales_reporting_quarter.*' => 'nullable|string',
             'production_reporting_quarter' => 'nullable|array',
@@ -124,7 +124,7 @@ class GrowerController extends Controller {
             'country' => 'required|string|max:255',
             'phone' => 'nullable|string|max:255',
             'website' => 'nullable|string|max:255',
-            'agreement_number' => 'required|numeric',
+            'agreement_number' => 'required|string',
             'sales_reporting_quarter' => 'nullable|array',
             'sales_reporting_quarter.*' => 'nullable|string|max:255',
             'production_reporting_quarter' => 'nullable|array',
@@ -182,7 +182,6 @@ class GrowerController extends Controller {
     }
 
     public function importCSV( Request $request ) {
-
         $request->validate( [
             'file' => 'required|file|mimes:csv,txt',
         ] );
@@ -191,18 +190,17 @@ class GrowerController extends Controller {
             $import = new GrowersImport;
             Excel::import( $import, $request->file( 'file' ) );
 
-            // Check if there were any failed imports
-            if ( count( $import->failedImports ) > 0 ) {
-                return response()->json( [
-                    'message' => 'Growers imported with some errors.',
-                    'failedImports' => $import->failedImports,
-                ], 422 );
-            }
-
-            return response()->json( ['message' => 'Growers imported successfully'] );
+            return response()->json( [
+                'message' => 'Import completed',
+                'success_count' => $import->successCount,
+                'failed_count' => count( $import->failedImports ),
+                'failed_details' => $import->failedImports,
+            ], $import->failedImports ? 422 : 200 );
         } catch ( Exception $e ) {
-            // Log the error or handle it as needed
-            return response()->json( ['message' => 'Failed to import growers'] );
+            return response()->json( [
+                'message' => 'Failed to import growers',
+                'error' => $e->getMessage(),
+            ], 500 );
         }
     }
 

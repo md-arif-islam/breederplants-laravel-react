@@ -12,96 +12,105 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 
 class GrowersImport implements ToCollection {
     private $firstRow = true;
-    public $failedImports = []; // Store failed records
+    public $failedImports = [];
+    public $successCount = 0;
 
     public function collection( Collection $rows ) {
-
         foreach ( $rows as $index => $row ) {
+            $rowNumber = $index + 1;
 
             if ( $this->firstRow ) {
-
-                $this->firstRow = false; // Skip the header row
+                $this->firstRow = false;
                 continue;
             }
 
-            // Check if the row is blank
             if ( $row->filter()->isEmpty() ) {
-                // Log the blank row error
-                Log::error( 'Failed import', [
-                    'reason' => 'Blank row',
-                ] );
-
-                continue; // Skip this row, as it is blank
-            }
-
-            // Check if the email already exists
-            $existingUser = User::where( 'email', $row[3] )->first();
-
-            // Check if the username already exists
-            $existingGrower = Grower::where( 'username', $row[0] )->first();
-
-            if ( $existingUser || $existingGrower ) {
-                // Store the failed record in the array
-                $this->failedImports[] = [
-                    'username' => $row[0],
-                    'email' => $row[3],
-                    'reason' => $existingUser ? 'Email already exists' : 'Username already exists',
-                ];
-
-                // Log the failed import
-                Log::error( 'Failed import', [
-                    'username' => $row[0],
-                    'email' => $row[3],
-                    'reason' => $existingUser ? 'Email already exists' : 'Username already exists',
-                ] );
-
+                $this->addFailure( $rowNumber, 'Blank row' );
                 continue;
             }
 
-            // Create user and grower if no conflicts
-            $password = Str::lower( str_replace( ' ', '', $row[6] ) );
-
             try {
+                $username = trim( $row[0] ?? '' );
+                $contactPerson = $row[1] ?? '';
+                $companyName = $row[2] ?? '';
+                $companyEmail = $row[3] ?? '';
+                $street = $row[4] ?? '';
+                $city = $row[5] ?? '';
+                $postalCode = $row[6] ?? '';
+                $country = $row[7] ?? '';
+                $phone = $row[8] ?? '';
+                $website = $row[9] ?? '';
+                $agreementNumber = $row[10] ?? '';
+                $salesReportingQuarter = isset( $row[11] ) ? explode( '.', $row[11] ) : [];
+
+                if ( empty( $username ) || empty( $companyEmail ) ) {
+                    $this->addFailure( $rowNumber, 'Missing username or email' );
+                    continue;
+                }
+
+                if ( User::where( 'email', $companyEmail )->exists() ) {
+                    $this->addFailure( $rowNumber, 'Duplicate email: ' . $companyEmail );
+                    continue;
+                }
+
+                if ( Grower::where( 'username', $username )->exists() ) {
+                    $this->addFailure( $rowNumber, 'Duplicate username: ' . $username );
+                    continue;
+                }
+
+                $generatedPassword = Str::lower( str_replace( ' ', '', $postalCode ) );
+
+                // Wrap user and grower creation in a transaction to ensure rollback on failure
+                \DB::beginTransaction();
+
                 $user = User::create( [
-                    'email' => $row[3],
-                    'password' => Hash::make( $password ),
+                    'email' => $companyEmail,
+                    'password' => Hash::make( $generatedPassword ),
                     'role' => 'grower',
-                    'status' => 'active', // default status
+                    'status' => 'active',
                 ] );
 
-                Log::info( 'User created', ['user_id' => $user->id, 'email' => $user->email] );
-            } catch ( \Exception $e ) {
-                Log::error( 'Failed to create user', ['email' => $row[3], 'error' => $e->getMessage()] );
-                continue; // Skip to the next row if user creation fails
-            }
-
-            try {
                 Grower::create( [
                     'user_id' => $user->id,
-                    'username' => $row[0] ?? '',
-                    'contact_person' => $row[1] ?? '',
-                    'company_name' => $row[2] ?? '',
-                    'company_email' => $row[3] ?? '',
-                    'street' => $row[4] ?? '',
-                    'city' => $row[5] ?? '',
-                    'postal_code' => $row[6] ?? '',
-                    'country' => $row[7] ?? '',
-                    'phone' => $row[8] ?? '',
-                    'website' => $row[9] ?? '',
-                    'agreement_number' => $row[10] ?? '',
-                    'sales_reporting_quarter' => $row[11] ?? '',
-                    'production_reporting_quarter' => $row[12] ?? '',
-                    'production_reporting_values' => $row[13] ?? '',
+                    'username' => $username,
+                    'contact_person' => $contactPerson,
+                    'company_name' => $companyName,
+                    'company_email' => $companyEmail,
+                    'street' => $street,
+                    'city' => $city,
+                    'postal_code' => $postalCode,
+                    'country' => $country,
+                    'phone' => $phone,
+                    'website' => $website,
+                    'agreement_number' => $agreementNumber,
+                    'sales_reporting_quarter' => json_encode( $salesReportingQuarter ),
+                    'production_reporting_quarter' => null,
+                    'production_reporting_values' => null,
                 ] );
-                Log::info( 'Grower created', ['username' => $row[0], 'user_id' => $user->id] );
+
+                \DB::commit();
+                $this->successCount++;
             } catch ( \Exception $e ) {
-                Log::error( 'Failed to create grower', ['username' => $row[0], 'user_id' => $user->id, 'error' => $e->getMessage()] );
-                // Optionally, delete the user if grower creation fails
-                $user->delete();
-                Log::warning( 'User deleted due to grower creation failure', ['user_id' => $user->id] );
-                continue; // Skip to the next row if grower creation fails
+                \DB::rollBack();
+                $this->addFailure( $rowNumber, 'Exception: ' . $e->getMessage() );
             }
         }
-        Log::info( 'Import finished' );
+
+        Log::info( 'Grower import finished', [
+            'success_count' => $this->successCount,
+            'failed_count' => count( $this->failedImports ),
+        ] );
+    }
+
+    private function addFailure( $rowNumber, $reason ) {
+        $this->failedImports[] = [
+            'row' => $rowNumber,
+            'reason' => $reason,
+        ];
+
+        Log::warning( 'Import row failed', [
+            'row' => $rowNumber,
+            'reason' => $reason,
+        ] );
     }
 }
