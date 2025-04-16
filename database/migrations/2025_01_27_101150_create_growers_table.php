@@ -23,7 +23,8 @@ return new class extends Migration {
             $table->string( 'phone' )->nullable();
             $table->string( 'website' )->nullable();
             $table->text( 'sales_reporting_quarter' );
-            $table->integer( 'agreement_number' );
+            $table->text( 'agreement_number' );
+            $table->boolean( 'is_deleted' )->default( false );
             $table->timestamps();
         } );
     }

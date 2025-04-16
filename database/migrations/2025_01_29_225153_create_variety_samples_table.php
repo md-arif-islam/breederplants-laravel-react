@@ -28,6 +28,7 @@ return new class extends Migration {
             $table->unsignedBigInteger( 'amount_of_seeds' )->nullable();
             $table->longText( 'note' )->nullable();
             $table->boolean( 'status' )->default( true );
+            $table->boolean( 'is_deleted' )->default( false );
             $table->timestamps();
         } );
     }

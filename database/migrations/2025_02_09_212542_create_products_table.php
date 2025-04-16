@@ -32,6 +32,7 @@ return new class extends Migration {
             $table->decimal( 'height', 8, 2 )->nullable();
             $table->boolean( 'width_icon' )->nullable();
             $table->decimal( 'width', 8, 2 )->nullable();
+            $table->boolean( 'is_deleted' )->default( false );
             $table->timestamps();
         } );
     }

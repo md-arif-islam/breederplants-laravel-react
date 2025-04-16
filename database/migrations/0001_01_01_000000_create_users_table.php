@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->enum( 'role', ['admin', 'grower', 'breeder'] )->default( 'grower' );
             $table->boolean( 'is_active' )->default( false );
             $table->longText( 'fcm_token' )->nullable();
+            $table->boolean( 'is_deleted' )->default( false );
             $table->rememberToken();
             $table->timestamps();
         } );
