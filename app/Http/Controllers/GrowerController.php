@@ -16,11 +16,15 @@ class GrowerController extends Controller {
     public function index( Request $request ) {
         $query = $request->input( 'search' );
 
-        $growers = Grower::with( 'user' )->when( $query, function ( $q ) use ( $query ) {
-            return $q->where( 'contact_person', 'like', "%{$query}%" )->orWhere( 'company_name', 'like', "%{$query}%" )->orWhereHas( 'user', function ( $q ) use ( $query ) {
-                $q->where( 'email', 'like', "%{$query}%" );
-            } );
-        } )->paginate( 10 );
+        $growers = Grower::with( 'user' )
+            ->where( 'is_deleted', false )
+            ->when( $query, function ( $q ) use ( $query ) {
+                return $q->where( 'contact_person', 'like', "%{$query}%" )
+                    ->orWhere( 'company_name', 'like', "%{$query}%" )
+                    ->orWhereHas( 'user', function ( $q ) use ( $query ) {
+                        $q->where( 'email', 'like', "%{$query}%" );
+                    } );
+            } )->paginate( 10 );
 
         return response()->json( $growers );
     }
@@ -93,7 +97,10 @@ class GrowerController extends Controller {
      * Display the specified resource.
      */
     public function show( Grower $grower ) {
-        $grower = Grower::with( 'user' )->findOrFail( $grower->id );
+        $grower = Grower::with( 'user' )
+            ->where( 'is_deleted', false )
+            ->findOrFail( $grower->id );
+
         return response()->json( $grower );
     }
 
@@ -163,9 +170,15 @@ class GrowerController extends Controller {
      * Remove the specified resource from storage.
      */
     public function destroy( Grower $grower ) {
-        $user = $grower->user;
-        $grower->delete();
-        $user->delete();
+        // Instead of deleting, mark as deleted for both grower and user
+        $grower->update( [
+            'is_deleted' => true,
+        ] );
+
+        $grower->user->update( [
+            'is_deleted' => true,
+        ] );
+
         return response()->json( ['message' => 'Grower deleted successfully'] );
     }
 
@@ -237,28 +250,30 @@ class GrowerController extends Controller {
                 'Production Reporting Values',
             ] );
 
-            // Fetch and process data in chunks
-            Grower::with( 'user' )->chunk( 100, function ( $growers ) use ( $handle ) {
-                foreach ( $growers as $grower ) {
-                    $data = [
-                        $grower->username ?? '',
-                        $grower->contact_person ?? '',
-                        $grower->company_name ?? '',
-                        $grower->user->email ?? '',
-                        $grower->street ?? '',
-                        $grower->city ?? '',
-                        $grower->postal_code ?? '',
-                        $grower->country ?? '',
-                        $grower->phone ?? '',
-                        $grower->website ?? '',
-                        $grower->agreement_number ?? '',
-                        $grower->sales_reporting_quarter ?? '',
-                        $grower->production_reporting_quarter ?? '',
-                        $grower->production_reporting_values ?? '',
-                    ];
-                    fputcsv( $handle, $data );
-                }
-            } );
+            // Fetch and process data in chunks - only non-deleted growers
+            Grower::with( 'user' )
+                ->where( 'is_deleted', false )
+                ->chunk( 100, function ( $growers ) use ( $handle ) {
+                    foreach ( $growers as $grower ) {
+                        $data = [
+                            $grower->username ?? '',
+                            $grower->contact_person ?? '',
+                            $grower->company_name ?? '',
+                            $grower->user->email ?? '',
+                            $grower->street ?? '',
+                            $grower->city ?? '',
+                            $grower->postal_code ?? '',
+                            $grower->country ?? '',
+                            $grower->phone ?? '',
+                            $grower->website ?? '',
+                            $grower->agreement_number ?? '',
+                            $grower->sales_reporting_quarter ?? '',
+                            $grower->production_reporting_quarter ?? '',
+                            $grower->production_reporting_values ?? '',
+                        ];
+                        fputcsv( $handle, $data );
+                    }
+                } );
 
             fclose( $handle );
         };

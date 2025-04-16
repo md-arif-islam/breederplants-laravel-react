@@ -23,6 +23,7 @@ class Grower extends Model {
         'sales_reporting_quarter',
         'production_reporting_quarter',
         'production_reporting_values',
+        'is_deleted',
     ];
 
     public function user() {
