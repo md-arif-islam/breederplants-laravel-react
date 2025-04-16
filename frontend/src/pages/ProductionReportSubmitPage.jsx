@@ -1,8 +1,8 @@
 import { Loader2 } from "lucide-react";
-import { useProductionReportStore } from "../store/useProductionReportStore";
-import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { PageTitleContext } from "../context/PageTitleContext";
+import { useProductionReportStore } from "../store/useProductionReportStore";
 
 export default function ProductionReportSubmitPage() {
     const {
@@ -89,8 +89,6 @@ export default function ProductionReportSubmitPage() {
             ),
             production: productionData,
         };
-
-        console.log("Final data payload:", data);
 
         const res = await submitProductionReport(data);
         if (res.status === 200) {

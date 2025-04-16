@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
-import { usePostStore } from "../../store/usePostStore";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import { MultiSelect } from "../../components/backend/MultiSelect";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { useNavigate } from "react-router-dom";
+import { usePostStore } from "../../store/usePostStore";
 
 export default function AdminNewsCreatePage() {
     const navigate = useNavigate();
@@ -46,14 +45,12 @@ export default function AdminNewsCreatePage() {
         try {
             const res = await createPost(formData);
 
-            console.log(res);
-
             if (res.status === 201) {
                 toast.success("News created successfully!");
                 navigate("/admin/news");
             }
         } catch (error) {
-            console.log(error);
+            // Handle error
         } finally {
             setLoading(false);
         }
@@ -84,7 +81,7 @@ export default function AdminNewsCreatePage() {
     const handleCreateCategory = async (name) => {
         try {
             const res = await createCategory({ name });
-            console.log("createCategory response:", res);
+
             // Adjust this line once you see where the id is returned;
             // here we also check res.data.category.id as an example.
             const newCategoryId =

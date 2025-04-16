@@ -1,6 +1,6 @@
+import { toast } from "react-hot-toast";
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
-import { toast } from "react-hot-toast";
 
 export const useBreederProductStore = create((set, get) => ({
     isLoading: false,
@@ -46,7 +46,6 @@ export const useBreederProductStore = create((set, get) => ({
             return response.data;
         } catch (error) {
             toast.error("Failed to fetch breeder product");
-            console.log(error);
         } finally {
             set({ isLoading: false });
         }
@@ -78,7 +77,6 @@ export const useBreederProductStore = create((set, get) => ({
             const res = await axiosInstance.delete(
                 `/api/admin/breeders/${breederId}/products/${id}`
             );
-            console.log(res.data);
             toast.success(res.data.message);
             return res;
         } catch (error) {

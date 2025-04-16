@@ -1,5 +1,5 @@
+import { Eye, Leaf, Pencil, Trash2 } from "lucide-react";
 import React, { useState } from "react";
-import { Eye, Pencil, Trash2, Download, Leaf } from "lucide-react";
 import { useVarietySampleStore } from "../../store/useVarietySampleStore";
 import { formatDate } from "../../utils/formatDate"; // Import formatDate
 
@@ -28,7 +28,6 @@ export function VarietySampleCard({ sample, varietyReportId, onDelete }) {
         setShowPopup(false);
         const response = await deleteVarietySample(varietyReportId, sample.id);
         if (response.status === 200) {
-            console.log("Deletion successful");
             onDelete(); // trigger parent callback to refresh data
         } else {
             console.error("Error deleting variety sample");

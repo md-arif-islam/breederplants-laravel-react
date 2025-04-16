@@ -80,7 +80,7 @@ export default function AdminGrowerEditPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // console.log(formData);
+
         const response = await updateGrower(id, formData);
         if (response.status === 200) {
             navigate(`/admin/growers/${id}`);

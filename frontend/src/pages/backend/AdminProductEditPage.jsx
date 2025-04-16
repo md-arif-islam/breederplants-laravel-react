@@ -1,6 +1,6 @@
+import { Leaf, Loader2, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Leaf, Loader2, X } from "lucide-react";
 import { useProductStore } from "../../store/useProductStore";
 
 export default function AdminProductEditPage() {
@@ -119,8 +119,6 @@ export default function AdminProductEditPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        console.log(formData);
 
         const response = await updateProduct(id, formData);
         if (response.status === 200) {

@@ -33,7 +33,6 @@ export default function AdminBreederCreatePage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const response = await createBreeder(formData);
-        console.log(response);
         if (response.status === 200) {
             navigate(`/admin/breeders`);
         }

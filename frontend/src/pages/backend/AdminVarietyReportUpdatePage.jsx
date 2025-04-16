@@ -1,7 +1,7 @@
+import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { Loader2, X } from "lucide-react";
-import { useVarietyReportStore } from "../../store/useVarietyReportStore";
 import { useNavigate, useParams } from "react-router-dom";
+import { useVarietyReportStore } from "../../store/useVarietyReportStore";
 
 export default function AdminVarietyReportUpdatePage() {
     const [sampleDates, setSampleDates] = useState([""]);
@@ -67,7 +67,6 @@ export default function AdminVarietyReportUpdatePage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
         const response = await updateVarietyReport(id, formData);
 
         if (response.status === 200) {

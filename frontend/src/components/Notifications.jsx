@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import { FileChartColumn, Home } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import AdminImg from "../assets/images/admin.svg";
+import LogoutImg from "../assets/images/Log_Out.svg";
 import NotificationImg from "../assets/images/notification-bing.svg";
 import SRImg from "../assets/images/sales-report.svg";
-import LogoutImg from "../assets/images/Log_Out.svg";
-import { useStore } from "../store/useStore";
 import echo from "../lib/echo";
 import { useNotificationStore } from "../store/useNotificationStore";
-import { FileChartColumn, Home } from "lucide-react";
+import { useStore } from "../store/useStore";
 
 const Notifications = () => {
     const { logout, authUser } = useStore();
@@ -36,8 +36,6 @@ const Notifications = () => {
             const channel = echo
                 .private(channelName)
                 .notification((notification) => {
-                    console.log("New notification received:", notification);
-
                     // Normalize the push notification
                     const normalizedNotification = {
                         id: notification.id,
@@ -57,28 +55,17 @@ const Notifications = () => {
                             notification.updated_at || new Date().toISOString(),
                     };
 
-                    console.log(
-                        "Normalized notification:",
-                        normalizedNotification
-                    );
-
                     // Update notifications using a functional style and update unread count
                     setNotifications((prev) => {
                         const previousNotifications = Array.isArray(prev)
                             ? prev
                             : [];
-                        console.log(
-                            "Previous notifications:",
-                            previousNotifications
-                        );
+
                         const newNotifications = [
                             normalizedNotification,
                             ...previousNotifications,
                         ];
-                        console.log(
-                            "New notifications array:",
-                            newNotifications
-                        );
+
                         setUnreadCount(
                             newNotifications.filter((n) => !n.read_at).length
                         );

@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState } from "react";
 import { Leaf, Loader2, X } from "lucide-react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useVarietySampleStore } from "../store/useVarietySampleStore";
 import { PageTitleContext } from "../context/PageTitleContext.jsx";
+import { useVarietySampleStore } from "../store/useVarietySampleStore";
 
 export default function VarietySampleUpdatePage() {
     const {
@@ -32,8 +32,6 @@ export default function VarietySampleUpdatePage() {
         note: "",
         images: [],
     });
-
-    console.log(varietySample);
 
     const [imagePreviews, setImagePreviews] = useState([]);
     // New state to track each image load status

@@ -37,7 +37,6 @@ export default function AdminGrowerCreatePage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const response = await createGrower(formData);
-        console.log(response);
         if (response.status === 200) {
             navigate(`/admin/growers`);
         }

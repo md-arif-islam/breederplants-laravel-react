@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
-import { usePostStore } from "../../store/usePostStore";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import { MultiSelect } from "../../components/backend/MultiSelect";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { useNavigate, useParams } from "react-router-dom";
+import { usePostStore } from "../../store/usePostStore";
 
 export default function AdminNewsUpdatePage() {
     const { id } = useParams();
@@ -69,7 +68,7 @@ export default function AdminNewsUpdatePage() {
                 navigate("/admin/news");
             }
         } catch (error) {
-            console.log(error);
+            //
         } finally {
             setLoading(false);
         }
@@ -101,7 +100,7 @@ export default function AdminNewsUpdatePage() {
     const handleCreateCategory = async (name) => {
         try {
             const res = await createCategory({ name });
-            console.log("createCategory response:", res);
+
             const newCategoryId =
                 res?.data?.id || res?.data?.data?.id || res?.data?.category?.id;
             if (!newCategoryId) {

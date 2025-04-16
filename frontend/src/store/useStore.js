@@ -1,7 +1,6 @@
+import { toast } from "react-hot-toast";
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
-import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 
 export const useStore = create((set, get) => ({
     authUser: null,
@@ -33,7 +32,7 @@ export const useStore = create((set, get) => ({
         set({ isLoggingIn: true });
         try {
             await axiosInstance.get("/sanctum/csrf-cookie").then((response) => {
-                console.log(response);
+                //
             });
             const res = await axiosInstance.post("/api/login", data);
             set({ authUser: res.data });
@@ -43,7 +42,6 @@ export const useStore = create((set, get) => ({
 
             return res.data.user;
         } catch (error) {
-            console.log(error);
             toast.error(error.response.data.message);
         } finally {
             set({ isLoggingIn: false });
@@ -143,7 +141,6 @@ export const useStore = create((set, get) => ({
             toast.success("Grower updated successfully");
             return res;
         } catch (error) {
-            console.log("Error from updateGrower", error.response.data);
             toast.error(error.response.data.message);
         } finally {
             set({ isLoading: false });
@@ -186,7 +183,6 @@ export const useStore = create((set, get) => ({
             toast.success("Grower created successfully");
             return res;
         } catch (error) {
-            console.log("Error from createGrower", error.response.data);
             toast.error(error.response.data.message);
             const errors = error.response.data.errors;
             for (const key in errors) {
@@ -248,7 +244,6 @@ export const useStore = create((set, get) => ({
             toast.success("Breeder updated successfully");
             return res;
         } catch (error) {
-            console.log("Error from updateBreeder", error.response.data);
             toast.error(error.response.data.message);
         } finally {
             set({ isLoading: false });
@@ -294,7 +289,6 @@ export const useStore = create((set, get) => ({
             toast.success("Breeder created successfully");
             return res;
         } catch (error) {
-            console.log("Error from createBreeder", error.response.data);
             toast.error(error.response.data.message);
             const errors = error.response.data.errors;
             for (const key in errors) {
@@ -337,11 +331,9 @@ export const useStore = create((set, get) => ({
                     );
                 });
             } else {
-                toast.error(
-                    "Failed to import growers. Please check the console for details."
-                );
+                toast.error("Failed to import growers");
             }
-            throw error; // Re-throw to handle in component
+            throw error;
         }
     },
 

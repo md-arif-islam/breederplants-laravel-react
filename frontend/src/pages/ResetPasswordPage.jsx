@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import breederplantsLogo from "../assets/images/logo.png";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import breederplantsLogo from "../assets/images/logo.png";
 import { useStore } from "../store/useStore";
 
 const ResetPasswordPage = () => {
@@ -31,7 +31,7 @@ const ResetPasswordPage = () => {
         if (res.status === 200) {
             navigate("/login");
         } else {
-            console.log(res.data);
+            //
         }
     };
 

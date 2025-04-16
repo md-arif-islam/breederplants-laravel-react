@@ -1,6 +1,6 @@
+import { toast } from "react-hot-toast";
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
-import { toast } from "react-hot-toast";
 
 export const useProductStore = create((set, get) => ({
     isLoading: false,
@@ -40,7 +40,6 @@ export const useProductStore = create((set, get) => ({
             return response.data;
         } catch (error) {
             toast.error("Failed to fetch product");
-            console.log(error);
         } finally {
             set({ isLoading: false });
         }

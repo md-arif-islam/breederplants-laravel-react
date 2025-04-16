@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { usePostStore } from "../store/usePostStore";
+import { useParams } from "react-router-dom";
 import PostCard from "../components/PostCard";
 import { PageTitleContext } from "../context/PageTitleContext";
+import { usePostStore } from "../store/usePostStore";
 
 const PublicTagsPage = () => {
     const { slug } = useParams();
@@ -18,7 +18,6 @@ const PublicTagsPage = () => {
             if (data?.tagName) {
                 setTagName(data.tagName);
             }
-            console.log(data);
         });
     }, [slug, currentPage, getPostsByTag]);
 

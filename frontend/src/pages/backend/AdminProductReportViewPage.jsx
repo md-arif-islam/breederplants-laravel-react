@@ -1,8 +1,7 @@
+import { DownloadIcon, Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { Pencil, Trash2, Download, DownloadIcon, Loader2 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useProductionReportStore } from "../../store/useProductionReportStore";
-import { format } from "date-fns";
 import { formatDate } from "../../utils/formatDate.js";
 
 export default function AdminProductionReportViewPage() {
@@ -83,8 +82,6 @@ export default function AdminProductionReportViewPage() {
     const reportData = currentProductionReport.data
         ? JSON.parse(currentProductionReport.data)
         : {};
-
-    console.log(currentProductionReport);
 
     return (
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">

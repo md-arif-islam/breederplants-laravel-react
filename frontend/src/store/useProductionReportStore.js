@@ -1,6 +1,6 @@
+import { toast } from "react-hot-toast";
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
-import { toast } from "react-hot-toast";
 
 export const useProductionReportStore = create((set, get) => ({
     isLoading: false,
@@ -121,7 +121,6 @@ export const useProductionReportStore = create((set, get) => ({
             toast.success(res.data.message);
             return res;
         } catch (error) {
-            console.log(error);
             const message =
                 error?.response?.data?.message ||
                 "Error submitting production report";

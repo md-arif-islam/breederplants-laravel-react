@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { useStore } from "../../store/useStore";
 import { useNavigate } from "react-router-dom";
 import { ImportGrowerModal } from "../../components/backend/ImportGrowerModal";
+import { useStore } from "../../store/useStore";
 
 export default function AdminGrowerPage() {
-    // Track local input state
     const [searchQuery, setSearchQuery] = useState("");
     const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+    const [importResult, setImportResult] = useState(null);
 
     const {
         getAllGrowers,
@@ -24,9 +24,7 @@ export default function AdminGrowerPage() {
         document.title = "Growers - Breederplants";
     }, []);
 
-    // Fetch all growers on mount (or whenever currentPage changes).
     useEffect(() => {
-        // By default, pass the current searchQuery
         getAllGrowers(currentPage, searchQuery);
     }, [getAllGrowers, currentPage, searchQuery]);
 
@@ -36,13 +34,24 @@ export default function AdminGrowerPage() {
 
     const handleImport = async (file) => {
         try {
-            await importCSVGrowers(file);
+            const response = await importCSVGrowers(file);
+            setImportResult({
+                success: true,
+                message: `Imported ${response.data.success_count} successfully, ${response.data.failed_count} failed.`,
+                failedDetails: response.data.failed_details || [],
+            });
             setIsImportModalOpen(false);
-            // Refresh growers list
             getAllGrowers(currentPage, searchQuery);
         } catch (error) {
+            const failedDetails = error?.response?.data?.failed_details || [];
+
+            setImportResult({
+                success: false,
+                message: "Import failed.",
+                failedDetails,
+            });
+
             setIsImportModalOpen(false);
-            console.error("Import failed:", error);
             getAllGrowers(currentPage, searchQuery);
         }
     };
@@ -55,7 +64,6 @@ export default function AdminGrowerPage() {
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f8f9fa]">
             <div className="container mx-auto px-4 py-8">
                 <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    {/* Search input */}
                     <div className="flex-1">
                         <input
                             type="search"
@@ -88,7 +96,29 @@ export default function AdminGrowerPage() {
                     </div>
                 </div>
 
-                {/* TABLE */}
+                {importResult && (
+                    <div
+                        className={`p-4 mb-4 rounded-md ${
+                            importResult.success
+                                ? "bg-green-100 text-green-800"
+                                : "bg-red-100 text-red-800"
+                        }`}
+                    >
+                        <p className="font-medium">{importResult.message}</p>
+                        {importResult.failedDetails.length > 0 && (
+                            <ul className="mt-2 list-disc list-inside text-sm">
+                                {importResult.failedDetails.map(
+                                    (fail, index) => (
+                                        <li key={index}>
+                                            Row {fail.row}: {fail.reason}
+                                        </li>
+                                    )
+                                )}
+                            </ul>
+                        )}
+                    </div>
+                )}
+
                 <div className="rounded-md border bg-white">
                     <div className="overflow-x-auto">
                         <table className="w-full table-auto shadow rounded overflow-hidden">
@@ -127,68 +157,62 @@ export default function AdminGrowerPage() {
                                             </div>
                                         </td>
                                     </tr>
+                                ) : !growers?.length ? (
+                                    <tr>
+                                        <td
+                                            colSpan={7}
+                                            className="text-center py-4 bg-red-100 p-5 rounded-md"
+                                        >
+                                            No growers found.
+                                        </td>
+                                    </tr>
                                 ) : (
-                                    <>
-                                        {!isLoading &&
-                                            growers?.length === 0 && (
-                                                <tr>
-                                                    <td
-                                                        colSpan={7}
-                                                        className="text-center py-4 bg-red-100 p-5 rounded-md"
-                                                    >
-                                                        No growers found.
-                                                    </td>
-                                                </tr>
-                                            )}
-                                        {growers?.map((grower) => (
-                                            <tr
-                                                key={grower.id}
-                                                className="hover:bg-gray-50 cursor-pointer"
-                                                onClick={() =>
-                                                    navigate(
-                                                        `/admin/growers/${grower.id}`
-                                                    )
-                                                }
-                                            >
-                                                <td className="px-4 py-5 text-primary font-medium border-b">
-                                                    {grower.username}
-                                                </td>
-                                                <td className="px-4 py-2 text-[#353535] border-b">
-                                                    {grower.contact_person}
-                                                </td>
-                                                <td className="px-4 py-2 text-[#353535] border-b">
-                                                    {grower.company_email}
-                                                </td>
-                                                <td className="px-4 py-2 text-[#353535] border-b">
-                                                    {grower.company_name}
-                                                </td>
-                                                <td className="px-4 py-2 text-[#353535] border-b">
-                                                    {grower.phone}
-                                                </td>
-                                                <td className="px-4 py-2 text-[#353535] border-b">
-                                                    <a
-                                                        href={grower.website}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="text-blue-600 hover:underline"
-                                                    >
-                                                        {grower.website}
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </>
+                                    growers.map((grower) => (
+                                        <tr
+                                            key={grower.id}
+                                            className="hover:bg-gray-50 cursor-pointer"
+                                            onClick={() =>
+                                                navigate(
+                                                    `/admin/growers/${grower.id}`
+                                                )
+                                            }
+                                        >
+                                            <td className="px-4 py-5 text-primary font-medium border-b">
+                                                {grower.username}
+                                            </td>
+                                            <td className="px-4 py-2 text-[#353535] border-b">
+                                                {grower.contact_person}
+                                            </td>
+                                            <td className="px-4 py-2 text-[#353535] border-b">
+                                                {grower.company_email}
+                                            </td>
+                                            <td className="px-4 py-2 text-[#353535] border-b">
+                                                {grower.company_name}
+                                            </td>
+                                            <td className="px-4 py-2 text-[#353535] border-b">
+                                                {grower.phone}
+                                            </td>
+                                            <td className="px-4 py-2 text-[#353535] border-b">
+                                                <a
+                                                    href={grower.website}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-blue-600 hover:underline"
+                                                >
+                                                    {grower.website}
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    ))
                                 )}
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                {/* Pagination Controls */}
                 {growers?.length > 0 && (
                     <div className="flex justify-center mt-6">
                         <nav className="inline-flex rounded-md shadow-sm gap-2">
-                            {/* Previous Button */}
                             <button
                                 onClick={() =>
                                     handlePageChange(currentPage - 1)
@@ -203,7 +227,6 @@ export default function AdminGrowerPage() {
                                 Previous
                             </button>
 
-                            {/* Page Numbers */}
                             {Array.from(
                                 { length: totalPages },
                                 (_, i) => i + 1
@@ -221,7 +244,6 @@ export default function AdminGrowerPage() {
                                 </button>
                             ))}
 
-                            {/* Next Button */}
                             <button
                                 onClick={() =>
                                     handlePageChange(currentPage + 1)

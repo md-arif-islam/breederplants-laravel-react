@@ -46,14 +46,14 @@ export default function AdminNewsCreatePage() {
         try {
             const res = await createPost(formData);
 
-            console.log(res);
+
 
             if (res.status === 201) {
                 toast.success("News created successfully!");
                 navigate("/admin/news");
             }
         } catch (error) {
-            console.log(error);
+
         } finally {
             setLoading(false);
         }
@@ -84,7 +84,7 @@ export default function AdminNewsCreatePage() {
     const handleCreateCategory = async (name) => {
         try {
             const res = await createCategory({ name });
-            console.log("createCategory response:", res);
+
             // Adjust this line once you see where the id is returned;
             // here we also check res.data.category.id as an example.
             const newCategoryId =
