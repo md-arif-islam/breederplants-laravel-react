@@ -162,7 +162,6 @@ class BreederController extends Controller {
     }
 
     public function importCSV( Request $request ) {
-
         $request->validate( [
             'file' => 'required|file|mimes:csv,txt',
         ] );
@@ -171,18 +170,17 @@ class BreederController extends Controller {
             $import = new BreedersImport;
             Excel::import( $import, $request->file( 'file' ) );
 
-            // Check if there are any failed imports due to duplicate username/email
-            if ( count( $import->failedImports ) > 0 ) {
-                return redirect()->back()->with( [
-                    'success' => 'Breeders imported successfully with some errors.',
-                    'failedImports' => $import->failedImports, // Pass failed imports to view
-                ] );
-            }
-
-            return response()->json( ['message' => 'Breeders imported successfully'] );
+            return response()->json( [
+                'message' => 'Import completed',
+                'success_count' => $import->successCount,
+                'failed_count' => count( $import->failedImports ),
+                'failed_details' => $import->failedImports,
+            ], $import->failedImports ? 200 : 200 );
         } catch ( Exception $e ) {
-            // Log the error or handle it as needed
-            return response()->json( ['message' => 'An error occurred while importing breeders'] );
+            return response()->json( [
+                'message' => 'An error occurred while importing breeders',
+                'error' => $e->getMessage(),
+            ], 500 );
         }
     }
 
