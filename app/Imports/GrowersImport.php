@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\Models\Grower;
 use App\Models\User;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -48,50 +49,83 @@ class GrowersImport implements ToCollection {
                     continue;
                 }
 
-                if ( User::where( 'email', $companyEmail )->exists() ) {
-                    $this->addFailure( $rowNumber, 'Duplicate email: ' . $companyEmail );
+                // Check if soft-deleted user exists
+                $user = User::withTrashed()->where( 'email', $companyEmail )->first();
+                if ( $user && !$user->trashed() ) {
+                    $this->addFailure( $rowNumber, "Duplicate email: $companyEmail" );
                     continue;
                 }
 
-                if ( Grower::where( 'username', $username )->exists() ) {
-                    $this->addFailure( $rowNumber, 'Duplicate username: ' . $username );
+                // Check if soft-deleted grower exists
+                $grower = Grower::withTrashed()->where( 'username', $username )->first();
+                if ( $grower && !$grower->trashed() ) {
+                    $this->addFailure( $rowNumber, "Duplicate username: $username" );
                     continue;
                 }
 
                 $generatedPassword = Str::lower( str_replace( ' ', '', $postalCode ) );
 
-                // Wrap user and grower creation in a transaction to ensure rollback on failure
-                \DB::beginTransaction();
+                DB::beginTransaction();
 
-                $user = User::create( [
-                    'email' => $companyEmail,
-                    'password' => Hash::make( $generatedPassword ),
-                    'role' => 'grower',
-                    'status' => 'active',
-                ] );
+                if ( $user && $user->trashed() ) {
+                    $user->restore();
+                    $user->update( [
+                        'password' => Hash::make( $generatedPassword ),
+                        'role' => 'grower',
+                        'status' => 'active',
+                    ] );
+                } elseif ( !$user ) {
+                    $user = User::create( [
+                        'email' => $companyEmail,
+                        'password' => Hash::make( $generatedPassword ),
+                        'role' => 'grower',
+                        'status' => 'active',
+                    ] );
+                }
 
-                Grower::create( [
-                    'user_id' => $user->id,
-                    'username' => $username,
-                    'contact_person' => $contactPerson,
-                    'company_name' => $companyName,
-                    'company_email' => $companyEmail,
-                    'street' => $street,
-                    'city' => $city,
-                    'postal_code' => $postalCode,
-                    'country' => $country,
-                    'phone' => $phone,
-                    'website' => $website,
-                    'agreement_number' => $agreementNumber,
-                    'sales_reporting_quarter' => json_encode( $salesReportingQuarter ),
-                    'production_reporting_quarter' => null,
-                    'production_reporting_values' => null,
-                ] );
+                if ( $grower && $grower->trashed() ) {
+                    $grower->restore();
+                    $grower->update( [
+                        'user_id' => $user->id,
+                        'username' => $username,
+                        'contact_person' => $contactPerson,
+                        'company_name' => $companyName,
+                        'company_email' => $companyEmail,
+                        'street' => $street,
+                        'city' => $city,
+                        'postal_code' => $postalCode,
+                        'country' => $country,
+                        'phone' => $phone,
+                        'website' => $website,
+                        'agreement_number' => $agreementNumber,
+                        'sales_reporting_quarter' => json_encode( $salesReportingQuarter ),
+                        'production_reporting_quarter' => null,
+                        'production_reporting_values' => null,
+                    ] );
+                } elseif ( !$grower ) {
+                    Grower::create( [
+                        'user_id' => $user->id,
+                        'username' => $username,
+                        'contact_person' => $contactPerson,
+                        'company_name' => $companyName,
+                        'company_email' => $companyEmail,
+                        'street' => $street,
+                        'city' => $city,
+                        'postal_code' => $postalCode,
+                        'country' => $country,
+                        'phone' => $phone,
+                        'website' => $website,
+                        'agreement_number' => $agreementNumber,
+                        'sales_reporting_quarter' => json_encode( $salesReportingQuarter ),
+                        'production_reporting_quarter' => null,
+                        'production_reporting_values' => null,
+                    ] );
+                }
 
-                \DB::commit();
+                DB::commit();
                 $this->successCount++;
             } catch ( \Exception $e ) {
-                \DB::rollBack();
+                DB::rollBack();
                 $this->addFailure( $rowNumber, 'Exception: ' . $e->getMessage() );
             }
         }

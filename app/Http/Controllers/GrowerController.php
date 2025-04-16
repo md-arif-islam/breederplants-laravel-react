@@ -7,44 +7,37 @@ use App\Models\Grower;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 
 class GrowerController extends Controller {
-    /**
-     * Display a listing of the resource.
-     */
     public function index( Request $request ) {
         $query = $request->input( 'search' );
 
         $growers = Grower::with( 'user' )
-            ->where( 'is_deleted', false )
             ->when( $query, function ( $q ) use ( $query ) {
                 return $q->where( 'contact_person', 'like', "%{$query}%" )
                     ->orWhere( 'company_name', 'like', "%{$query}%" )
                     ->orWhereHas( 'user', function ( $q ) use ( $query ) {
                         $q->where( 'email', 'like', "%{$query}%" );
                     } );
-            } )->paginate( 10 );
+            } )
+            ->paginate( 10 );
 
         return response()->json( $growers );
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create() {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store( Request $request ) {
-
         $request->validate( [
-            'username' => 'required|string|max:255|unique:growers,username',
-            'company_email' => 'required|string|email|max:255|unique:users,email',
-            'password' => 'nullable|string|min:4|confirmed',
+            'username' => [
+                'required', 'string', 'max:255',
+                Rule::unique( 'growers' )->whereNull( 'deleted_at' ),
+            ],
+            'company_email' => [
+                'required', 'string', 'email', 'max:255',
+                Rule::unique( 'users', 'email' )->whereNull( 'deleted_at' ),
+            ],
+            'password' => 'required|string|min:4|confirmed',
             'company_name' => 'required|string|max:255',
             'contact_person' => 'required|string|max:255',
             'street' => 'required|string|max:255',
@@ -55,74 +48,90 @@ class GrowerController extends Controller {
             'website' => 'nullable|string|max:255',
             'agreement_number' => 'required|string',
             'sales_reporting_quarter' => 'nullable|array',
-            'sales_reporting_quarter.*' => 'nullable|string',
             'production_reporting_quarter' => 'nullable|array',
-            'production_reporting_quarter.*' => 'nullable|string',
             'production_reporting_values' => 'nullable|array',
-            'production_reporting_values.*' => 'nullable|string',
-            'password' => 'required|string|min:4|confirmed',
         ] );
 
-        // Create user
-        $user = $request->user()->create( [
-            'email' => $request->company_email,
-            'password' => $request->password,
-            'role' => 'grower',
-            'is_active' => true,
-        ] );
+        // Check if user with email exists (trashed)
+        $user = User::withTrashed()->where( 'email', $request->company_email )->first();
+        if ( $user && $user->trashed() ) {
+            $user->restore();
+            $user->update( [
+                'password' => $request->password,
+                'role' => 'grower',
+                'is_active' => true,
+            ] );
+        } elseif ( !$user ) {
+            $user = User::create( [
+                'email' => $request->company_email,
+                'password' => $request->password,
+                'role' => 'grower',
+                'is_active' => true,
+            ] );
+        }
 
-        // Create grower
-        $grower = new Grower();
-        $grower->create( [
-            'user_id' => $user->id,
-            'username' => $request->username,
-            'company_name' => $request->company_name,
-            'company_email' => $request->company_email,
-            'contact_person' => $request->contact_person,
-            'street' => $request->street,
-            'city' => $request->city,
-            'postal_code' => $request->postal_code,
-            'country' => $request->country,
-            'phone' => $request->phone,
-            'website' => $request->website,
-            'agreement_number' => $request->agreement_number,
-            'sales_reporting_quarter' => json_encode( $request->sales_reporting_quarter ),
-            'production_reporting_quarter' => json_encode( $request->production_reporting_quarter ),
-            'production_reporting_values' => json_encode( $request->production_reporting_values ),
-        ] );
+        // Check if grower with username exists (trashed)
+        $grower = Grower::withTrashed()->where( 'company_email', $request->company_email )->first();
+        if ( $grower && $grower->trashed() ) {
+            $grower->restore();
+            $grower->update( [
+                'user_id' => $user->id,
+                'company_name' => $request->company_name,
+                'company_email' => $request->company_email,
+                'contact_person' => $request->contact_person,
+                'street' => $request->street,
+                'city' => $request->city,
+                'postal_code' => $request->postal_code,
+                'country' => $request->country,
+                'phone' => $request->phone,
+                'website' => $request->website,
+                'agreement_number' => $request->agreement_number,
+                'sales_reporting_quarter' => json_encode( $request->sales_reporting_quarter ),
+                'production_reporting_quarter' => json_encode( $request->production_reporting_quarter ),
+                'production_reporting_values' => json_encode( $request->production_reporting_values ),
+            ] );
+        } elseif ( !$grower ) {
+            Grower::create( [
+                'user_id' => $user->id,
+                'username' => $request->username,
+                'company_name' => $request->company_name,
+                'company_email' => $request->company_email,
+                'contact_person' => $request->contact_person,
+                'street' => $request->street,
+                'city' => $request->city,
+                'postal_code' => $request->postal_code,
+                'country' => $request->country,
+                'phone' => $request->phone,
+                'website' => $request->website,
+                'agreement_number' => $request->agreement_number,
+                'sales_reporting_quarter' => json_encode( $request->sales_reporting_quarter ),
+                'production_reporting_quarter' => json_encode( $request->production_reporting_quarter ),
+                'production_reporting_values' => json_encode( $request->production_reporting_values ),
+            ] );
+        }
 
+        return response()->json( ['message' => 'Grower created or restored successfully'] );
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show( Grower $grower ) {
-        $grower = Grower::with( 'user' )
-            ->where( 'is_deleted', false )
-            ->findOrFail( $grower->id );
-
-        return response()->json( $grower );
+        return response()->json(
+            Grower::with( 'user' )->findOrFail( $grower->id )
+        );
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit( Grower $grower ) {
-
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update( Request $request, Grower $grower ) {
-
         $user = $grower->user;
 
         $request->validate( [
-            'username' => 'required|string|max:255|unique:growers,username,' . $grower->id,
-            'company_email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'username' => [
+                'required', 'string', 'max:255',
+                Rule::unique( 'growers' )->ignore( $grower->id )->whereNull( 'deleted_at' ),
+            ],
+            'company_email' => [
+                'required', 'string', 'email', 'max:255',
+                Rule::unique( 'users', 'email' )->ignore( $user->id )->whereNull( 'deleted_at' ),
+            ],
             'password' => 'nullable|string|min:4|confirmed',
-
             'company_name' => 'required|string|max:255',
             'contact_person' => 'required|string|max:255',
             'street' => 'required|string|max:255',
@@ -133,11 +142,8 @@ class GrowerController extends Controller {
             'website' => 'nullable|string|max:255',
             'agreement_number' => 'required|string',
             'sales_reporting_quarter' => 'nullable|array',
-            'sales_reporting_quarter.*' => 'nullable|string|max:255',
             'production_reporting_quarter' => 'nullable|array',
-            'production_reporting_quarter.*' => 'nullable|string|max:255',
             'production_reporting_values' => 'nullable|array',
-            'production_reporting_values.*' => 'nullable|string|max:255',
         ] );
 
         $user->update( [
@@ -163,21 +169,11 @@ class GrowerController extends Controller {
         ] );
 
         return response()->json( $grower );
-
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy( Grower $grower ) {
-        // Instead of deleting, mark as deleted for both grower and user
-        $grower->update( [
-            'is_deleted' => true,
-        ] );
-
-        $grower->user->update( [
-            'is_deleted' => true,
-        ] );
+        $grower->delete();
+        $grower->user->delete();
 
         return response()->json( ['message' => 'Grower deleted successfully'] );
     }
@@ -218,7 +214,6 @@ class GrowerController extends Controller {
     }
 
     public function exportCSV() {
-
         $filename = 'growers-data-' . date( 'Y-m-d' ) . '.csv';
 
         $headers = [
@@ -232,46 +227,32 @@ class GrowerController extends Controller {
         $callback = function () {
             $handle = fopen( 'php://output', 'w' );
 
-            // Add CSV headers
             fputcsv( $handle, [
-                'Grower ID',
-                'Contact Person',
-                'Company Name',
-                'Company Email',
-                'Street',
-                'City',
-                'Postal Code',
-                'Country',
-                'Phone Number',
-                'Website',
-                'Agreement Number',
-                'Sales Reporting Quarter',
-                'Production Reporting Quarter',
-                'Production Reporting Values',
+                'Grower ID', 'Contact Person', 'Company Name', 'Company Email',
+                'Street', 'City', 'Postal Code', 'Country', 'Phone Number',
+                'Website', 'Agreement Number', 'Sales Reporting Quarter',
+                'Production Reporting Quarter', 'Production Reporting Values',
             ] );
 
-            // Fetch and process data in chunks - only non-deleted growers
             Grower::with( 'user' )
-                ->where( 'is_deleted', false )
                 ->chunk( 100, function ( $growers ) use ( $handle ) {
                     foreach ( $growers as $grower ) {
-                        $data = [
-                            $grower->username ?? '',
-                            $grower->contact_person ?? '',
-                            $grower->company_name ?? '',
-                            $grower->user->email ?? '',
-                            $grower->street ?? '',
-                            $grower->city ?? '',
-                            $grower->postal_code ?? '',
-                            $grower->country ?? '',
-                            $grower->phone ?? '',
-                            $grower->website ?? '',
-                            $grower->agreement_number ?? '',
-                            $grower->sales_reporting_quarter ?? '',
-                            $grower->production_reporting_quarter ?? '',
-                            $grower->production_reporting_values ?? '',
-                        ];
-                        fputcsv( $handle, $data );
+                        fputcsv( $handle, [
+                            $grower->username,
+                            $grower->contact_person,
+                            $grower->company_name,
+                            $grower->user->email,
+                            $grower->street,
+                            $grower->city,
+                            $grower->postal_code,
+                            $grower->country,
+                            $grower->phone,
+                            $grower->website,
+                            $grower->agreement_number,
+                            $grower->sales_reporting_quarter,
+                            $grower->production_reporting_quarter,
+                            $grower->production_reporting_values,
+                        ] );
                     }
                 } );
 
