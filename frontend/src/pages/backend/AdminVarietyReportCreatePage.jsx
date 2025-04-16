@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
-import { useVarietyReportStore } from "../../store/useVarietyReportStore";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { PageTitleContext } from "../../context/PageTitleContext";
+import { useVarietyReportStore } from "../../store/useVarietyReportStore";
 
 export default function AdminVarietyReportCreatePage() {
     const {
@@ -12,6 +13,7 @@ export default function AdminVarietyReportCreatePage() {
         getCreateVarietyReport,
     } = useVarietyReportStore();
     const navigate = useNavigate();
+    const { setTitle } = useContext(PageTitleContext);
 
     const [formData, setFormData] = useState({
         variety_name: "",
@@ -32,7 +34,8 @@ export default function AdminVarietyReportCreatePage() {
 
     useEffect(() => {
         document.title = "Create Variety Report - Breederplants";
-    }, []);
+        setTitle("Create Variety Report");
+    }, [setTitle]);
 
     useEffect(() => {
         getCreateVarietyReport();

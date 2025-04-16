@@ -1,5 +1,5 @@
+import { Download, Eye, Leaf, Loader2, Pencil, Trash2 } from "lucide-react";
 import React, { useState } from "react";
-import { Eye, Pencil, Trash2, Download, Leaf, Loader2 } from "lucide-react";
 import { useVarietyReportStore } from "../../store/useVarietyReportStore";
 import { formatDate } from "../../utils/formatDate.js";
 
@@ -31,6 +31,8 @@ export function VarietyReportCard({ report, onDelete }) {
         ? `${import.meta.env.VITE_API_URL}/${report.thumbnail}`
         : null;
 
+    const isInactive = !report?.grower || !report?.breeder;
+
     const getFormattedDate = (dateString) => {
         try {
             return formatDate(dateString);
@@ -55,7 +57,7 @@ export function VarietyReportCard({ report, onDelete }) {
                     onLoad={() => setImgLoaded(true)}
                     className={`w-full h-full object-cover rounded-lg mt-3 transition-opacity duration-300 ${
                         imgLoaded ? "opacity-100" : "opacity-0"
-                    }`}
+                    } ${isInactive ? "grayscale opacity-80" : ""}`}
                 />
                 <div className="absolute left-1/2 -translate-x-1/2 bottom-5 flex gap-2 p-2 border border-white rounded-lg backdrop-blur-md bg-white/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <a
@@ -96,19 +98,38 @@ export function VarietyReportCard({ report, onDelete }) {
                 </div>
             </div>
             <div className="p-4 border-b">
-                <h3 className="text-lg font-semibold">{report.variety_name}</h3>
+                <h3
+                    className={`text-lg font-semibold ${
+                        isInactive ? "text-gray-600" : ""
+                    }`}
+                >
+                    {report.variety_name}
+                    {isInactive && (
+                        <span className="ml-2 text-xs font-normal text-gray-500 bg-gray-200 px-2 py-0.5 rounded-full">
+                            Inactive
+                        </span>
+                    )}
+                </h3>
             </div>
             <div className="p-4 grid gap-2 text-sm">
                 <div className="grid grid-cols-2">
                     <span className="text-gray-600">Company</span>
-                    <span className="justify-self-end">
-                        {report?.grower?.company_name}
+                    <span
+                        className={`justify-self-end ${
+                            !report?.grower ? "text-gray-400 italic" : ""
+                        }`}
+                    >
+                        {report?.grower?.company_name || "Not assigned"}
                     </span>
                 </div>
                 <div className="grid grid-cols-2">
                     <span className="text-gray-600">Breeder name</span>
-                    <span className="justify-self-end">
-                        {report?.breeder?.company_name}
+                    <span
+                        className={`justify-self-end ${
+                            !report?.breeder ? "text-gray-400 italic" : ""
+                        }`}
+                    >
+                        {report?.breeder?.company_name || "Not assigned"}
                     </span>
                 </div>
                 <div className="grid grid-cols-2">

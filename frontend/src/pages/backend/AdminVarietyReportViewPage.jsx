@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { Pencil, Trash2, Download, Leaf, Bell, Loader2 } from "lucide-react";
-import { VarietySampleCard } from "../../components/backend/VarietySampleCard";
-import hydrangeaImg from "../../assets/images/hydrangea-paniculata.jpg";
-import { useVarietyReportStore } from "../../store/useVarietyReportStore";
-import { useNavigate, useParams } from "react-router-dom";
+import { Bell, Download, Leaf, Loader2, Pencil, Trash2 } from "lucide-react";
+import React, { useContext, useEffect, useState } from "react";
 import { Gallery, Item } from "react-photoswipe-gallery";
+import { useNavigate, useParams } from "react-router-dom";
+import { VarietySampleCard } from "../../components/backend/VarietySampleCard";
+import { PageTitleContext } from "../../context/PageTitleContext";
+import { useVarietyReportStore } from "../../store/useVarietyReportStore";
 import { formatDate } from "../../utils/formatDate.js";
 
 export default function AdminVarietyReportViewPage() {
+    const { setTitle } = useContext(PageTitleContext);
     const {
         isLoading,
         getVarietyReportById,
@@ -26,8 +27,16 @@ export default function AdminVarietyReportViewPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        document.title = "Variety Report View - Breederplants";
-    }, []);
+        document.title = report?.variety_name
+            ? `View - ${report.variety_name} - Breederplants`
+            : "Variety Report View - Breederplants";
+
+        setTitle(
+            report?.variety_name
+                ? `View - ${report.variety_name}`
+                : "Variety Report View"
+        );
+    }, [report?.variety_name, setTitle]);
 
     useEffect(() => {
         getVarietyReportById(id);
@@ -154,7 +163,8 @@ export default function AdminVarietyReportViewPage() {
                                         Company
                                     </h3>
                                     <p className="mt-1">
-                                        {report?.grower?.company_name}
+                                        {report?.grower?.company_name ||
+                                            "Not assigned"}
                                     </p>
                                 </div>
                                 <div>
@@ -162,7 +172,8 @@ export default function AdminVarietyReportViewPage() {
                                         Breeder Name
                                     </h3>
                                     <p className="mt-1">
-                                        {report?.breeder?.company_name}
+                                        {report?.breeder?.company_name ||
+                                            "Not assigned"}
                                     </p>
                                 </div>
                                 <div>

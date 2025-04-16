@@ -1,14 +1,12 @@
 import { Loader2 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { PageTitleContext } from "../../context/PageTitleContext";
 import { useVarietyReportStore } from "../../store/useVarietyReportStore";
 
 export default function AdminVarietyReportUpdatePage() {
     const [sampleDates, setSampleDates] = useState([""]);
-
-    useEffect(() => {
-        document.title = "Update Variety Report - Breederplants";
-    }, []);
+    const { setTitle } = useContext(PageTitleContext);
 
     const {
         isLoading,
@@ -64,6 +62,18 @@ export default function AdminVarietyReportUpdatePage() {
             });
         }
     }, [report]);
+
+    useEffect(() => {
+        document.title = report?.variety_name
+            ? `Edit - ${report.variety_name} - Breederplants`
+            : "Variety Report Edit - Breederplants";
+
+        setTitle(
+            report?.variety_name
+                ? `Edit - ${report.variety_name}`
+                : "Variety Report Edit"
+        );
+    }, [report?.variety_name, setTitle]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -178,6 +188,7 @@ export default function AdminVarietyReportUpdatePage() {
                                         }
                                         className="mt-1 w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
                                     >
+                                        <option value="">Select Grower</option>
                                         {growers?.map((grower) => (
                                             <option
                                                 key={grower.id}
@@ -205,6 +216,8 @@ export default function AdminVarietyReportUpdatePage() {
                                         }
                                         className="mt-1 w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
                                     >
+                                        <option value="">Select Breeder</option>
+
                                         {breeders?.map((breeder) => (
                                             <option
                                                 key={breeder.id}
@@ -451,7 +464,7 @@ export default function AdminVarietyReportUpdatePage() {
                                         <Loader2 className="h-5 w-5 animate-spin mr-2" />
                                     </>
                                 ) : (
-                                    " Create Variety Report"
+                                    "Update Variety Report"
                                 )}
                             </button>
                         </div>
