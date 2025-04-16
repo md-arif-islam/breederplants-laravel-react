@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void {
         Schema::create( 'breeders', function ( Blueprint $table ) {
             $table->id();
-            $table->foreignId( 'user_id' )->constrained()->onDelete( 'cascade' );
+            $table->foreignId( 'user_id' )->constrained()->onDelete( 'restrict' );
             $table->string( 'username' )->unique()->index();
             $table->string( 'company_name' );
             $table->string( 'company_email' )->unique()->index();
@@ -22,8 +22,8 @@ return new class extends Migration {
             $table->string( 'country' );
             $table->string( 'phone' )->nullable();
             $table->string( 'website' )->nullable();
-            $table->boolean( 'is_deleted' )->default( false );
             $table->timestamps();
+            $table->softDeletes();
         } );
     }
 

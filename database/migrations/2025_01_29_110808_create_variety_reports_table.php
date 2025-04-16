@@ -11,9 +11,9 @@ return new class extends Migration {
     public function up(): void {
         Schema::create( 'variety_reports', function ( Blueprint $table ) {
             $table->id();
-            $table->foreignId( 'user_id' )->constrained()->onDelete( 'cascade' );
-            $table->foreignId( 'grower_id' )->constrained( 'growers' )->onDelete( 'cascade' );
-            $table->foreignId( 'breeder_id' )->constrained( 'breeders' )->onDelete( 'cascade' );
+            $table->foreignId( 'user_id' )->constrained()->onDelete( 'restrict' );
+            $table->foreignId( 'grower_id' )->constrained( 'growers' )->onDelete( 'restrict' );
+            $table->foreignId( 'breeder_id' )->constrained( 'breeders' )->onDelete( 'restrict' );
             $table->string( 'variety_name' )->index();
             $table->string( 'thumbnail' )->nullable();
             $table->unsignedBigInteger( 'amount_of_plants' );
@@ -26,8 +26,8 @@ return new class extends Migration {
             $table->date( 'start_date' )->nullable();
             $table->date( 'end_date' )->nullable();
             $table->boolean( 'status' )->default( true );
-            $table->boolean( 'is_deleted' )->default( false );
             $table->timestamps();
+            $table->softDeletes();
         } );
     }
 
