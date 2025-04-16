@@ -1,3 +1,4 @@
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ImportGrowerModal } from "../../components/backend/ImportGrowerModal";
@@ -7,6 +8,7 @@ export default function AdminGrowerPage() {
     const [searchQuery, setSearchQuery] = useState("");
     const [isImportModalOpen, setIsImportModalOpen] = useState(false);
     const [importResult, setImportResult] = useState(null);
+    const [isExporting, setIsExporting] = useState(false);
 
     const {
         getAllGrowers,
@@ -57,7 +59,14 @@ export default function AdminGrowerPage() {
     };
 
     const handleExportCSV = async () => {
-        await exportCSVGrowers();
+        setIsExporting(true);
+        try {
+            await exportCSVGrowers();
+        } catch (error) {
+            console.error("Export failed:", error);
+        } finally {
+            setIsExporting(false);
+        }
     };
 
     return (
@@ -83,9 +92,14 @@ export default function AdminGrowerPage() {
                         </button>
                         <button
                             onClick={handleExportCSV}
+                            disabled={isExporting}
                             className="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                         >
-                            Export CSV
+                            {isExporting ? (
+                                <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                            ) : (
+                                "Export CSV"
+                            )}
                         </button>
                         <button
                             className="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"

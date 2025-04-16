@@ -131,7 +131,6 @@ export const useStore = create((set, get) => ({
     },
 
     updateGrower: async (id, payload) => {
-        set({ isLoading: true });
         try {
             const res = await axiosInstance.put(
                 `/api/admin/growers/${id}`,
@@ -161,7 +160,6 @@ export const useStore = create((set, get) => ({
     },
 
     updateGrowerPassword: async (id, payload) => {
-        set({ isLoading: true });
         try {
             const res = await axiosInstance.put(
                 `/api/admin/growers/${id}/update-password`,
@@ -177,7 +175,6 @@ export const useStore = create((set, get) => ({
     },
 
     createGrower: async (payload) => {
-        set({ isLoading: true });
         try {
             const res = await axiosInstance.post("/api/admin/growers", payload);
             toast.success("Grower created successfully");

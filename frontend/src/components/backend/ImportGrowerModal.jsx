@@ -62,7 +62,7 @@ export function ImportGrowerModal({ isOpen, onClose, onImport }) {
                         <button
                             type="submit"
                             disabled={isImporting}
-                            className="w-full h-10 rounded-sm text-lg bg-primary hover:bg-secondary text-white font-bold transition-colors flex items-center justify-center"
+                            className="w-full h-10 rounded-sm text-md bg-primary hover:bg-secondary text-white font-bold transition-colors flex items-center justify-center"
                         >
                             {isImporting ? (
                                 <Loader2 className="h-5 w-5 animate-spin mr-2" />
