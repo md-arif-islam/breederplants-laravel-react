@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Leaf, Loader2, X } from "lucide-react";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { PageTitleContext } from "../../context/PageTitleContext";
 import { useProductStore } from "../../store/useProductStore";
 
 export default function AdminProductCreatePage() {
     const { isLoading, createProduct } = useProductStore();
     const navigate = useNavigate();
+    const { setTitle } = useContext(PageTitleContext);
 
     useEffect(() => {
         document.title = "Create Product - Breederplants";
-    }, []);
+        setTitle("Create Product");
+    }, [setTitle]);
 
     const [formData, setFormData] = useState({
         genus: "",
@@ -151,6 +154,19 @@ export default function AdminProductCreatePage() {
                             <div>
                                 <div className="mb-4">
                                     <label className="block text-sm font-medium mb-1">
+                                        Plant ID
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="plant_id"
+                                        value={formData.plant_id}
+                                        onChange={handleChange}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                    />
+                                </div>
+
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-1">
                                         Genus{" "}
                                         <span className="text-red-500">*</span>
                                     </label>
@@ -199,18 +215,7 @@ export default function AdminProductCreatePage() {
                                         rows="3"
                                     />
                                 </div>
-                                <div className="mb-4">
-                                    <label className="block text-sm font-medium mb-1">
-                                        Plant ID
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="plant_id"
-                                        value={formData.plant_id}
-                                        onChange={handleChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                                    />
-                                </div>
+
                                 <div className="mb-4">
                                     <label className="block text-sm font-medium mb-1">
                                         Protection Number

@@ -40,6 +40,12 @@ class BreedersImport implements ToCollection {
             $phone = $row[8] ?? '';
             $website = $row[9] ?? '';
 
+            if ( empty( $email ) && !empty( $companyName ) ) {
+                // Create a default email using company name if email is empty
+                $sanitizedCompanyName = preg_replace( '/[^a-z0-9]/i', '', strtolower( $companyName ) );
+                $email = "info+{$sanitizedCompanyName}@breederplants.nl";
+            }
+
             if ( empty( $username ) || empty( $email ) ) {
                 $this->addFailure( $rowNumber, 'Missing username or email' );
                 continue;

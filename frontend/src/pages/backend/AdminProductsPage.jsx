@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useProductStore } from "../../store/useProductStore";
 import { Leaf } from "lucide-react";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { PageTitleContext } from "../../context/PageTitleContext";
+import { useProductStore } from "../../store/useProductStore";
 
 // LazyImage component for lazy loading with a skeleton placeholder
 function LazyImage({ src, alt, className }) {
@@ -35,10 +36,12 @@ export default function AdminProductsPage() {
         useProductStore();
 
     const navigate = useNavigate();
+    const { setTitle } = useContext(PageTitleContext);
 
     useEffect(() => {
         document.title = "Products - Breederplants";
-    }, []);
+        setTitle("Products");
+    }, [setTitle]);
 
     // Fetch all products on mount (or whenever currentPage changes).
     useEffect(() => {

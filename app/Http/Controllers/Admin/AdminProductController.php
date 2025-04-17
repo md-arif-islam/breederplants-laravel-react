@@ -144,14 +144,19 @@ class AdminProductController extends Controller {
     public function destroy( $id ) {
         $product = Product::findOrFail( $id );
 
-        // Delete associated image files
+        // Move images to trash folder
+        $trashDir = public_path( 'images/products/trash/' );
+        if ( !File::exists( $trashDir ) ) {
+            File::makeDirectory( $trashDir, 0755, true );
+        }
+
         if ( $product->images ) {
             $images = json_decode( $product->images, true ) ?? [];
 
             foreach ( $images as $imagePath ) {
-                $fullPath = public_path( $imagePath );
-                if ( File::exists( $fullPath ) ) {
-                    File::delete( $fullPath );
+                $absolutePath = public_path( $imagePath );
+                if ( File::exists( $absolutePath ) ) {
+                    File::move( $absolutePath, $trashDir . basename( $imagePath ) );
                 }
             }
         }

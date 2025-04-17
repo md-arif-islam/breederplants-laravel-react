@@ -3,20 +3,24 @@ import { NavLink } from "react-router-dom";
 
 export default function BottomNavigation() {
     const navItems = [
-        { name: "Home", to: "/", icon: Home },
+        {
+            name: "Catalog",
+            to: "https://app-breederplants.onlinewithyou.nl/",
+            icon: Home,
+        },
         {
             name: "News",
-            to: "https://app.breederplants.nl/news",
+            to: "https://app-breederplants.onlinewithyou.nl/news",
             icon: Newspaper,
         },
         {
             name: "About",
-            to: "https://app.breederplants.nl/about",
+            to: "https://app-breederplants.onlinewithyou.nl/about",
             icon: Info,
         },
         {
-            name: "Public Area",
-            to: "https://app.breederplants.nl",
+            name: "Portal",
+            to: "https://breederplants.onlinewithyou.nl/",
             icon: User,
         },
     ];
