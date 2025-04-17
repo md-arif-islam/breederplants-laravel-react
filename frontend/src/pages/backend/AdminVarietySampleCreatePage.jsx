@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
 import { Loader2, X } from "lucide-react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { PageTitleContext } from "../../context/PageTitleContext";
 import { useVarietySampleStore } from "../../store/useVarietySampleStore";
 
 export default function VarietySampleCreatePage() {
     const { isLoading, createVarietySample } = useVarietySampleStore();
     const { id } = useParams();
     const navigate = useNavigate();
+    const { setTitle } = useContext(PageTitleContext);
 
     // Empty initial state for creating a new sample.
     const [formData, setFormData] = useState({
@@ -88,8 +90,8 @@ export default function VarietySampleCreatePage() {
     };
 
     useEffect(() => {
-        // page title
         document.title = "Add Sample - Breederplants";
+        setTitle("Add Sample");
     });
 
     return (

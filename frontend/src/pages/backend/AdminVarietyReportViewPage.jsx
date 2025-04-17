@@ -42,11 +42,6 @@ export default function AdminVarietyReportViewPage() {
         getVarietyReportById(id);
     }, [getVarietyReportById, id]);
 
-    const handleDelete = (e) => {
-        e.preventDefault();
-        setShowPopup(true);
-    };
-
     const confirmDelete = async () => {
         setShowPopup(false);
         const response = await deleteVarietyReport(id);
@@ -84,6 +79,10 @@ export default function AdminVarietyReportViewPage() {
             });
         };
     }, [thumbnailUrl]);
+
+    const handleDelete = () => {
+        getVarietyReportById(id);
+    };
 
     const getFormattedDate = (dateString) => {
         try {
@@ -306,6 +305,7 @@ export default function AdminVarietyReportViewPage() {
                                 key={sample.id}
                                 sample={sample}
                                 varietyReportId={id}
+                                onDelete={handleDelete}
                             />
                         ))}
                     </div>

@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
 import { Leaf, Loader2, X } from "lucide-react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { PageTitleContext } from "../../context/PageTitleContext";
 import { useVarietySampleStore } from "../../store/useVarietySampleStore";
 
 export default function VarietySampleUpdatePage() {
@@ -12,6 +13,7 @@ export default function VarietySampleUpdatePage() {
     } = useVarietySampleStore();
     const { id, sampleId } = useParams();
     const navigate = useNavigate();
+    const { setTitle } = useContext(PageTitleContext);
 
     const [formData, setFormData] = useState({
         sample_date: "",
@@ -71,7 +73,8 @@ export default function VarietySampleUpdatePage() {
     useEffect(() => {
         // page title
         document.title = "Edit - Variety Sample - Breederplants";
-    });
+        setTitle("Edit Variety Sample");
+    }, [setTitle]);
 
     const fileToBase64 = (file) =>
         new Promise((resolve, reject) => {
