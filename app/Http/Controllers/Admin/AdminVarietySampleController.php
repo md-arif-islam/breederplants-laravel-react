@@ -142,6 +142,21 @@ class AdminVarietySampleController extends Controller {
 
     public function destroy( $id, $sampleId ) {
         $varietySample = VarietySample::findOrFail( $sampleId );
+
+        // Move images to trash folder
+        $trashDir = public_path( 'images/variety-samples/trash/' );
+        if ( !File::exists( $trashDir ) ) {
+            File::makeDirectory( $trashDir, 0755, true );
+        }
+
+        $images = json_decode( $varietySample->images, true ) ?? [];
+        foreach ( $images as $imagePath ) {
+            $absolutePath = public_path( $imagePath );
+            if ( File::exists( $absolutePath ) ) {
+                File::move( $absolutePath, $trashDir . basename( $imagePath ) );
+            }
+        }
+
         $varietySample->delete();
 
         return response()->json( [
