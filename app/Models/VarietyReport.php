@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\File;
 
 class VarietyReport extends Model {
 
@@ -38,5 +39,41 @@ class VarietyReport extends Model {
 
     public function samples() {
         return $this->hasMany( VarietySample::class );
+    }
+
+    protected static function booted() {
+
+        static::deleting( function ( $report ) {
+            if ( $report->thumbnail && file_exists( public_path( $report->thumbnail ) ) ) {
+                $trashDir = public_path( 'images/variety-reports/trash/' );
+                if ( !File::exists( $trashDir ) ) {
+                    File::makeDirectory( $trashDir, 0755, true );
+                }
+
+                File::move(
+                    public_path( $report->thumbnail ),
+                    $trashDir . basename( $report->thumbnail )
+                );
+            }
+        } );
+
+        static::restoring( function ( $report ) {
+            if ( $report->thumbnail ) {
+                $fileName = basename( $report->thumbnail );
+                $trashPath = public_path( 'images/variety-reports/trash/' . $fileName );
+                $originalPath = public_path( $report->thumbnail );
+
+                if ( file_exists( $trashPath ) ) {
+                    // Create the directory if it doesn't exist
+                    $originalDir = dirname( $originalPath );
+                    if ( !File::exists( $originalDir ) ) {
+                        File::makeDirectory( $originalDir, 0755, true );
+                    }
+
+                    // Move the file from trash back to original location
+                    File::move( $trashPath, $originalPath );
+                }
+            }
+        } );
     }
 }

@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
-import { Pencil, Trash2, Download, Leaf } from "lucide-react";
-import { useVarietySampleStore } from "../../store/useVarietySampleStore";
-import { useNavigate, useParams } from "react-router-dom";
+import { Leaf, Pencil, Trash2 } from "lucide-react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Gallery, Item } from "react-photoswipe-gallery";
+import { useNavigate, useParams } from "react-router-dom";
+import { PageTitleContext } from "../../context/PageTitleContext";
+import { useVarietySampleStore } from "../../store/useVarietySampleStore";
 import { formatDate } from "../../utils/formatDate.js";
 
 // Helper component for lazy loading images with a skeleton placeholder
@@ -31,15 +32,27 @@ function LazyImage({ src, alt }) {
 }
 
 export default function AdminVarietySampleViewPage() {
-    useEffect(() => {
-        document.title = "Variety Sample - Breederplants";
-    }, []);
-
+    const { setTitle } = useContext(PageTitleContext);
     const [showPopup, setShowPopup] = useState(false);
     const { isLoading, getVarietySample, varietySample, deleteVarietySample } =
         useVarietySampleStore();
     const { id, sampleId } = useParams();
     const navigate = useNavigate();
+
+    // Update document title and page title when data is loaded
+    useEffect(() => {
+        if (varietySample) {
+            const sampleDate = varietySample.sample_date
+                ? formatDate(varietySample.sample_date)
+                : "Unknown Date";
+
+            document.title = `Sample ${sampleDate} - Breederplants`;
+            setTitle(`Sample - ${sampleDate}`);
+        } else {
+            document.title = "Variety Sample - Breederplants";
+            setTitle("Variety Sample");
+        }
+    }, [varietySample, setTitle]);
 
     // Always call getVarietySample hook in the same order
     useEffect(() => {
@@ -190,7 +203,9 @@ export default function AdminVarietySampleViewPage() {
                                     Flower Buds
                                 </h3>
                                 <p className="mt-1 uppercase">
-                                    {varietySample.flower_buds}
+                                    {varietySample.flower_buds == 1
+                                        ? "Yes"
+                                        : "No"}
                                 </p>
                             </div>
                             <div>

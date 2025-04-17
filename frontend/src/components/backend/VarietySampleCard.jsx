@@ -113,7 +113,7 @@ export function VarietySampleCard({ sample, varietyReportId, onDelete }) {
                 <div className="grid grid-cols-2">
                     <span className="text-gray-600">Flower Buds</span>
                     <span className="justify-self-end uppercase">
-                        {sample.flower_buds}
+                        {sample.flower_buds == 1 ? "Yes" : "No"}
                     </span>
                 </div>
                 <div className="grid grid-cols-2">

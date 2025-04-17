@@ -165,12 +165,21 @@ class AdminVarietyReportController extends Controller {
 
     public function destroy( $id ) {
         $varietyReport = VarietyReport::findOrFail( $id );
-        $varietyReport->delete();
 
-        // Delete the thumbnail
-        if ( file_exists( $varietyReport->thumbnail ) ) {
-            unlink( $varietyReport->thumbnail );
+        // Move image to trash folder
+        $trashDir = public_path( 'images/variety-reports/trash/' );
+        if ( !File::exists( $trashDir ) ) {
+            File::makeDirectory( $trashDir, 0755, true );
         }
+
+        if ( file_exists( $varietyReport->thumbnail ) ) {
+            File::move(
+                public_path( $varietyReport->thumbnail ),
+                $trashDir . basename( $varietyReport->thumbnail )
+            );
+        }
+
+        $varietyReport->delete();
 
         return response()->json( [
             'message' => 'Variety report deleted successfully',

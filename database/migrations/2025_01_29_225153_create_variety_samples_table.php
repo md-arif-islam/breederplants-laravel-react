@@ -30,6 +30,7 @@ return new class extends Migration {
             $table->boolean( 'status' )->default( true );
             $table->boolean( 'is_deleted' )->default( false );
             $table->timestamps();
+            $table->softDeletes();
         } );
     }
 
